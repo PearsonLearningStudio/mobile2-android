@@ -5,12 +5,6 @@
     android:layout_height="fill_parent"
     >
 <EditText  
-	android:id="@+id/client_string_text"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:hint="Client String"
-    />
-<EditText  
 	android:id="@+id/username_text"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 

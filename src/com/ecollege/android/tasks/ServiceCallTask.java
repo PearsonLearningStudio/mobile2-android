@@ -8,9 +8,8 @@ import android.content.Context;
 import com.ecollege.android.activities.ECollegeActivity;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.services.BaseService;
-import com.github.droidfu.concurrent.BetterAsyncTask;
 
-public class ServiceCallTask<ServiceT extends BaseService> extends BetterAsyncTask<ServiceT, Void, ServiceT> {
+public class ServiceCallTask<ServiceT extends BaseService> extends SmartAsyncTask<ServiceT, Void, ServiceT> {
 
 	public ServiceCallTask(Context context) {
 		super(context);

@@ -1,28 +1,14 @@
-/* Copyright (c) 2009 Matthias Käppler
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package com.ecollege.android.tasks;
 
-package com.github.droidfu.concurrent;
+//Based on example from droid-fu
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.Window;
 
-import com.github.droidfu.DroidFuApplication;
-import com.github.droidfu.activities.BetterActivity;
+import com.ecollege.android.ECollegeApplication;
+import com.ecollege.android.activities.ECollegeActivity;
 
 /**
  * Works in a similar way to AsyncTask but provides extra functionality.
@@ -47,53 +33,64 @@ import com.github.droidfu.activities.BetterActivity;
  * @param <ProgressT>
  * @param <ReturnT>
  */
-public abstract class BetterAsyncTask<ParameterT, ProgressT, ReturnT> extends
+public abstract class SmartAsyncTask<ParameterT, ProgressT, ReturnT> extends
         AsyncTask<ParameterT, ProgressT, ReturnT> {
 
-    private final DroidFuApplication appContext;
-    private final boolean contextIsDroidFuActivity;
+    private final ECollegeApplication appContext;
+    private boolean isECollegeActivity;
 
     private Exception error;
 
-    private boolean isTitleProgressEnabled,
-            isTitleProgressIndeterminateEnabled = true;
-
     private final String callerId;
 
-    private BetterAsyncTaskCallable<ParameterT, ProgressT, ReturnT> callable;
+    private SmartAsyncTaskCallable<ParameterT, ProgressT, ReturnT> callable;
 
-    private int dialogId = 0;
-
+    private boolean reportsProgress = false;
+    private boolean isModalDialog = false;
+    private int progressDialogTitleId = -1;
+    private int progressDialogMsgId = -1;
+    
     /**
-     * Creates a new BetterAsyncTask who displays a progress dialog on the specified Context.
+     * Creates a new SmartAsyncTask who displays a progress dialog on the specified Context.
      *
      * @param context
      */
-    public BetterAsyncTask(Context context) {
+    public SmartAsyncTask(Context context) {
 
-        if (!(context.getApplicationContext() instanceof DroidFuApplication)) {
+        if (!(context.getApplicationContext() instanceof ECollegeApplication)) {
             throw new IllegalArgumentException(
-                    "context bound to this task must be a DroidFu context (DroidFuApplication)");
+                    "must be used as part of ECollegeApplication");
         }
-        this.appContext = (DroidFuApplication) context.getApplicationContext();
+        this.appContext = (ECollegeApplication) context.getApplicationContext();
         this.callerId = context.getClass().getCanonicalName();
-        this.contextIsDroidFuActivity = context instanceof BetterActivity;
-
+        this.isECollegeActivity = context instanceof ECollegeActivity;
         appContext.setActiveContext(callerId, context);
-
-        if (contextIsDroidFuActivity) {
-            int windowFeatures = ((BetterActivity) context).getWindowFeatures();
-            if (Window.FEATURE_PROGRESS == (Window.FEATURE_PROGRESS & windowFeatures)) {
-                this.isTitleProgressEnabled = true;
-            } else if (Window.FEATURE_INDETERMINATE_PROGRESS == (Window.FEATURE_INDETERMINATE_PROGRESS & windowFeatures)) {
-                this.isTitleProgressIndeterminateEnabled = true;
-            }
-        }
+    }
+    
+    public SmartAsyncTask<ParameterT, ProgressT, ReturnT> makeModal() {
+    	this.isModalDialog = true;
+    	return this;
+    }
+    
+    public SmartAsyncTask<ParameterT, ProgressT, ReturnT> enableProgressHandling() {
+    	this.reportsProgress = true;
+    	return this;
     }
 
+	public SmartAsyncTask<ParameterT, ProgressT, ReturnT> setProgressDialogTitleId(int progressDialogTitleId) {
+		this.progressDialogTitleId=progressDialogTitleId;
+		return this;
+	}
+
+	public SmartAsyncTask<ParameterT, ProgressT, ReturnT> setProgressDialogMsgId(int progressDialogMsgId) {
+		this.progressDialogMsgId=progressDialogMsgId;
+		return this;
+	}
+    
+    
     /**
      * Gets the most recent instance of this Context.
-     * This may not be the Context used to construct this BetterAsyncTask as that Context might have been destroyed
+     * This may not be the Context used to construct this SmartAsyncTask as that Context might have been destroyed
      * when a incoming call was received, or the user rotated the screen.
      *
      * @return The current Context, or null if the current Context has ended, and a new one has not spawned.
@@ -118,21 +115,26 @@ public abstract class BetterAsyncTask<ParameterT, ProgressT, ReturnT> extends
     protected final void onPreExecute() {
         Context context = getCallingContext();
         if (context == null) {
-            Log.d(BetterAsyncTask.class.getSimpleName(), "skipping pre-exec handler for task "
+            Log.d(SmartAsyncTask.class.getSimpleName(), "skipping pre-exec handler for task "
                     + hashCode() + " (context is null)");
             cancel(true);
             return;
         }
 
-        if (contextIsDroidFuActivity) {
+        if (isECollegeActivity) {
             Activity activity = (Activity) context;
-            if (dialogId > -1) {
-                activity.showDialog(dialogId);
-            }
-            if (isTitleProgressEnabled) {
-                activity.setProgressBarVisibility(true);
-            } else if (isTitleProgressIndeterminateEnabled) {
-                activity.setProgressBarIndeterminateVisibility(true);
+            ECollegeActivity eactivity = (ECollegeActivity)context;
+            
+            if (isModalDialog) {
+            	eactivity.getApp().setNextProgressDialogTitleId(progressDialogTitleId);
+            	eactivity.getApp().setNextProgressDialogMsgId(progressDialogMsgId);
+            	activity.showDialog(0);
+            } else {
+            	if (reportsProgress) {
+                	activity.setProgressBarVisibility(true);
+            	} else {
+                    activity.setProgressBarIndeterminateVisibility(true);
+            	}
             }
         }
         before(context);
@@ -176,7 +178,7 @@ public abstract class BetterAsyncTask<ParameterT, ProgressT, ReturnT> extends
     /**
      * Runs in the UI thread if there was an exception throw from doCheckedInBackground
      *
-     * @param context The most recent instance of the Context that executed this BetterAsyncTask
+     * @param context The most recent instance of the Context that executed this SmartAsyncTask
      * @param error The thrown exception.
      */
     protected abstract void handleError(Context context, Exception error);
@@ -185,20 +187,22 @@ public abstract class BetterAsyncTask<ParameterT, ProgressT, ReturnT> extends
     protected final void onPostExecute(ReturnT result) {
         Context context = getCallingContext();
         if (context == null) {
-            Log.d(BetterAsyncTask.class.getSimpleName(), "skipping post-exec handler for task "
+            Log.d(SmartAsyncTask.class.getSimpleName(), "skipping post-exec handler for task "
                     + hashCode() + " (context is null)");
             return;
         }
 
-        if (contextIsDroidFuActivity) {
+
+        if (isECollegeActivity) {
             Activity activity = (Activity) context;
-            if (dialogId > -1) {
-                activity.removeDialog(dialogId);
-            }
-            if (isTitleProgressEnabled) {
-                activity.setProgressBarVisibility(false);
-            } else if (isTitleProgressIndeterminateEnabled) {
-                activity.setProgressBarIndeterminateVisibility(false);
+            if (isModalDialog) {
+                activity.removeDialog(0);
+            } else {
+            	if (reportsProgress) {
+                	activity.setProgressBarVisibility(false);
+            	} else {
+                    activity.setProgressBarIndeterminateVisibility(false);
+            	}
             }
         }
 
@@ -212,7 +216,7 @@ public abstract class BetterAsyncTask<ParameterT, ProgressT, ReturnT> extends
     /**
      * A replacement for onPostExecute. Runs in the UI thread after doCheckedInBackground returns.
      *
-     * @param context The most recent instance of the Context that executed this BetterAsyncTask
+     * @param context The most recent instance of the Context that executed this SmartAsyncTask
      * @param result The result returned from doCheckedInBackground
      */
     protected abstract void after(Context context, ReturnT result);
@@ -226,27 +230,12 @@ public abstract class BetterAsyncTask<ParameterT, ProgressT, ReturnT> extends
     }
 
     /**
-     * Use a BetterAsyncTaskCallable instead of overriding doCheckedInBackground()
+     * Use a SmartAsyncTaskCallable instead of overriding doCheckedInBackground()
      *
      * @param callable
      */
-    public void setCallable(BetterAsyncTaskCallable<ParameterT, ProgressT, ReturnT> callable) {
+    public void setCallable(SmartAsyncTaskCallable<ParameterT, ProgressT, ReturnT> callable) {
         this.callable = callable;
     }
 
-    /**
-     * Use a custom resource ID for the progress dialog
-     *
-     * @param dialogId
-     */
-    public void useCustomDialog(int dialogId) {
-        this.dialogId = dialogId;
-    }
-
-    /**
-     * Disable the display of a dialog during the execution of this task.
-     */
-    public void disableDialog() {
-        this.dialogId = -1;
-    }
 }

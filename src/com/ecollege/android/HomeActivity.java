@@ -7,14 +7,14 @@ import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.api.ECollegeClient;
 import com.google.inject.Inject;
 
-public class CoursesActivity extends ECollegeListActivity {
+public class HomeActivity extends ECollegeListActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	protected ECollegeClient client;
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.courses);
+        setContentView(R.layout.home);
         client = app.getClient();
     }
 }

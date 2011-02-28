@@ -1,7 +1,6 @@
 package com.ecollege.android;
 
 import roboguice.inject.InjectView;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;

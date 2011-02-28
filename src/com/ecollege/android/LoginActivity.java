@@ -1,7 +1,7 @@
 package com.ecollege.android;
 
 import roboguice.inject.InjectView;
-import android.content.Intent;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -28,15 +28,7 @@ public class LoginActivity extends ECollegeDefaultActivity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = app.getClient();
-        
-        String grantToken = prefs.getString("grantToken", null);
-        if (grantToken != null) {
-            setContentView(R.layout.login_remembered);
-    		client.setupAuthentication(grantToken);
-        	fetchCurrentUser();
-        } else {
-            setContentView(R.layout.login);
-        }
+        setContentView(R.layout.login);
     }
     
     public void onLoginClick(View v)
@@ -67,13 +59,11 @@ public class LoginActivity extends ECollegeDefaultActivity {
 					editor.commit(); //change to apply if android 2.2
 				}
 				
-//				Activity a = (Activity)currentActivity.get();
-//				a.setTitle("I'm the activity");
+				app.setCurrentUser(service.getResult());				
 				
-				app.setCurrentUser(service.getResult());
-				
-				Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivityForResult(myIntent, 0);
+				Activity a = (Activity)currentActivity.get();
+				a.setResult(RESULT_OK);
+				a.finish();
 			}
 		}.makeModal().execute();
     }

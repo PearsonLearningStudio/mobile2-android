@@ -1,17 +1,61 @@
 package com.ecollege.android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TabHost;
 
 import com.ecollege.android.activities.ECollegeTabActivity;
+import com.ecollege.android.tasks.ServiceCallTask;
+import com.ecollege.api.ECollegeClient;
+import com.ecollege.api.services.users.FetchMeService;
 import com.google.inject.Inject;
 
 public class MainActivity extends ECollegeTabActivity {
 	@Inject ECollegeApplication app;
+	@Inject SharedPreferences prefs;
+	protected ECollegeClient client;
+	
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        client = app.getClient();
+
+        String grantToken = prefs.getString("grantToken", null);
+        if (grantToken != null) {
+    		client.setupAuthentication(grantToken);
+        	fetchCurrentUser();
+        } else {
+        	Intent myIntent = new Intent(this, LoginActivity.class);
+        	startActivityForResult(myIntent, LOGIN_REQUEST_CODE);
+        }        
+        
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	super.onActivityResult(requestCode, resultCode, data);
+    	
+    	if (requestCode == LOGIN_REQUEST_CODE && resultCode == RESULT_OK) {
+    		setupActivity();
+    	}
+    }
+    
+    protected void fetchCurrentUser() {		
+		new ServiceCallTask<FetchMeService>(app,new FetchMeService()) {
+			@Override
+			protected void onSuccess(FetchMeService service) throws Exception {
+				super.onSuccess(service);
+				app.setCurrentUser(service.getResult());				
+				
+				if (currentActivity.get() instanceof MainActivity) {
+					((MainActivity)currentActivity.get()).setupActivity();
+				}
+			}
+		}.execute();
+    }    
+    
+    protected void setupActivity() {
         addHomeTab();
         addDiscussionsTab();
         addCoursesTab();

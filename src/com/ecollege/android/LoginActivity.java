@@ -1,6 +1,7 @@
 package com.ecollege.android;
 
 import roboguice.inject.InjectView;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,12 +15,13 @@ import com.ecollege.android.tasks.ServiceCallTask;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.services.users.FetchMeService;
 import com.google.inject.Inject;
+import com.google.inject.internal.Nullable;
 
 public class LoginActivity extends ECollegeDefaultActivity {
-    @InjectView(R.id.login_button) Button loginButton;
-	@InjectView(R.id.username_text) EditText usernameText;
-	@InjectView(R.id.password_text) EditText passwordText;
-	@InjectView(R.id.remember_check) CheckBox rememberCheck;
+    @Nullable @InjectView(R.id.login_button) Button loginButton;
+    @Nullable @InjectView(R.id.username_text) EditText usernameText;
+    @Nullable @InjectView(R.id.password_text) EditText passwordText;
+    @Nullable @InjectView(R.id.remember_check) CheckBox rememberCheck;
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	protected ECollegeClient client;
@@ -27,12 +29,14 @@ public class LoginActivity extends ECollegeDefaultActivity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = app.getClient();
-        setContentView(R.layout.login);
         
         String grantToken = prefs.getString("grantToken", null);
         if (grantToken != null) {
+            setContentView(R.layout.login_remembered);
     		client.setupAuthentication(grantToken);
         	fetchCurrentUser();
+        } else {
+            setContentView(R.layout.login);
         }
     }
     
@@ -58,11 +62,14 @@ public class LoginActivity extends ECollegeDefaultActivity {
 			protected void onSuccess(FetchMeService service) throws Exception {
 				super.onSuccess(service);
 				
-				if (rememberCheck.isChecked()) {
+				if (rememberCheck != null && rememberCheck.isChecked()) {
 					SharedPreferences.Editor editor = prefs.edit();
 					editor.putString("grantToken",client.getGrantToken());
 					editor.commit(); //change to apply if android 2.2
 				}
+				
+//				Activity a = (Activity)currentActivity.get();
+//				a.setTitle("I'm the activity");
 				
 				app.setCurrentUser(service.getResult());
 				

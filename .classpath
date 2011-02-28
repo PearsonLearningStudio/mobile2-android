@@ -3,10 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="lib/jackson-core-asl-1.7.2.jar"/>
-	<classpathentry kind="lib" path="lib/jackson-mapper-asl-1.7.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/eCollege Java API"/>
 	<classpathentry kind="lib" path="lib/roboguice-1.1.jar" sourcepath="/Users/zpinter/Downloads/roboguice-1.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/guice-2.0-no_aop.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/eCollege Java API"/>
+	<classpathentry kind="lib" path="lib/jackson-core-asl-1.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-mapper-asl-1.7.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

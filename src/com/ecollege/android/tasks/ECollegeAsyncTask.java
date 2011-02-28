@@ -35,7 +35,7 @@ import com.google.inject.Provider;
  */
 public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT>  {
 
-	@Inject Provider<Context> currentActivity;
+	@Inject protected Provider<Context> currentActivity;
 
 	protected ECollegeApplication app;
     private boolean reportsProgress = false;

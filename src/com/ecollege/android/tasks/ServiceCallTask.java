@@ -1,15 +1,9 @@
 package com.ecollege.android.tasks;
 
-import android.content.Context;
-
 import com.ecollege.android.ECollegeApplication;
 import com.ecollege.api.services.BaseService;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsyncTask<ServiceT> {
-
-	@Inject Provider<Context> currentActivity;
 	
 	private ServiceT service;
 	

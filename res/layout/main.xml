@@ -4,29 +4,24 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<EditText  
-	android:id="@+id/username_text"
+<TextView
+	android:text="You are logged in!"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:hint="User Name"
-    />
-<EditText  
-	android:id="@+id/password_text"
+	/>
+<TextView
+	android:id="@+id/username"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:hint="Password"
-    />
-<CheckBox
-	android:id="@+id/remember_check"
+	/>
+<TextView
+	android:id="@+id/firstname"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:hint="Remember Me?"
-    />
-<Button
-	android:id="@+id/login_button"
+	/>
+<TextView
+	android:id="@+id/lastname"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:text="Log in"
-    android:onClick="onLoginClick"
 	/>
 </LinearLayout>

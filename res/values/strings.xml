@@ -4,6 +4,6 @@
     <string name="app_name">eCollege</string>
     <string name="client_string">ctstate</string>
     <string name="client_id">30bb1d4f-2677-45d1-be13-339174404402</string>
-    <string name="progress_dialog_default_title">Busy</string>
+    <string name="progress_dialog_default_title">eCollege</string>
     <string name="progress_dialog_default_message">Processing request...</string>
 </resources>

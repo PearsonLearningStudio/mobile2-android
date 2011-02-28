@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import roboguice.application.RoboApplication;
+import roboguice.inject.SharedPreferencesName;
 
 import android.content.Context;
 
 import com.ecollege.api.ECollegeClient;
+import com.ecollege.api.model.User;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
@@ -26,16 +28,25 @@ public class ECollegeApplication extends RoboApplication {
 	protected void addApplicationModules(List<Module> modules) {
 		modules.add(new Module() {
 			public void configure(Binder binder) {
+				 binder.bindConstant().annotatedWith(SharedPreferencesName.class).to("com.ecollege.android");
 				//can make a separate module as needed
 			}
 		});
 	}
 	
-
+	private User currentUser;
 	private int nextProgressDialogTitleId = -1;
     private int nextProgressDialogMsgId = -1;
     
-    public int getNextProgressDialogTitleId() {
+    public User getCurrentUser() {
+		return currentUser;
+	}
+
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
+	}
+
+	public int getNextProgressDialogTitleId() {
 		return nextProgressDialogTitleId;
 	}
 

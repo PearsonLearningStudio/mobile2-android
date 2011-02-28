@@ -22,22 +22,23 @@ public class LoginActivity extends ECollegeDefaultActivity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        
-        loginButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				ECollegeClient client = app.getClient();
-				client.setupAuthentication(usernameText.getText().toString(), passwordText.getText().toString());
-				
-	        	(new ServiceCallTask<FetchMeService>(LoginActivity.this))
-	        		.execute(new FetchMeService());
-			}
-		});
     }
     
-    public void onFetchMeServiceSuccess(FetchMeService service) {
-    	AlertDialog alert = new AlertDialog.Builder(this).create();
-    	alert.setTitle("Login success!!!");
-    	alert.setMessage("You are: " + service.getResult().getFirstName() + " " + service.getResult().getLastName());
-    	alert.show();
+    public void onLoginClick(View v)
+    {
+		ECollegeClient client = app.getClient();
+		client.setupAuthentication(usernameText.getText().toString(), passwordText.getText().toString());
+		
+		new ServiceCallTask<FetchMeService>(app,new FetchMeService()) {
+			@Override
+			protected void onSuccess(FetchMeService service) throws Exception {
+				super.onSuccess(service);
+
+		    	AlertDialog alert = new AlertDialog.Builder(LoginActivity.this).create();
+		    	alert.setTitle("Login success!");
+		    	alert.setMessage("You are: " + service.getResult().getFirstName() + " " + service.getResult().getLastName());
+		    	alert.show();
+			}
+		}.makeModal().execute();
     }
 }

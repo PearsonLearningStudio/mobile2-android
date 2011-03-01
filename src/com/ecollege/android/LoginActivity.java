@@ -28,6 +28,7 @@ public class LoginActivity extends ECollegeDefaultActivity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = app.getClient();
+        setTitle("PEARSON");
         setContentView(R.layout.login);
     }
     

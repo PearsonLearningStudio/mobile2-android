@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+<TextView
+	android:id="@+id/icon_stub"
+	android:textSize="6mm"
+	android:text="DB"
+	android:layout_marginLeft="5dp"	
+	android:layout_marginRight="5dp"
+	android:layout_width="wrap_content"
+	android:layout_height="fill_parent"
+	android:layout_alignParentTop="true"
+	android:layout_alignParentLeft="true"
+	android:layout_alignParentBottom="true"
+	/>
+
+<TextView
+	android:id="@+id/title_text"
+	android:text="some title"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_toRightOf="@id/icon_stub"
+	android:layout_alignParentTop="true"
+	/>
+	
+<TextView
+	android:id="@+id/description_text"
+	android:text="some description"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_below="@id/title_text"
+	android:layout_toRightOf="@id/icon_stub"
+	/>
+		
+</RelativeLayout>

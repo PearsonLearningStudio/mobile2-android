@@ -26,6 +26,4 @@ public class ECollegeDefaultActivity extends RoboActivity implements ECollegeAct
         return ECollegeActivityHelper.createProgressDialog(this);
     }
     
-    
-	
 }

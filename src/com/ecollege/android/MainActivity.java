@@ -20,16 +20,20 @@ public class MainActivity extends ECollegeTabActivity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = app.getClient();
-
-        String grantToken = prefs.getString("grantToken", null);
-        if (grantToken != null) {
-    		client.setupAuthentication(grantToken);
-        	fetchCurrentUser();
-        } else {
-        	Intent myIntent = new Intent(this, LoginActivity.class);
-        	startActivityForResult(myIntent, LOGIN_REQUEST_CODE);
-        }        
+        setContentView(R.layout.main);        	        	
         
+        if (app.getCurrentUser() == null) {
+	        String grantToken = prefs.getString("grantToken", null);
+	        if (grantToken != null) {
+	    		client.setupAuthentication(grantToken);
+	        	fetchCurrentUser();
+	        } else {
+	        	Intent myIntent = new Intent(this, LoginActivity.class);
+	        	startActivityForResult(myIntent, LOGIN_REQUEST_CODE);
+	        }        	
+        } else {
+        	setupActivity();
+        }
     }
     
     @Override

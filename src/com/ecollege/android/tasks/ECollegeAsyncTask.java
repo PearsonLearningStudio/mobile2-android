@@ -38,7 +38,8 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
 	@Inject protected Provider<Context> currentActivity;
 
 	protected ECollegeApplication app;
-    private boolean reportsProgress = false;
+    @SuppressWarnings("unused")
+	private boolean reportsProgress = false;
     private boolean isModalDialog = false;
     private int progressDialogTitleId = -1;
     private int progressDialogMsgId = -1;
@@ -70,7 +71,7 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
 	}
     
     @Override
-    protected final void onPreExecute() throws Exception {
+    protected void onPreExecute() throws Exception {
     	super.onPreExecute();
 
         if (currentActivity != null && currentActivity.get() !=null) {
@@ -80,12 +81,6 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
             	app.setNextProgressDialogTitleId(progressDialogTitleId);
             	app.setNextProgressDialogMsgId(progressDialogMsgId);
             	activity.showDialog(0);
-            } else {
-            	if (reportsProgress) {
-                	activity.setProgressBarVisibility(true);
-            	} else {
-                    activity.setProgressBarIndeterminateVisibility(true);
-            	}
             }
         }
     }
@@ -99,12 +94,6 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
             Activity activity = (Activity) currentActivity.get();
             if (isModalDialog) {
                 activity.removeDialog(0);
-            } else {
-            	if (reportsProgress) {
-                	activity.setProgressBarVisibility(false);
-            	} else {
-                    activity.setProgressBarIndeterminateVisibility(false);
-            	}
             }
         }
 	}

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.ecollege.android.ECollegeApplication;
 import com.ecollege.android.R;
 
 public class HeaderView extends FrameLayout {
@@ -17,8 +18,14 @@ public class HeaderView extends FrameLayout {
 
 	public HeaderView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		
+				
         LayoutInflater.from(context).inflate(R.layout.header_view, this, true);
+        
+        ECollegeApplication app = (ECollegeApplication)context.getApplicationContext();
+        
+        if (app != null) {
+        	app.registerHeaderView(this);
+        }
         
 //        subtitleText = (TextView) findViewById(R.id.subtitle_text);
 //        subtitleIcon = (ImageView) findViewById(R.id.subtitle_icon);
@@ -26,12 +33,8 @@ public class HeaderView extends FrameLayout {
 //        secondaryLayout = findViewById(R.id.header_secondary);
 	}
 	
-	public void showProgressBar() {
-		progressBar.setVisibility(VISIBLE);
-	}
-	
-	public void hideProgressBar() {
-		progressBar.setVisibility(INVISIBLE);
+	public void setProgressVisibility(boolean visible) {
+		if (progressBar != null) progressBar.setVisibility(visible ? VISIBLE : INVISIBLE);
 	}
 	
 }

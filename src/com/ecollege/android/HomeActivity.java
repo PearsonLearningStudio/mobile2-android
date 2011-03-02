@@ -39,11 +39,20 @@ public class HomeActivity extends ECollegeListActivity {
     }
     
     public void onRadioGroupCheckedChanged(View v) {
+    	if (whatsDueRadioButton.isChecked()) {
+    		if (prefs.getBoolean("showWhatsDue", true) != true) {
+    			prefs.edit().putBoolean("showWhatsDue", true).commit();    			
+    		}
+    	} else {
+    		if (prefs.getBoolean("showWhatsDue", true) != false) {
+    			prefs.edit().putBoolean("showWhatsDue", false).commit();
+    		}    		
+    	}
     	updateSelectedView();
     }
     
     protected void updateSelectedView() {
-    	if (whatsDueRadioButton.isChecked()) {
+    	if (prefs.getBoolean("showWhatsDue", true)) {
     		setListAdapter(new WhatsHappeningAdapter(this));
     	} else {
     		if (currentStreamItems != null) {

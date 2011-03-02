@@ -24,10 +24,16 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		super.onException(e);
 	}
 
+    @Override
+    protected void onPreExecute() throws Exception {
+    	super.onPreExecute();
+    	app.incrementPendingServiceCalls();
+    }
+	
 	@Override
 	protected void onFinally() throws RuntimeException {
-		// TODO Auto-generated method stub
 		super.onFinally();
+		app.decrementPendingServiceCalls();
 	}
 
 	@Override
@@ -35,8 +41,6 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		// TODO Auto-generated method stub
 		super.onSuccess(t);
 	}
-
-	
 	
 //	public ServiceCallTask(Context context) {
 //		super(context);

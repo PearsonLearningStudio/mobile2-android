@@ -19,10 +19,21 @@
 <TextView
 	android:id="@+id/title_text"
 	android:text="some title"
+	android:singleLine="true"
 	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="fill_parent"
+	android:layout_toLeftOf="@+id/time_text"
 	android:layout_toRightOf="@id/icon"
 	android:layout_alignParentTop="true"
+	/>
+	
+<TextView
+	android:id="@id/time_text"
+	android:text="yesterday"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_alignParentTop="true"
+	android:layout_alignParentRight="true"	
 	/>
 	
 <TextView

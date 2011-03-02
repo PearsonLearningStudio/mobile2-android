@@ -21,6 +21,7 @@ import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ActivityStreamItem;
 import com.ecollege.api.services.activities.FetchMyWhatsHappeningFeed;
 import com.google.inject.Inject;
+import com.ocpsoft.pretty.time.PrettyTime;
 
 public class HomeActivity extends ECollegeListActivity {
 	@Inject ECollegeApplication app;
@@ -31,6 +32,7 @@ public class HomeActivity extends ECollegeListActivity {
 	protected ECollegeClient client;
 	private LayoutInflater mInflater;
 	private List<ActivityStreamItem> currentStreamItems;
+	private static PrettyTime prettyTimeFormatter = new PrettyTime();
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +88,7 @@ public class HomeActivity extends ECollegeListActivity {
     static class ViewHolder {
         TextView titleText;
         TextView descriptionText;
+        TextView timeText;
         ImageView icon;
     }
     
@@ -149,6 +152,7 @@ public class HomeActivity extends ECollegeListActivity {
                 holder = new ViewHolder();
                 holder.titleText = (TextView) convertView.findViewById(R.id.title_text);
                 holder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
+                holder.timeText = (TextView) convertView.findViewById(R.id.time_text);
                 holder.icon = (ImageView) convertView.findViewById(R.id.icon);
                 convertView.setTag(holder);
             } else {
@@ -167,7 +171,7 @@ public class HomeActivity extends ECollegeListActivity {
             	title = "Topic: " + si.getTarget().getTitle();
             	holder.icon.setImageResource(R.drawable.ic_thread_topic);
             } else if ("thread-post".equals(objectType)) {
-            	title = "Discussion: " + si.getTarget().getTitle();
+            	title = "Re: " + si.getTarget().getTitle();
             	holder.icon.setImageResource(R.drawable.ic_thread_post);
             } else if ("grade".equals(objectType)) {
             	title = "Grade: " + si.getTarget().getTitle();
@@ -185,6 +189,7 @@ public class HomeActivity extends ECollegeListActivity {
             
             holder.titleText.setText(title);
             holder.descriptionText.setText(desc);
+            holder.timeText.setText(prettyTimeFormatter.format(si.getPostedTime().getTime()));
             
             //holder.iconPlaceholder.setText(si.getObject().getObjectType().substring(0, 1));
             return convertView;

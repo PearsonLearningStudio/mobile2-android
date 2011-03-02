@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
 
-<TextView
-	android:text="Home View"	
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"/>
+
+<RadioGroup
+	android:id="@+id/radiogrp"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"
+	android:layout_centerHorizontal="true"
+	android:layout_alignParentTop="true"
+	>
+	
+	<RadioButton android:checked="true"
+		android:id="@+id/radio_whats_due"
+		android:onClick="onRadioGroupCheckedChanged"
+		android:text="What's Due"/>
+		
+	<RadioButton
+		android:id="@+id/radio_activity"
+		android:onClick="onRadioGroupCheckedChanged"
+		android:text="Activity"/>		
+	
+</RadioGroup>
+
 	
 <ListView
 	android:id="@id/android:list"
 	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"/>
+	android:layout_height="fill_parent"
+	android:layout_below="@id/radiogrp"
+	/>
 		
-</LinearLayout>
+</RelativeLayout>

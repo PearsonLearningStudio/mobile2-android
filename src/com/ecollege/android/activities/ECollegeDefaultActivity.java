@@ -16,9 +16,8 @@ public class ECollegeDefaultActivity extends RoboActivity implements ECollegeAct
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-		// Request progress bar
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        // Request progress bar
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 	}
 	
     @Override

@@ -37,8 +37,7 @@ public class ECollegeListActivity extends RoboListActivity implements ECollegeAc
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-		// Request progress bar
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 	}
 	
     @Override

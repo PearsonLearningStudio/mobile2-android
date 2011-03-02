@@ -7,6 +7,7 @@ import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 
 import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.android.tasks.ServiceCallTask;
@@ -186,9 +188,10 @@ public class HomeActivity extends ECollegeListActivity {
             	title = "Remark: " + si.getTarget().getTitle();
             	holder.icon.setImageResource(R.drawable.ic_remark);
             } 
-            
+            if (title == null) title = "";
+            if (desc == null) desc = "";
             holder.titleText.setText(title);
-            holder.descriptionText.setText(desc);
+            holder.descriptionText.setText(Html.fromHtml(desc),BufferType.SPANNABLE);
             holder.timeText.setText(prettyTimeFormatter.format(si.getPostedTime().getTime()));
             
             //holder.iconPlaceholder.setText(si.getObject().getObjectType().substring(0, 1));

@@ -1,16 +1,19 @@
 package com.ecollege.android.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.ecollege.android.ECollegeApplication;
 import com.ecollege.android.R;
 
 public class HeaderView extends FrameLayout {
     private final ProgressBar progressBar;
+    private final TextView headerTitle;
 
 	public HeaderView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
@@ -27,10 +30,12 @@ public class HeaderView extends FrameLayout {
         	app.registerHeaderView(this);
         }
         
-//        subtitleText = (TextView) findViewById(R.id.subtitle_text);
-//        subtitleIcon = (ImageView) findViewById(R.id.subtitle_icon);
+        headerTitle = (TextView) findViewById(R.id.header_title);
         progressBar = (ProgressBar) findViewById(R.id.loading_indicator);
-//        secondaryLayout = findViewById(R.id.header_secondary);
+        
+        if (context instanceof Activity) {
+        	headerTitle.setText(((Activity)context).getTitle());	
+        }
 	}
 	
 	public void setProgressVisibility(boolean visible) {

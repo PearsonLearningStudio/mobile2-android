@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class HomeActivity extends ECollegeListActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectView(R.id.radio_whats_due) RadioButton whatsDueRadioButton;
+	@InjectView(R.id.radio_activity) RadioButton activityRadioButton;
 	
 	protected ECollegeClient client;
 	private LayoutInflater mInflater;
@@ -53,8 +55,10 @@ public class HomeActivity extends ECollegeListActivity {
     
     protected void updateSelectedView() {
     	if (prefs.getBoolean("showWhatsDue", true)) {
+    		whatsDueRadioButton.setChecked(true);
     		setListAdapter(new WhatsHappeningAdapter(this));
     	} else {
+    		activityRadioButton.setChecked(true);
     		if (currentStreamItems != null) {
     			setListAdapter(new ActivityFeedAdapter(this,currentStreamItems));
     		} else {
@@ -82,7 +86,7 @@ public class HomeActivity extends ECollegeListActivity {
     static class ViewHolder {
         TextView titleText;
         TextView descriptionText;
-        TextView iconPlaceholder;
+        ImageView icon;
     }
     
     private class WhatsHappeningAdapter extends ArrayAdapter<String> {    
@@ -107,7 +111,7 @@ public class HomeActivity extends ECollegeListActivity {
                 holder = new ViewHolder();
                 holder.titleText = (TextView) convertView.findViewById(R.id.title_text);
                 holder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
-                holder.iconPlaceholder = (TextView) convertView.findViewById(R.id.icon_stub);
+                //holder.iconPlaceholder = (TextView) convertView.findViewById(R.id.icon_stub);
                 convertView.setTag(holder);
             } else {
                 // Get the ViewHolder back to get fast access to the TextView
@@ -118,7 +122,7 @@ public class HomeActivity extends ECollegeListActivity {
             
             holder.titleText.setText("Pending");
             holder.descriptionText.setText("Waiting for API");
-            holder.iconPlaceholder.setText("!!");
+            //holder.iconPlaceholder.setText("!!");
             return convertView;
         }    	
     }
@@ -145,7 +149,7 @@ public class HomeActivity extends ECollegeListActivity {
                 holder = new ViewHolder();
                 holder.titleText = (TextView) convertView.findViewById(R.id.title_text);
                 holder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
-                holder.iconPlaceholder = (TextView) convertView.findViewById(R.id.icon_stub);
+                holder.icon = (ImageView) convertView.findViewById(R.id.icon);
                 convertView.setTag(holder);
             } else {
                 // Get the ViewHolder back to get fast access to the TextView
@@ -155,9 +159,34 @@ public class HomeActivity extends ECollegeListActivity {
             // Bind the data efficiently with the holder.
             ActivityStreamItem si = getItem(position);
 
-            holder.titleText.setText(si.getObject().getObjectType());
-            holder.descriptionText.setText(si.getObject().getSummary());
-            holder.iconPlaceholder.setText(si.getObject().getObjectType().substring(0, 1));
+            String title = si.getObject().getObjectType();
+            String desc = si.getObject().getSummary();
+            String objectType = si.getObject().getObjectType();
+            
+            if ("thread-topic".equals(objectType)) {
+            	title = "Topic: " + si.getTarget().getTitle();
+            	holder.icon.setImageResource(R.drawable.ic_thread_topic);
+            } else if ("thread-post".equals(objectType)) {
+            	title = "Discussion: " + si.getTarget().getTitle();
+            	holder.icon.setImageResource(R.drawable.ic_thread_post);
+            } else if ("grade".equals(objectType)) {
+            	title = "Grade: " + si.getTarget().getTitle();
+            	holder.icon.setImageResource(R.drawable.ic_grade);
+            } else if ("dropbox-submission".equals(objectType)) {
+            	title = "Dropbox: " + si.getTarget().getTitle();
+            	holder.icon.setImageResource(R.drawable.ic_dropbox_submission);
+            } else if ("exam-submission".equals(objectType)) {
+            	title = "Exam: " + si.getTarget().getTitle();
+            	holder.icon.setImageResource(R.drawable.ic_exam_submission);
+            } else if ("remark".equals(objectType)) {
+            	title = "Remark: " + si.getTarget().getTitle();
+            	holder.icon.setImageResource(R.drawable.ic_remark);
+            } 
+            
+            holder.titleText.setText(title);
+            holder.descriptionText.setText(desc);
+            
+            //holder.iconPlaceholder.setText(si.getObject().getObjectType().substring(0, 1));
             return convertView;
         }
     	

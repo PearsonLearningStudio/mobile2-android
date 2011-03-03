@@ -1,5 +1,10 @@
 package com.ecollege.android.tasks;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import android.content.Context;
+
 import com.ecollege.android.ECollegeApplication;
 import com.ecollege.api.services.BaseService;
 
@@ -40,6 +45,29 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	protected void onSuccess(ServiceT t) throws Exception {
 		// TODO Auto-generated method stub
 		super.onSuccess(t);
+		
+		
+		//call on[MyServiceName]Success
+		String resultClassName = t.getClass().getSimpleName();
+		String resultSuccessMethod = "on" + resultClassName + "Success";
+		
+		try {
+			Context c = currentActivity.get();
+			Method successHandler = c.getClass().getMethod(resultSuccessMethod, t.getClass());
+			successHandler.invoke(c,t);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			//no success handler found
+		} catch (IllegalArgumentException e) {
+			//problem calling method with arg
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			//problem calling method with permissions
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}		
 	}
 	
 //	public ServiceCallTask(Context context) {

@@ -5,6 +5,7 @@ import java.util.List;
 
 import roboguice.inject.InjectView;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
@@ -13,12 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
 import com.ecollege.android.activities.ECollegeListActivity;
-import com.ecollege.android.tasks.ServiceCallTask;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ActivityStreamItem;
 import com.ecollege.api.services.activities.FetchMyWhatsHappeningFeed;
@@ -73,18 +74,35 @@ public class HomeActivity extends ECollegeListActivity {
     }
     
     protected void fetchWhatsHappening() {
-    	new ServiceCallTask<FetchMyWhatsHappeningFeed>(app,new FetchMyWhatsHappeningFeed()) {
-			@Override
-			protected void onSuccess(FetchMyWhatsHappeningFeed service) throws Exception {
-				super.onSuccess(service);
-				
-				if (currentActivity.get() instanceof HomeActivity) {
-					HomeActivity ha = ((HomeActivity)currentActivity.get());
-					ha.currentStreamItems = service.getResult();
-					ha.updateSelectedView();
-				}
-			}
-		}.execute();
+    	app.buildService(new FetchMyWhatsHappeningFeed()).execute();
+    }
+    
+    public void onFetchMyWhatsHappeningFeedSuccess(FetchMyWhatsHappeningFeed service) {
+    	currentStreamItems = service.getResult();
+    	updateSelectedView();
+    }
+    
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+    	ActivityStreamItem si = (ActivityStreamItem)getListAdapter().getItem(position);
+        String objectType = si.getObject().getObjectType();
+        
+        if ("thread-topic".equals(objectType)) {
+        	long topicId = Long.parseLong(si.getObject().getReferenceId());
+        	Intent i = new Intent(this,DiscussionTopicActivity.class);
+        	i.putExtra("topicId", topicId);
+        	startActivity(i);
+        } else if ("thread-post".equals(objectType)) {
+        	long responseId = Long.parseLong(si.getObject().getReferenceId());
+        	Intent i = new Intent(this,DiscussionResponseActivity.class);
+        	i.putExtra("responseId", responseId);
+        	startActivity(i);        	
+        } else if ("grade".equals(objectType)) {
+        } else if ("dropbox-submission".equals(objectType)) {
+        } else if ("exam-submission".equals(objectType)) {
+        } else if ("remark".equals(objectType)) {
+        } 
+    	
     }
     
     static class ViewHolder {

@@ -23,5 +23,11 @@
 		<activity android:name="CoursesActivity"></activity>
 		<activity android:name="PeopleActivity"></activity>
 		<activity android:name="ProfileActivity"></activity>
+		
+		<activity android:name="DiscussionResponseActivity"></activity>
+		<activity android:name="DiscussionTopicActivity"></activity>
+		<activity android:name="DropboxMessageActivity"></activity>
+		<activity android:name="GradeActivity"></activity>
+		
     </application>
 </manifest>

@@ -7,9 +7,11 @@ import java.util.List;
 import roboguice.application.RoboApplication;
 import roboguice.inject.SharedPreferencesName;
 
+import com.ecollege.android.tasks.ServiceCallTask;
 import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.User;
+import com.ecollege.api.services.BaseService;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
@@ -32,6 +34,15 @@ public class ECollegeApplication extends RoboApplication {
 			}
 		});
 	}
+	
+	public <ServiceT extends BaseService> ServiceCallTask<ServiceT> buildService(ServiceT service) {
+		return new ServiceCallTask<ServiceT>(this, service);
+	}
+		
+		
+//new ServiceCallTask<FetchDiscussionResponseById>(app,new FetchDiscussionResponseById(userResponseId)) {		
+//		
+//	}
 	
 	private int pendingServiceCalls = 0;
 	private User currentUser;

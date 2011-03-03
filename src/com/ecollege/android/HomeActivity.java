@@ -105,6 +105,14 @@ public class HomeActivity extends ECollegeListActivity {
         	i.putExtra("gradebookItemGuid", gradebookItemGuid);
         	startActivity(i);
         } else if ("dropbox-submission".equals(objectType)) {
+        	long courseId = si.getObject().getCourseId();
+        	long basketId = Long.parseLong(si.getTarget().getReferenceId().toString());
+        	long messageId = Long.parseLong(si.getObject().getReferenceId());
+        	Intent i = new Intent(this,DropboxMessageActivity.class);
+        	i.putExtra("courseId", courseId);
+        	i.putExtra("basketId", basketId);
+        	i.putExtra("messageId", messageId);
+        	startActivity(i);
         } else if ("exam-submission".equals(objectType)) {
         } else if ("remark".equals(objectType)) {
         } 

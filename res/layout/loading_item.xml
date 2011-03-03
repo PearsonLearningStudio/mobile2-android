@@ -19,7 +19,6 @@
 	android:id="@+id/title_text"
 	android:text="Loading..."
 	android:singleLine="true"
-	android:layout_alignParentTop="true"
 	android:layout_toRightOf="@+id/loading_indicator"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"

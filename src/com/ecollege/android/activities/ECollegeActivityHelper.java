@@ -1,12 +1,16 @@
 package com.ecollege.android.activities;
 
-import com.ecollege.android.R;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import com.ecollege.android.ECollegeApplication;
+import com.ecollege.android.LoginActivity;
+import com.ecollege.android.R;
 
 
 public class ECollegeActivityHelper {
@@ -36,5 +40,29 @@ public class ECollegeActivityHelper {
         // progressDialog.setInverseBackgroundForced(true);
         return progressDialog;
     }
+    
+	public static boolean onCreateOptionsMenu(Activity activity, Menu menu) {
+		if (activity instanceof LoginActivity) {
+			//do nothing for login activity
+			return false;
+		} else {
+			activity.getMenuInflater().inflate(R.menu.default_menu, menu);
+			return true;
+		}
+	}
+	
+	public static boolean onOptionsItemSelected(Activity activity, MenuItem item) {
+		if (item.getItemId() == R.id.settings_menu_item) {
+			//TODO
+			//activity.startActivity(new Intent(activity, MainActivity.class));
+			//return true;
+		}
+		if (item.getItemId() == R.id.logout_menu_item) {
+			ECollegeApplication app = (ECollegeApplication)activity.getApplication();
+			app.logout();
+			return true;
+		}		
+		return false;
+	}
 	
 }

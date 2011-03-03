@@ -7,16 +7,21 @@ import java.util.List;
 import roboguice.application.RoboApplication;
 import roboguice.inject.SharedPreferencesName;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+
 import com.ecollege.android.tasks.ServiceCallTask;
 import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.User;
 import com.ecollege.api.services.BaseService;
 import com.google.inject.Binder;
+import com.google.inject.Inject;
 import com.google.inject.Module;
 
 public class ECollegeApplication extends RoboApplication {
-
+	@Inject SharedPreferences prefs;
+	
 	private ECollegeClient client;
 	public ECollegeClient getClient() {
 		if (client == null) {
@@ -39,6 +44,16 @@ public class ECollegeApplication extends RoboApplication {
 		return new ServiceCallTask<ServiceT>(this, service);
 	}
 		
+	public void logout() {
+		client = null;
+		currentUser = null;
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.remove("grantToken");
+		editor.commit(); //change to apply if android 2.2
+		Intent i = new Intent(this,MainActivity.class);
+		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(i);
+	}
 		
 //new ServiceCallTask<FetchDiscussionResponseById>(app,new FetchDiscussionResponseById(userResponseId)) {		
 //		

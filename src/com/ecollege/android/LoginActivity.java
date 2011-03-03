@@ -62,7 +62,7 @@ public class LoginActivity extends ECollegeDefaultActivity {
 				
 				app.setCurrentUser(service.getResult());				
 				
-				Activity a = (Activity)currentActivity.get();
+				Activity a = (Activity)currentContext.get();
 				a.setResult(RESULT_OK);
 				a.finish();
 			}

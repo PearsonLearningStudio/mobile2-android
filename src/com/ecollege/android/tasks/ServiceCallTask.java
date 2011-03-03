@@ -52,7 +52,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		String resultSuccessMethod = "on" + resultClassName + "Success";
 		
 		try {
-			Context c = currentActivity.get();
+			Context c = currentContext.get();
 			Method successHandler = c.getClass().getMethod(resultSuccessMethod, t.getClass());
 			successHandler.invoke(c,t);
 		} catch (SecurityException e) {

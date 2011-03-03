@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.ecollege.android.ECollegeApplication;
+import com.ecollege.android.activities.ECollegeActivity;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -35,7 +36,7 @@ import com.google.inject.Provider;
  */
 public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT>  {
 
-	@Inject protected Provider<Context> currentActivity;
+	@Inject protected Provider<Context> currentContext;
 
 	protected ECollegeApplication app;
     @SuppressWarnings("unused")
@@ -74,13 +75,13 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
     protected void onPreExecute() throws Exception {
     	super.onPreExecute();
 
-        if (currentActivity != null && currentActivity.get() !=null) {
-            Activity activity = (Activity) currentActivity.get();
-            
-            if (isModalDialog) {
+        if (currentContext != null && currentContext.get() !=null) {
+        	Context c = currentContext.get();
+        	        	
+            if (app != null && isModalDialog && c instanceof Activity) {
             	app.setNextProgressDialogTitleId(progressDialogTitleId);
             	app.setNextProgressDialogMsgId(progressDialogMsgId);
-            	activity.showDialog(0);
+            	((Activity)c).showDialog(0);
             }
         }
     }
@@ -90,10 +91,10 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
 	protected void onFinally() throws RuntimeException {
 		super.onFinally();
 
-        if (currentActivity != null && currentActivity.get() !=null) {
-            Activity activity = (Activity) currentActivity.get();
-            if (isModalDialog) {
-                activity.removeDialog(0);
+        if (currentContext != null && currentContext.get() !=null) {
+        	Context c = currentContext.get();
+            if (isModalDialog && c instanceof Activity) {
+            	((Activity)c).removeDialog(0);
             }
         }
 	}

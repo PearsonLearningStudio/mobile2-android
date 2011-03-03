@@ -52,8 +52,8 @@ public class MainActivity extends ECollegeTabActivity {
 				super.onSuccess(service);
 				app.setCurrentUser(service.getResult());				
 				
-				if (currentActivity.get() instanceof MainActivity) {
-					((MainActivity)currentActivity.get()).setupActivity();
+				if (currentContext.get() instanceof MainActivity) {
+					((MainActivity)currentContext.get()).setupActivity();
 				}
 			}
 		}.execute();

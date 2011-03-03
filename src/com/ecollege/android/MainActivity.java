@@ -2,6 +2,7 @@ package com.ecollege.android;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.TabHost;
 
@@ -71,34 +72,39 @@ public class MainActivity extends ECollegeTabActivity {
     {
         TabHost host = getTabHost();
         Intent i= new Intent(this,HomeActivity.class);
-        host.addTab(host.newTabSpec("home").setIndicator("Home").setContent(i));
+        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_home);
+        host.addTab(host.newTabSpec("home").setIndicator(null,icon).setContent(i));
     }
     
     protected void addDiscussionsTab()
     {
         TabHost host = getTabHost();
         Intent i= new Intent(this,DiscussionsActivity.class);
-        host.addTab(host.newTabSpec("discussions").setIndicator("Discussions").setContent(i));
+        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_discussions);
+        host.addTab(host.newTabSpec("discussions").setIndicator(null,icon).setContent(i));
     }
     
     protected void addCoursesTab()
     {
         TabHost host = getTabHost();
         Intent i= new Intent(this,CoursesActivity.class);
-        host.addTab(host.newTabSpec("courses").setIndicator("Courses").setContent(i));
+        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_courses);
+        host.addTab(host.newTabSpec("courses").setIndicator(null,icon).setContent(i));
     }
     
     protected void addPeopleTab()
     {
         TabHost host = getTabHost();
         Intent i= new Intent(this,PeopleActivity.class);
-        host.addTab(host.newTabSpec("people").setIndicator("People").setContent(i));
+        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_people);
+        host.addTab(host.newTabSpec("people").setIndicator(null,icon).setContent(i));
     }
     
     protected void addProfileTab()
     {
         TabHost host = getTabHost();
         Intent i= new Intent(this,ProfileActivity.class);
-        host.addTab(host.newTabSpec("profile").setIndicator("Profile").setContent(i));
+        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_profile);
+        host.addTab(host.newTabSpec("profile").setIndicator(null,icon).setContent(i));
     }
 }

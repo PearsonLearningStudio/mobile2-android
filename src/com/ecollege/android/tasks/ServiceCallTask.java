@@ -10,12 +10,18 @@ import com.ecollege.api.services.BaseService;
 
 public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsyncTask<ServiceT> {
 	
+	private boolean showTitlebarProgress = true;
 	private ServiceT service;
 	
 	public ServiceCallTask(ECollegeApplication app, ServiceT service)
 	{
 		super(app);
 		this.service=service;
+	}
+	
+	public ServiceCallTask<ServiceT> disableTitlebarProgress() {
+		this.showTitlebarProgress = false;
+		return this;
 	}
 	
 	public ServiceT call() throws Exception {
@@ -32,13 +38,13 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
     @Override
     protected void onPreExecute() throws Exception {
     	super.onPreExecute();
-    	app.incrementPendingServiceCalls();
+    	if (showTitlebarProgress) app.incrementPendingServiceCalls();
     }
 	
 	@Override
 	protected void onFinally() throws RuntimeException {
 		super.onFinally();
-		app.decrementPendingServiceCalls();
+		if (showTitlebarProgress) app.decrementPendingServiceCalls();
 	}
 
 	@Override
@@ -66,7 +72,12 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 			//problem calling method with permissions
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			if (e instanceof Exception) {
+				throw (Exception)e.getTargetException();	
+			} else {
+				throw new RuntimeException(e.getTargetException());
+			}
+			
 		}		
 	}
 	

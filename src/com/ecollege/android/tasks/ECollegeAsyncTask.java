@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.ecollege.android.ECollegeApplication;
-import com.ecollege.android.activities.ECollegeActivity;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 

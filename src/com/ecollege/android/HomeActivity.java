@@ -1,6 +1,8 @@
 package com.ecollege.android;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import roboguice.inject.InjectView;
@@ -14,12 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
 import com.ecollege.android.activities.ECollegeListActivity;
+import com.ecollege.android.adapter.LoadMoreAdapter;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ActivityStreamItem;
 import com.ecollege.api.services.activities.FetchMyWhatsHappeningFeed;
@@ -34,7 +38,8 @@ public class HomeActivity extends ECollegeListActivity {
 	
 	protected ECollegeClient client;
 	private LayoutInflater mInflater;
-	private List<ActivityStreamItem> currentStreamItems;
+	
+	
 	private static PrettyTime prettyTimeFormatter = new PrettyTime();
 	
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -42,48 +47,86 @@ public class HomeActivity extends ECollegeListActivity {
         setContentView(R.layout.home);
         mInflater = getLayoutInflater();
         client = app.getClient();
-        updateSelectedView();
     }
     
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	boolean showWhatsDue = prefs.getBoolean("showWhatsDue", true); 
+    	whatsDueRadioButton.setChecked(showWhatsDue);
+    	activityRadioButton.setChecked(!showWhatsDue);
+        refreshList();
+
+    }
+    
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	if (whatsDueRadioButton != null) {
+    		prefs.edit().putBoolean("showWhatsDue", whatsDueRadioButton.isChecked()).commit();
+    	}
+    }
+
     public void onRadioGroupCheckedChanged(View v) {
-    	if (whatsDueRadioButton.isChecked()) {
-    		if (prefs.getBoolean("showWhatsDue", true) != true) {
-    			prefs.edit().putBoolean("showWhatsDue", true).commit();    			
-    		}
-    	} else {
-    		if (prefs.getBoolean("showWhatsDue", true) != false) {
-    			prefs.edit().putBoolean("showWhatsDue", false).commit();
-    		}    		
-    	}
-    	updateSelectedView();
+    	refreshList();
     }
     
-    protected void updateSelectedView() {
-    	if (prefs.getBoolean("showWhatsDue", true)) {
-    		whatsDueRadioButton.setChecked(true);
-    		setListAdapter(new WhatsHappeningAdapter(this));
+    protected void refreshList() {
+    	ListAdapter chosenAdapter;
+    	if (whatsDueRadioButton.isChecked()) {
+    		chosenAdapter = createOrReturnWhatsHappeningAdapter();
     	} else {
-    		activityRadioButton.setChecked(true);
-    		if (currentStreamItems != null) {
-    			setListAdapter(new ActivityFeedAdapter(this,currentStreamItems));
-    		} else {
-    			setListAdapter(new ActivityFeedAdapter(this,new ArrayList<ActivityStreamItem>()));
-    			fetchWhatsHappening();
-    		}
+    		chosenAdapter = createOrReturnActivitiesAdapter();
     	}
+    	setListAdapter(chosenAdapter);
+    }
+
+	private WhatsHappeningAdapter whatsHappeningAdapter;
+    protected ListAdapter createOrReturnWhatsHappeningAdapter() {
+    	if (whatsHappeningAdapter == null) {
+    		whatsHappeningAdapter = new WhatsHappeningAdapter(this);
+    	}
+    	return whatsHappeningAdapter;
+    }
+
+	private LoadMoreAdapter activityAdapter;
+	private boolean canLoadMoreActivites = true;
+	
+    private ListAdapter createOrReturnActivitiesAdapter() {
+    	if (activityAdapter == null) {
+			ActivityFeedAdapter baseAdapter = new ActivityFeedAdapter(this,new ArrayList<ActivityStreamItem>());
+    		activityAdapter = new LoadMoreAdapter(this, baseAdapter, canLoadMoreActivites);
+    		fetchWhatsHappening();
+    	}
+    	return activityAdapter;
     }
     
     protected void fetchWhatsHappening() {
-    	app.buildService(new FetchMyWhatsHappeningFeed()).execute();
+		activityAdapter.setIsLoadingMore(true);
+    	if (canLoadMoreActivites) {
+    		GregorianCalendar oneMonthAgo = new GregorianCalendar();
+    		oneMonthAgo.add(Calendar.MONTH, -2);
+        	app.buildService(new FetchMyWhatsHappeningFeed(oneMonthAgo)).disableTitlebarProgress().execute();
+    	} else {
+    		app.buildService(new FetchMyWhatsHappeningFeed()).disableTitlebarProgress().execute();	
+    	}
     }
     
     public void onFetchMyWhatsHappeningFeedSuccess(FetchMyWhatsHappeningFeed service) {
-    	currentStreamItems = service.getResult();
-    	updateSelectedView();
+		ActivityFeedAdapter baseAdapter = new ActivityFeedAdapter(this,service.getResult());
+    	activityAdapter.update(baseAdapter,canLoadMoreActivites);
+    	refreshList();
     }
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
+    	
+    	if (id == LoadMoreAdapter.LOAD_MORE_ITEM_ID) {
+    		canLoadMoreActivites = false;
+    		fetchWhatsHappening();
+    		return;
+    	}
+    	
     	ActivityStreamItem si = (ActivityStreamItem)getListAdapter().getItem(position);
         String objectType = si.getObject().getObjectType();
         

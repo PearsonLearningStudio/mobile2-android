@@ -19,8 +19,8 @@ public class MainActivity extends ECollegeTabActivity {
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);        	
         client = app.getClient();
-        setContentView(R.layout.main);        	        	
         
         if (app.getCurrentUser() == null) {
 	        String grantToken = prefs.getString("grantToken", null);

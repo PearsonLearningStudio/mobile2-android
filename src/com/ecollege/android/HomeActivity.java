@@ -204,7 +204,18 @@ public class HomeActivity extends ECollegeListActivity {
             holder.descriptionText.setText("Waiting for API");
             //holder.iconPlaceholder.setText("!!");
             return convertView;
-        }    	
+        }
+
+		@Override
+		public boolean areAllItemsEnabled() {
+			return false;
+		}
+
+		@Override
+		public boolean isEnabled(int position) {
+			return false;
+		}    	
+
     }
     
     private class ActivityFeedAdapter extends ArrayAdapter<ActivityStreamItem> {

@@ -1,5 +1,7 @@
 package com.ecollege.android;
 
+import org.apache.commons.lang.StringUtils;
+
 import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,7 +11,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
+import com.ecollege.android.errors.ECollegeErrorType;
+import com.ecollege.android.errors.ECollegeException;
 import com.ecollege.api.ECollegeClient;
+import com.ecollege.api.exceptions.IncorrectCredentialsException;
 import com.ecollege.api.services.users.FetchMeService;
 import com.google.inject.Inject;
 import com.google.inject.internal.Nullable;
@@ -32,6 +37,11 @@ public class LoginActivity extends ECollegeDefaultActivity {
     
     public void onLoginClick(View v)
     {	
+    	if (StringUtils.isBlank(usernameText.getText().toString()) || StringUtils.isBlank(passwordText.getText().toString())) {
+    		app.reportError(new ECollegeException(this, ECollegeErrorType.ALERT, R.string.e_no_login_provided));
+    		return;
+    	}
+    	
 		client.setupAuthentication(usernameText.getText().toString(), passwordText.getText().toString());
 
 		if (!rememberCheck.isChecked()) {
@@ -43,6 +53,14 @@ public class LoginActivity extends ECollegeDefaultActivity {
 		}
 
     	app.buildService(new FetchMeService()).makeModal().execute();
+    }
+    
+    public boolean onServiceCallException(FetchMeService service, Exception e) {
+    	if (e instanceof IncorrectCredentialsException) {
+			app.reportError(new ECollegeException(this, ECollegeErrorType.ALERT, R.string.e_invalid_login, e));	
+			return true; //handled
+    	}
+    	return false;
     }
     
     public void onServiceCallSuccess(FetchMeService service) {

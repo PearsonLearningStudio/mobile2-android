@@ -3,6 +3,8 @@ package com.ecollege.android.tasks;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import roboguice.util.Ln;
+
 import android.content.Context;
 
 import com.ecollege.android.ECollegeApplication;
@@ -24,9 +26,34 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	}
 	
 	@Override
-	protected void onException(Exception e) throws RuntimeException {
-		// TODO Auto-generated method stub
-		super.onException(e);
+	protected void onException(Exception sourceException) throws RuntimeException {
+		boolean errorHandled = false;
+		
+		String resultExceptionMethod = "onServiceCallException";
+		
+		try {
+			Context c = currentContext.get();
+			Method exceptionHandler = c.getClass().getMethod(resultExceptionMethod, service.getClass(), Exception.class);
+			errorHandled = (Boolean)exceptionHandler.invoke(c,service,sourceException);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			Ln.i("onException","No exception handler found in " + service.getClass().getSimpleName());
+			//no success handler found
+		} catch (IllegalArgumentException e) {
+			//problem calling method with arg
+			app.reportError(e);
+		} catch (IllegalAccessException e) {
+			//problem calling method with permissions
+			app.reportError(e);
+		} catch (InvocationTargetException e) {
+			app.reportError(e.getTargetException());
+		}	
+		
+		if (!errorHandled) {
+			super.onException(sourceException);
+		}
+		
 	}
 
 	@Override
@@ -35,30 +62,24 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		super.onSuccess(t);
 		
 		
-		//call on[MyServiceName]Success
 		String resultSuccessMethod = "onServiceCallSuccess";
 		
 		try {
 			Context c = currentContext.get();
-			Method successHandler = c.getClass().getMethod(resultSuccessMethod, t.getClass());
+			Method successHandler = c.getClass().getMethod(resultSuccessMethod, service.getClass());
 			successHandler.invoke(c,t);
-		} catch (SecurityException e) {
-			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
 			//no success handler found
+		} catch (SecurityException e) {
+			app.reportError(e);
 		} catch (IllegalArgumentException e) {
 			//problem calling method with arg
-			e.printStackTrace();
+			app.reportError(e);
 		} catch (IllegalAccessException e) {
 			//problem calling method with permissions
-			e.printStackTrace();
+			app.reportError(e);
 		} catch (InvocationTargetException e) {
-			if (e instanceof Exception) {
-				throw (Exception)e.getTargetException();	
-			} else {
-				throw new RuntimeException(e.getTargetException());
-			}
-			
+			app.reportError(e.getTargetException());
 		}		
 	}
 	

@@ -51,7 +51,12 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
     	app.getInjector().injectMembers(this);
     }
     
-    public ECollegeAsyncTask<ResultT> makeModal() {
+    @Override
+	protected void onException(Exception e) throws RuntimeException {
+		app.reportError(e);
+	}
+
+	public ECollegeAsyncTask<ResultT> makeModal() {
     	this.showModalDialog = true;
 		this.showTitlebarBusyIndicator = false;
     	return this;

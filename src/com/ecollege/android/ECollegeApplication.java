@@ -1,15 +1,19 @@
 package com.ecollege.android;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import roboguice.application.RoboApplication;
 import roboguice.inject.SharedPreferencesName;
-
+import roboguice.util.Ln;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
+import com.ecollege.android.errors.ECollegeErrorType;
+import com.ecollege.android.errors.ECollegeException;
 import com.ecollege.android.tasks.ServiceCallTask;
 import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.ECollegeClient;
@@ -19,9 +23,15 @@ import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 
-public class ECollegeApplication extends RoboApplication {
+public class ECollegeApplication extends RoboApplication implements UncaughtExceptionHandler {
 	@Inject SharedPreferences prefs;
 	
+	
+	public ECollegeApplication() {
+		super();
+		Thread.setDefaultUncaughtExceptionHandler(this); //global error handling on UI thread
+	}
+
 	private ECollegeClient client;
 	public ECollegeClient getClient() {
 		if (client == null) {
@@ -135,6 +145,28 @@ public class ECollegeApplication extends RoboApplication {
 				registeredHeaderViews.remove(i);
 			}
 		}
+	}
+	
+	public void reportError(Throwable source) {
+		ECollegeException ex;
+		
+		if (source instanceof ECollegeException){
+			ex = (ECollegeException)source;
+		} else {
+			ex = new ECollegeException(this, source);
+		}
+		
+		if (ex.getSource() != null) {
+			Ln.e(ex.getSource());
+		}
+		
+		if (ex.getErrorType() == ECollegeErrorType.ALERT) {
+			Toast.makeText(this,ex.getErrorMessageId(),5000).show();
+		}
+	}
+
+	public void uncaughtException(Thread thread, Throwable ex) {
+		reportError(ex);
 	}
 	
 	

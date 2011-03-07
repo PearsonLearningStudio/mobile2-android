@@ -6,4 +6,12 @@
     <string name="client_id">30bb1d4f-2677-45d1-be13-339174404402</string>
     <string name="progress_dialog_default_title">eCollege</string>
     <string name="progress_dialog_default_message">Processing request...</string>
+    
+    
+    
+    
+    <string name="e_unhandled_exception">An unknown error has occurred</string>
+    <string name="e_invalid_login">Incorrect username and/or password</string>
+    <string name="e_no_login_provided">You must provide both a username and password</string>
+
 </resources>

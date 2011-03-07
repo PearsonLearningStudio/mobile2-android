@@ -30,7 +30,7 @@ public class DiscussionTopicActivity extends ECollegeDefaultActivity {
     	app.buildService(new FetchDiscussionTopicById(app.getCurrentUser().getId(),topicId)).execute();
     }
     
-    public void onFetchDiscussionTopicByIdSuccess(FetchDiscussionTopicById service) {
+    public void onServiceCallSuccess(FetchDiscussionTopicById service) {
     	UserDiscussionTopic result = service.getResult();
     	String content = "Title: " + result.getTopic().getTitle();
     	content += "\nDescription: " + result.getTopic().getDescription();

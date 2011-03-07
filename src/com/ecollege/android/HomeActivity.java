@@ -112,7 +112,7 @@ public class HomeActivity extends ECollegeListActivity {
     	}
     }
     
-    public void onFetchMyWhatsHappeningFeedSuccess(FetchMyWhatsHappeningFeed service) {
+    public void onServiceCallSuccess(FetchMyWhatsHappeningFeed service) {
 		ActivityFeedAdapter baseAdapter = new ActivityFeedAdapter(this,service.getResult());
     	activityAdapter.update(baseAdapter,canLoadMoreActivites);
     	refreshList();

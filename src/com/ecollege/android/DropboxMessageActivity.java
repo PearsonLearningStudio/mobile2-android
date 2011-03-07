@@ -33,7 +33,7 @@ public class DropboxMessageActivity extends ECollegeDefaultActivity {
     	app.buildService(new FetchDropboxMessage(courseId,basketId,messageId)).execute();
     }
     
-    public void onFetchDropboxMessageSuccess(FetchDropboxMessage service) {
+    public void onServiceCallSuccess(FetchDropboxMessage service) {
     	DropboxMessage message = service.getResult(); 
     	
     	StringBuilder content = new StringBuilder();

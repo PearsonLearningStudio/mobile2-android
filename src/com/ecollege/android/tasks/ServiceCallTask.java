@@ -54,8 +54,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		
 		
 		//call on[MyServiceName]Success
-		String resultClassName = t.getClass().getSimpleName();
-		String resultSuccessMethod = "on" + resultClassName + "Success";
+		String resultSuccessMethod = "onServiceCallSuccess";
 		
 		try {
 			Context c = currentContext.get();

@@ -10,6 +10,7 @@ import com.ecollege.android.activities.ECollegeDefaultActivity;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.Grade;
 import com.ecollege.api.model.GradebookItem;
+import com.ecollege.api.services.BaseService;
 import com.ecollege.api.services.grades.FetchGradebookItemByGuid;
 import com.ecollege.api.services.grades.FetchMyGradebookItemGrade;
 import com.google.inject.Inject;
@@ -36,16 +37,15 @@ public class GradeActivity extends ECollegeDefaultActivity {
     	app.buildService(new FetchMyGradebookItemGrade(courseId,gradebookItemGuid)).execute();
     }
     
-    public void onFetchGradebookItemByGuidSuccess(FetchGradebookItemByGuid service) {
+    public void onServiceCallSuccess(FetchGradebookItemByGuid service) {
     	gradebookItem = service.getResult(); 
     	updateText();
     }
 
-    public void onFetchMyGradebookItemGradeSuccess(FetchMyGradebookItemGrade service) {
+    public void onServiceCallSuccess(FetchMyGradebookItemGrade service) {
     	grade = service.getResult(); 
     	updateText();
     }
-    
     
     protected void updateText() {
     	StringBuilder content = new StringBuilder();

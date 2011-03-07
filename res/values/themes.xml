@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<!-- The default NFCU Theme -->
 	<style name="ECollegeTheme" parent="@android:style/Theme">
 		<item name="android:windowNoTitle">true</item>
 <!-- 		<item name="android:windowBackground">@drawable/light_bg</item> -->

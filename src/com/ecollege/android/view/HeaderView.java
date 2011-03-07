@@ -12,7 +12,7 @@ import com.ecollege.android.ECollegeApplication;
 import com.ecollege.android.R;
 
 public class HeaderView extends FrameLayout {
-    private final ProgressBar progressBar;
+    private final ProgressBar busyIndicator;
     private final TextView headerTitle;
 
 	public HeaderView(Context context, AttributeSet attrs) {
@@ -31,7 +31,7 @@ public class HeaderView extends FrameLayout {
         }
         
         headerTitle = (TextView) findViewById(R.id.header_title);
-        progressBar = (ProgressBar) findViewById(R.id.loading_indicator);
+        busyIndicator = (ProgressBar) findViewById(R.id.busy_indicator);
         
         if (context instanceof Activity) {
         	headerTitle.setText(((Activity)context).getTitle());	
@@ -39,7 +39,7 @@ public class HeaderView extends FrameLayout {
 	}
 	
 	public void setProgressVisibility(boolean visible) {
-		if (progressBar != null) progressBar.setVisibility(visible ? VISIBLE : INVISIBLE);
+		if (busyIndicator != null) busyIndicator.setVisibility(visible ? VISIBLE : INVISIBLE);
 	}
 	
 }

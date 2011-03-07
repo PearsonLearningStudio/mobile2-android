@@ -1,72 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="10dp"
-    >
-    
-<TextView
-	android:id="@+id/title_label"
-	android:text="eCollege Mobile"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_centerHorizontal="true"
-	android:layout_marginTop="15dp"
-	android:layout_marginBottom="15dp"
-	android:textSize="4mm"
-	android:layout_alignParentTop="true"/>
- 	
- <TextView
- 	android:id="@+id/username_label"
- 	android:text="Username"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_below="@id/title_label"/>
- 	
-<EditText  
-	android:id="@+id/username_text"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-    android:layout_marginTop="4dp" 
-	android:layout_below="@id/username_label"
-    android:hint="Username"
-    />
-     	
-<TextView
- 	android:id="@+id/password_label"
- 	android:text="Password"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-    android:layout_marginTop="4dp" 
-	android:layout_below="@id/username_text"/>
- 	
-<EditText  
-	android:id="@+id/password_text"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-    android:layout_marginTop="4dp" 
-	android:layout_below="@id/password_label"
-    android:hint="Password"
-    android:password="true"
-    />
-
-<CheckBox
-	android:id="@+id/remember_check"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:layout_marginTop="4dp" 
-	android:layout_below="@+id/password_text"
-    android:hint="Remember Me?"
-    />
-    
-    
-<Button
-	android:id="@+id/login_button"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content"
-    android:layout_marginTop="4dp" 
-    android:text="Sign in"
-    android:onClick="onLoginClick"
-	android:layout_below="@id/remember_check"
-	/>
-</RelativeLayout>
+    android:layout_height="fill_parent">
+	<RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:padding="10dp"
+	    >
+		<TextView
+			android:id="@+id/title_label"
+			android:text="eCollege Mobile"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="15dp"
+			android:layout_marginBottom="15dp"
+			android:textSize="4mm"
+			android:layout_alignParentTop="true"/>
+		 	
+		 <TextView
+		 	android:id="@+id/username_label"
+		 	android:text="Username"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/title_label"/>
+		 	
+		<EditText  
+			android:id="@+id/username_text"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+		    android:layout_marginTop="4dp" 
+			android:layout_below="@id/username_label"
+		    android:hint="Username"
+		    />
+		     	
+		<TextView
+		 	android:id="@+id/password_label"
+		 	android:text="Password"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+		    android:layout_marginTop="4dp" 
+			android:layout_below="@id/username_text"/>
+		 	
+		<EditText  
+			android:id="@+id/password_text"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+		    android:layout_marginTop="4dp" 
+			android:layout_below="@id/password_label"
+		    android:hint="Password"
+		    android:password="true"
+		    />
+		
+		<CheckBox
+			android:id="@+id/remember_check"
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    android:layout_marginTop="4dp" 
+			android:layout_below="@+id/password_text"
+		    android:hint="Remember Me?"
+		    />
+		    
+		    
+		<Button
+			android:id="@+id/login_button"
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="4dp" 
+		    android:text="Sign in"
+		    android:onClick="onLoginClick"
+			android:layout_below="@id/remember_check"
+			/>
+	</RelativeLayout>
+</ScrollView>

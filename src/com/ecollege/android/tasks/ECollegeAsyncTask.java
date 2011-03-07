@@ -40,9 +40,10 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
 	protected ECollegeApplication app;
     @SuppressWarnings("unused")
 	private boolean reportsProgress = false;
-    private boolean isModalDialog = false;
     private int progressDialogTitleId = -1;
     private int progressDialogMsgId = -1;
+    private boolean showModalDialog = false;
+	private boolean showTitlebarBusyIndicator = true;
     
     public ECollegeAsyncTask(ECollegeApplication app) {
     	super();
@@ -51,7 +52,8 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
     }
     
     public ECollegeAsyncTask<ResultT> makeModal() {
-    	this.isModalDialog = true;
+    	this.showModalDialog = true;
+		this.showTitlebarBusyIndicator = false;
     	return this;
     }
     
@@ -69,15 +71,22 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
 		this.progressDialogMsgId=progressDialogMsgId;
 		return this;
 	}
+	
+	public ECollegeAsyncTask<ResultT> disableTitlebarBusyIndicator() {
+		this.showTitlebarBusyIndicator = false;
+		return this;
+	}
     
     @Override
     protected void onPreExecute() throws Exception {
     	super.onPreExecute();
 
+    	if (showTitlebarBusyIndicator) app.incrementPendingServiceCalls();
+    	
         if (currentContext != null && currentContext.get() !=null) {
         	Context c = currentContext.get();
         	        	
-            if (app != null && isModalDialog && c instanceof Activity) {
+            if (app != null && showModalDialog && c instanceof Activity) {
             	app.setNextProgressDialogTitleId(progressDialogTitleId);
             	app.setNextProgressDialogMsgId(progressDialogMsgId);
             	((Activity)c).showDialog(0);
@@ -90,9 +99,11 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
 	protected void onFinally() throws RuntimeException {
 		super.onFinally();
 
+		if (showTitlebarBusyIndicator) app.decrementPendingServiceCalls();
+		
         if (currentContext != null && currentContext.get() !=null) {
         	Context c = currentContext.get();
-            if (isModalDialog && c instanceof Activity) {
+            if (showModalDialog && c instanceof Activity) {
             	((Activity)c).removeDialog(0);
             }
         }

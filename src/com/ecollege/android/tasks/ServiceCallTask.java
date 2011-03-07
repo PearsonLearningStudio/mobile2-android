@@ -10,18 +10,12 @@ import com.ecollege.api.services.BaseService;
 
 public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsyncTask<ServiceT> {
 	
-	private boolean showTitlebarProgress = true;
 	private ServiceT service;
 	
 	public ServiceCallTask(ECollegeApplication app, ServiceT service)
 	{
 		super(app);
 		this.service=service;
-	}
-	
-	public ServiceCallTask<ServiceT> disableTitlebarProgress() {
-		this.showTitlebarProgress = false;
-		return this;
 	}
 	
 	public ServiceT call() throws Exception {
@@ -33,18 +27,6 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	protected void onException(Exception e) throws RuntimeException {
 		// TODO Auto-generated method stub
 		super.onException(e);
-	}
-
-    @Override
-    protected void onPreExecute() throws Exception {
-    	super.onPreExecute();
-    	if (showTitlebarProgress) app.incrementPendingServiceCalls();
-    }
-	
-	@Override
-	protected void onFinally() throws RuntimeException {
-		super.onFinally();
-		if (showTitlebarProgress) app.decrementPendingServiceCalls();
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.ecollege.android;
 
 import roboguice.inject.InjectView;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
-import com.ecollege.android.tasks.ServiceCallTask;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.services.users.FetchMeService;
 import com.google.inject.Inject;
@@ -43,29 +41,20 @@ public class LoginActivity extends ECollegeDefaultActivity {
 				editor.commit(); //change to apply if android 2.2
 			}
 		}
-		
-    	fetchCurrentUser();
+
+    	app.buildService(new FetchMeService()).makeModal().execute();
     }
     
-    protected void fetchCurrentUser() {		
+    public void onServiceCallSuccess(FetchMeService service) {
+    	
+		if (rememberCheck != null && rememberCheck.isChecked()) {
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putString("grantToken",client.getGrantToken());
+			editor.commit(); //change to apply if android 2.2
+		}
 		
-		new ServiceCallTask<FetchMeService>(app,new FetchMeService()) {
-			@Override
-			protected void onSuccess(FetchMeService service) throws Exception {
-				super.onSuccess(service);
-				
-				if (rememberCheck != null && rememberCheck.isChecked()) {
-					SharedPreferences.Editor editor = prefs.edit();
-					editor.putString("grantToken",client.getGrantToken());
-					editor.commit(); //change to apply if android 2.2
-				}
-				
-				app.setCurrentUser(service.getResult());				
-				
-				Activity a = (Activity)currentContext.get();
-				a.setResult(RESULT_OK);
-				a.finish();
-			}
-		}.makeModal().execute();
+		app.setCurrentUser(service.getResult());
+		setResult(RESULT_OK);
+		finish();
     }
 }

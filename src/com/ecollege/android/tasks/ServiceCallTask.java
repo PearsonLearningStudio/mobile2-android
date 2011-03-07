@@ -6,8 +6,12 @@ import java.lang.reflect.Method;
 import roboguice.util.Ln;
 
 import android.content.Context;
+import android.content.DialogInterface;
 
 import com.ecollege.android.ECollegeApplication;
+import com.ecollege.android.R;
+import com.ecollege.android.errors.ECollegePromptRetryException;
+import com.ecollege.api.exceptions.TimeoutException;
 import com.ecollege.api.services.BaseService;
 
 public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsyncTask<ServiceT> {
@@ -51,7 +55,19 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		}	
 		
 		if (!errorHandled) {
-			super.onException(sourceException);
+			if (sourceException instanceof TimeoutException) {
+				DialogInterface.OnClickListener retryHandler = new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						ServiceCallTask.this.execute();
+					}
+				};
+				
+				ECollegePromptRetryException retryE = new ECollegePromptRetryException(currentContext.get(), retryHandler, R.string.e_network_timeout);
+				app.reportError(retryE);
+			} else {
+				super.onException(sourceException);	
+			}
 		}
 		
 	}

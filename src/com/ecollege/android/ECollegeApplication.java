@@ -12,8 +12,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
-import com.ecollege.android.errors.ECollegeErrorType;
+import com.ecollege.android.errors.ECollegeAlertException;
 import com.ecollege.android.errors.ECollegeException;
+import com.ecollege.android.errors.ECollegePromptException;
+import com.ecollege.android.errors.ECollegePromptRetryException;
 import com.ecollege.android.tasks.ServiceCallTask;
 import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.ECollegeClient;
@@ -153,15 +155,19 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 		if (source instanceof ECollegeException){
 			ex = (ECollegeException)source;
 		} else {
-			ex = new ECollegeException(this, source);
+			ex = new ECollegePromptException(this, source);
 		}
 		
 		if (ex.getSource() != null) {
 			Ln.e(ex.getSource());
 		}
 		
-		if (ex.getErrorType() == ECollegeErrorType.ALERT) {
+		if (ex instanceof ECollegeAlertException) {
 			Toast.makeText(this,ex.getErrorMessageId(),5000).show();
+		} else if (ex instanceof ECollegePromptException) {
+			((ECollegePromptException)ex).showErrorDialog();
+		} else if (ex instanceof ECollegePromptRetryException) {
+			((ECollegePromptRetryException)ex).showErrorDialog();
 		}
 	}
 

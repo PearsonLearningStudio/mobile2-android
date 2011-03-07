@@ -11,8 +11,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
-import com.ecollege.android.errors.ECollegeErrorType;
-import com.ecollege.android.errors.ECollegeException;
+import com.ecollege.android.errors.ECollegeAlertException;
+import com.ecollege.android.errors.ECollegePromptException;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.exceptions.IncorrectCredentialsException;
 import com.ecollege.api.services.users.FetchMeService;
@@ -38,7 +38,7 @@ public class LoginActivity extends ECollegeDefaultActivity {
     public void onLoginClick(View v)
     {	
     	if (StringUtils.isBlank(usernameText.getText().toString()) || StringUtils.isBlank(passwordText.getText().toString())) {
-    		app.reportError(new ECollegeException(this, ECollegeErrorType.ALERT, R.string.e_no_login_provided));
+    		app.reportError(new ECollegePromptException(this, R.string.e_no_login_provided));
     		return;
     	}
     	
@@ -57,7 +57,7 @@ public class LoginActivity extends ECollegeDefaultActivity {
     
     public boolean onServiceCallException(FetchMeService service, Exception e) {
     	if (e instanceof IncorrectCredentialsException) {
-			app.reportError(new ECollegeException(this, ECollegeErrorType.ALERT, R.string.e_invalid_login, e));	
+			app.reportError(new ECollegeAlertException(this, R.string.e_invalid_login, e));	
 			return true; //handled
     	}
     	return false;

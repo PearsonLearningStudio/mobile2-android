@@ -3,11 +3,13 @@ package com.ecollege.android;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import roboguice.application.RoboApplication;
 import roboguice.inject.SharedPreferencesName;
 import roboguice.util.Ln;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -16,11 +18,9 @@ import com.ecollege.android.errors.ECollegeAlertException;
 import com.ecollege.android.errors.ECollegeException;
 import com.ecollege.android.errors.ECollegePromptException;
 import com.ecollege.android.errors.ECollegePromptRetryException;
-import com.ecollege.android.tasks.ServiceCallTask;
 import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.User;
-import com.ecollege.api.services.BaseService;
 import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Module;
@@ -50,10 +50,6 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 				//can make a separate module as needed
 			}
 		});
-	}
-	
-	public <ServiceT extends BaseService> ServiceCallTask<ServiceT> buildService(ServiceT service) {
-		return new ServiceCallTask<ServiceT>(this, service);
 	}
 		
 	public void logout() {
@@ -122,6 +118,30 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 		this.nextProgressDialogMsgId = nextProgressDialogMsgId;
 	}
 
+    private HashMap<String, WeakReference<Context>> contextObjects = new HashMap<String, WeakReference<Context>>();
+
+    public synchronized Context getActiveContext(String className) {
+        WeakReference<Context> ref = contextObjects.get(className);
+        if (ref == null) {
+            return null;
+        }
+
+        final Context c = ref.get();
+        if (c == null) // If the WeakReference is no longer valid, ensure it is removed.
+            contextObjects.remove(className);
+
+        return c;
+    }
+
+    public synchronized void setActiveContext(String className, Context context) {
+        WeakReference<Context> ref = new WeakReference<Context>(context);
+        this.contextObjects.put(className, ref);
+    }
+
+    public synchronized void resetActiveContext(String className) {
+        contextObjects.remove(className);
+    }	
+	
 	private List<WeakReference<HeaderView>> registeredHeaderViews = new ArrayList<WeakReference<HeaderView>>();
 	
 	public synchronized void updateHeaderProgress(boolean showProgress) {

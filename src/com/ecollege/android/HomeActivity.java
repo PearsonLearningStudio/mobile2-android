@@ -106,9 +106,9 @@ public class HomeActivity extends ECollegeListActivity {
     	if (canLoadMoreActivites) {
     		GregorianCalendar oneMonthAgo = new GregorianCalendar();
     		oneMonthAgo.add(Calendar.MONTH, -2);
-        	app.buildService(new FetchMyWhatsHappeningFeed(oneMonthAgo)).disableTitlebarBusyIndicator().execute();
+        	buildService(new FetchMyWhatsHappeningFeed(oneMonthAgo)).disableTitlebarBusyIndicator().execute();
     	} else {
-    		app.buildService(new FetchMyWhatsHappeningFeed()).disableTitlebarBusyIndicator().execute();	
+    		buildService(new FetchMyWhatsHappeningFeed()).disableTitlebarBusyIndicator().execute();	
     	}
     }
     

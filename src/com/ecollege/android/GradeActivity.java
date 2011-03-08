@@ -32,8 +32,8 @@ public class GradeActivity extends ECollegeDefaultActivity {
     }
     
     protected void fetchData() {
-    	app.buildService(new FetchGradebookItemByGuid(courseId,gradebookItemGuid)).execute();
-    	app.buildService(new FetchMyGradebookItemGrade(courseId,gradebookItemGuid)).execute();
+    	buildService(new FetchGradebookItemByGuid(courseId,gradebookItemGuid)).execute();
+    	buildService(new FetchMyGradebookItemGrade(courseId,gradebookItemGuid)).execute();
     }
     
     public void onServiceCallSuccess(FetchGradebookItemByGuid service) {

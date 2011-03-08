@@ -27,7 +27,7 @@ public class DiscussionResponseActivity extends ECollegeDefaultActivity {
     }
     
     protected void fetchResponse() {
-    	app.buildService(new FetchDiscussionResponseById(app.getCurrentUser().getId(),responseId)).execute();
+    	buildService(new FetchDiscussionResponseById(app.getCurrentUser().getId(),responseId)).execute();
     }
     
     public void onServiceCallSuccess(FetchDiscussionResponseById service) {

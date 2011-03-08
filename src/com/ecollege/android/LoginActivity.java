@@ -52,7 +52,7 @@ public class LoginActivity extends ECollegeDefaultActivity {
 			}
 		}
 
-    	app.buildService(new FetchMeService()).makeModal().execute();
+    	buildService(new FetchMeService()).makeModal().execute();
     }
     
     public boolean onServiceCallException(FetchMeService service, Exception e) {

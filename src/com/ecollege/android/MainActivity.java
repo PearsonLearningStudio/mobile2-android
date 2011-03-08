@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.widget.TabHost;
 
 import com.ecollege.android.activities.ECollegeTabActivity;
-import com.ecollege.android.tasks.ServiceCallTask;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.services.users.FetchMeService;
 import com.google.inject.Inject;
@@ -46,19 +45,14 @@ public class MainActivity extends ECollegeTabActivity {
     	}
     }
     
-    protected void fetchCurrentUser() {		
-		new ServiceCallTask<FetchMeService>(app,new FetchMeService()) {
-			@Override
-			protected void onSuccess(FetchMeService service) throws Exception {
-				super.onSuccess(service);
-				app.setCurrentUser(service.getResult());				
-				
-				if (currentContext.get() instanceof MainActivity) {
-					((MainActivity)currentContext.get()).setupActivity();
-				}
-			}
-		}.execute();
+    protected void fetchCurrentUser() {
+    	buildService(new FetchMeService()).execute();
     }    
+    
+    public void onServiceCallSuccess(FetchMeService service) {
+		app.setCurrentUser(service.getResult());	
+		setupActivity();
+    }
     
     protected void setupActivity() {
         addHomeTab();

@@ -27,7 +27,7 @@ public class DiscussionTopicActivity extends ECollegeDefaultActivity {
     }
     
     protected void fetchTopic() {
-    	app.buildService(new FetchDiscussionTopicById(app.getCurrentUser().getId(),topicId)).execute();
+    	buildService(new FetchDiscussionTopicById(app.getCurrentUser().getId(),topicId)).execute();
     }
     
     public void onServiceCallSuccess(FetchDiscussionTopicById service) {

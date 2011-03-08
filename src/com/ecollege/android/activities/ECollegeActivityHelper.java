@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.ecollege.android.ECollegeApplication;
 import com.ecollege.android.LoginActivity;
@@ -39,6 +41,15 @@ public class ECollegeActivityHelper {
         });
         // progressDialog.setInverseBackgroundForced(true);
         return progressDialog;
+    }
+    
+
+    public static void onCreate(Activity activity, Bundle savedInstanceState) {
+        // Request progress bar
+        activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
+		ECollegeApplication app = (ECollegeApplication)activity.getApplication();
+		app.setActiveContext(activity.getClass().getCanonicalName(), activity);
     }
     
 	public static boolean onCreateOptionsMenu(Activity activity, Menu menu) {

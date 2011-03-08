@@ -4,12 +4,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import roboguice.util.Ln;
-
 import android.content.Context;
 import android.content.DialogInterface;
 
-import com.ecollege.android.ECollegeApplication;
 import com.ecollege.android.R;
+import com.ecollege.android.activities.ECollegeActivity;
 import com.ecollege.android.errors.ECollegePromptRetryException;
 import com.ecollege.api.exceptions.TimeoutException;
 import com.ecollege.api.services.BaseService;
@@ -18,9 +17,9 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	
 	private ServiceT service;
 	
-	public ServiceCallTask(ECollegeApplication app, ServiceT service)
+	public ServiceCallTask(ECollegeActivity activity, ServiceT service)
 	{
-		super(app);
+		super(activity);
 		this.service=service;
 	}
 	
@@ -32,13 +31,16 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	@Override
 	protected void onException(Exception sourceException) throws RuntimeException {
 		boolean errorHandled = false;
-		
 		String resultExceptionMethod = "onServiceCallException";
+		ECollegeActivity currentActivity = getCurrentActivity();
 		
 		try {
-			Context c = currentContext.get();
-			Method exceptionHandler = c.getClass().getMethod(resultExceptionMethod, service.getClass(), Exception.class);
-			errorHandled = (Boolean)exceptionHandler.invoke(c,service,sourceException);
+			if (currentActivity != null) {
+				Method exceptionHandler = currentActivity.getClass().getMethod(resultExceptionMethod, service.getClass(), Exception.class);
+				errorHandled = (Boolean)exceptionHandler.invoke(currentActivity,service,sourceException);
+			} else {
+				Ln.e("ERROR! No current activity to attach exception to!");
+			}
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
@@ -63,8 +65,10 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 					}
 				};
 				
-				ECollegePromptRetryException retryE = new ECollegePromptRetryException(currentContext.get(), retryHandler, R.string.e_network_timeout);
-				app.reportError(retryE);
+				if (currentActivity != null) {
+					ECollegePromptRetryException retryE = new ECollegePromptRetryException((Context)currentActivity, retryHandler, R.string.e_network_timeout);
+					app.reportError(retryE);
+				}
 			} else {
 				super.onException(sourceException);	
 			}
@@ -76,14 +80,18 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	protected void onSuccess(ServiceT t) throws Exception {
 		// TODO Auto-generated method stub
 		super.onSuccess(t);
-		
+
+		ECollegeActivity currentActivity = getCurrentActivity();
 		
 		String resultSuccessMethod = "onServiceCallSuccess";
 		
 		try {
-			Context c = currentContext.get();
-			Method successHandler = c.getClass().getMethod(resultSuccessMethod, service.getClass());
-			successHandler.invoke(c,t);
+			if (currentActivity != null) {
+				Method successHandler = currentActivity.getClass().getMethod(resultSuccessMethod, service.getClass());
+				successHandler.invoke(currentActivity,t);
+			} else {
+				Ln.e("ERROR! No current activity to attach success to!");
+			}
 		} catch (NoSuchMethodException e) {
 			//no success handler found
 		} catch (SecurityException e) {

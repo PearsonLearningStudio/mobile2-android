@@ -7,8 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.ecollege.android.ECollegeApplication;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import com.ecollege.android.activities.ECollegeActivity;
 
 /**
  * Works in a similar way to AsyncTask but provides extra functionality.
@@ -35,8 +34,6 @@ import com.google.inject.Provider;
  */
 public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT>  {
 
-	@Inject protected Provider<Context> currentContext;
-
 	protected ECollegeApplication app;
     @SuppressWarnings("unused")
 	private boolean reportsProgress = false;
@@ -44,11 +41,14 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
     private int progressDialogMsgId = -1;
     private boolean showModalDialog = false;
 	private boolean showTitlebarBusyIndicator = true;
-    
-    public ECollegeAsyncTask(ECollegeApplication app) {
+    private String activityName;
+	
+    public ECollegeAsyncTask(ECollegeActivity activity) {
     	super();
-    	this.app=app;
+    	this.app=activity.getApp();
     	app.getInjector().injectMembers(this);
+    	activityName = activity.getClass().getCanonicalName();
+    	app.setActiveContext(activityName,(Context)activity);
     }
     
     @Override
@@ -81,21 +81,23 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
 		this.showTitlebarBusyIndicator = false;
 		return this;
 	}
-    
+   
+	protected ECollegeActivity getCurrentActivity() {
+		return (ECollegeActivity)app.getActiveContext(activityName);
+	}
+	
     @Override
     protected void onPreExecute() throws Exception {
     	super.onPreExecute();
 
     	if (showTitlebarBusyIndicator) app.incrementPendingServiceCalls();
     	
-        if (currentContext != null && currentContext.get() !=null) {
-        	Context c = currentContext.get();
-        	        	
-            if (app != null && showModalDialog && c instanceof Activity) {
-            	app.setNextProgressDialogTitleId(progressDialogTitleId);
-            	app.setNextProgressDialogMsgId(progressDialogMsgId);
-            	((Activity)c).showDialog(0);
-            }
+    	ECollegeActivity currentActivity = getCurrentActivity();
+    	
+        if (currentActivity != null && showModalDialog) {
+        	app.setNextProgressDialogTitleId(progressDialogTitleId);
+        	app.setNextProgressDialogMsgId(progressDialogMsgId);
+        	((Activity)currentActivity).showDialog(0);
         }
     }
 
@@ -105,12 +107,11 @@ public abstract class ECollegeAsyncTask<ResultT> extends RoboAsyncTask<ResultT> 
 		super.onFinally();
 
 		if (showTitlebarBusyIndicator) app.decrementPendingServiceCalls();
-		
-        if (currentContext != null && currentContext.get() !=null) {
-        	Context c = currentContext.get();
-            if (showModalDialog && c instanceof Activity) {
-            	((Activity)c).removeDialog(0);
-            }
+
+    	ECollegeActivity currentActivity = getCurrentActivity();
+    	
+        if (currentActivity != null && showModalDialog) {
+            ((Activity)currentActivity).removeDialog(0);
         }
 	}
 }

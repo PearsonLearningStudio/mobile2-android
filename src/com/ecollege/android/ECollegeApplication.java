@@ -27,10 +27,11 @@ import com.google.inject.Module;
 
 public class ECollegeApplication extends RoboApplication implements UncaughtExceptionHandler {
 	@Inject SharedPreferences prefs;
-	
+	protected Context lastActiveContext;
 	
 	public ECollegeApplication() {
 		super();
+		lastActiveContext = this;
 		Thread.setDefaultUncaughtExceptionHandler(this); //global error handling on UI thread
 	}
 
@@ -133,7 +134,14 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
         return c;
     }
 
+    public synchronized Context getActiveContext() {
+    	return lastActiveContext;
+    }
+    
     public synchronized void setActiveContext(String className, Context context) {
+    	if (!(context instanceof ECollegeApplication)) {
+    		lastActiveContext = context;
+    	}
         WeakReference<Context> ref = new WeakReference<Context>(context);
         this.contextObjects.put(className, ref);
     }
@@ -175,7 +183,7 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 		if (source instanceof ECollegeException){
 			ex = (ECollegeException)source;
 		} else {
-			ex = new ECollegePromptException(this, source);
+			ex = new ECollegePromptException(lastActiveContext, source);
 		}
 		
 		if (ex.getSource() != null) {

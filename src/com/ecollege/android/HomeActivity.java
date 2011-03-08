@@ -5,6 +5,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Months;
+
 import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
 import com.ecollege.android.activities.ECollegeListActivity;
+import com.ecollege.android.adapter.HeaderAdapter;
 import com.ecollege.android.adapter.LoadMoreAdapter;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ActivityStreamItem;
@@ -114,7 +119,8 @@ public class HomeActivity extends ECollegeListActivity {
     
     public void onServiceCallSuccess(FetchMyWhatsHappeningFeed service) {
 		ActivityFeedAdapter baseAdapter = new ActivityFeedAdapter(this,service.getResult());
-    	activityAdapter.update(baseAdapter,canLoadMoreActivites);
+		ActivityFeedHeaderAdapter headerAdapter = new ActivityFeedHeaderAdapter(this, baseAdapter);
+    	activityAdapter.update(headerAdapter,canLoadMoreActivites);
     	refreshList();
     }
     
@@ -216,6 +222,33 @@ public class HomeActivity extends ECollegeListActivity {
 			return false;
 		}    	
 
+    }
+    
+    private class ActivityFeedHeaderAdapter extends HeaderAdapter {
+    	
+		public ActivityFeedHeaderAdapter(Context context,
+				ListAdapter baseAdapter) {
+			super(context, baseAdapter);
+		}
+
+		@Override
+		protected String headerLabelFunction(Object item, int position) {
+			ActivityStreamItem asi = (ActivityStreamItem)item;
+
+			if (asi.getPostedTime() == null) return "Unknown";
+			DateTime now = new DateTime();
+			DateTime postedTime = new DateTime(asi.getPostedTime());
+			
+			//int daysBetween = Days.daysBetween(postedTime, now).getDays();
+			int monthsBetween = Months.monthsBetween(postedTime, now).getMonths();
+			
+			if (monthsBetween <= 1) {
+				return "Past 30 days";
+			} else {
+				return "Over " + monthsBetween  + " months ago";
+			}
+		}
+    	
     }
     
     private class ActivityFeedAdapter extends ArrayAdapter<ActivityStreamItem> {

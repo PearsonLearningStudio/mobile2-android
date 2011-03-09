@@ -8,7 +8,6 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.ecollege.android.ECollegeApplication;
 import com.ecollege.android.R;
 
 public class HeaderView extends FrameLayout {
@@ -23,12 +22,6 @@ public class HeaderView extends FrameLayout {
 		super(context, attrs, defStyle);
 				
         LayoutInflater.from(context).inflate(R.layout.header_view, this, true);
-        
-        ECollegeApplication app = (ECollegeApplication)context.getApplicationContext();
-        
-        if (app != null) {
-        	app.registerHeaderView(this);
-        }
         
         headerTitle = (TextView) findViewById(R.id.header_title);
         busyIndicator = (ProgressBar) findViewById(R.id.busy_indicator);

@@ -2,6 +2,7 @@ package com.ecollege.android;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,12 +14,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
-import com.ecollege.android.activities.ECollegeActivityHelper;
 import com.ecollege.android.errors.ECollegeAlertException;
 import com.ecollege.android.errors.ECollegeException;
 import com.ecollege.android.errors.ECollegePromptException;
 import com.ecollege.android.errors.ECollegePromptRetryException;
 import com.ecollege.android.util.FileCacheManager;
+import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.User;
 import com.google.inject.Binder;
@@ -88,7 +89,7 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 	public synchronized void incrementPendingServiceCalls() {
 		if (pendingServiceCalls == 0) {
 			this.pendingServiceCalls++;
-			ECollegeActivityHelper.updateProgressVisibility(lastActiveContext);
+			updateHeaderProgress(true);
 		} else {
 			this.pendingServiceCalls++;
 		}
@@ -97,12 +98,12 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 	public synchronized void decrementPendingServiceCalls() {
 		if (pendingServiceCalls == 1) {
 			this.pendingServiceCalls--;	
-			ECollegeActivityHelper.updateProgressVisibility(lastActiveContext);
+			updateHeaderProgress(false);
 		} else {
 			this.pendingServiceCalls--;
 		}
-	}
-	
+	}	
+
 	public User getCurrentUser() {
 		return currentUser;
 	}
@@ -156,7 +157,34 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 
     public synchronized void resetActiveContext(String className) {
         contextObjects.remove(className);
-    }
+    }	
+	
+	private List<WeakReference<HeaderView>> registeredHeaderViews = new ArrayList<WeakReference<HeaderView>>();
+	
+	public synchronized void updateHeaderProgress(boolean showProgress) {
+		for (int i=registeredHeaderViews.size()-1;i>=0;i--) {
+			HeaderView hv = registeredHeaderViews.get(i).get();
+			if (hv == null) {
+				registeredHeaderViews.remove(i);				
+			} else {
+				hv.setProgressVisibility(showProgress);
+			}
+		}
+	}
+	
+	public synchronized void registerHeaderView(HeaderView hv) {
+		WeakReference<HeaderView> ref = new WeakReference<HeaderView>(hv);
+		registeredHeaderViews.add(ref);
+		hv.setProgressVisibility(pendingServiceCalls > 0);
+	}
+	
+	public synchronized void unregisterHeaderView(HeaderView hv) {
+		for (int i=registeredHeaderViews.size()-1;i>=0;i--) {
+			if (registeredHeaderViews.get(i).get() == hv) {
+				registeredHeaderViews.remove(i);
+			}
+		}
+	}
 	
 	public void reportError(Throwable source) {
 		ECollegeException ex;

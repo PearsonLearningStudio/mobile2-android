@@ -8,7 +8,6 @@ import android.view.MenuItem;
 
 import com.ecollege.android.ECollegeApplication;
 import com.ecollege.android.tasks.ServiceCallTask;
-import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.services.BaseService;
 
 public class ECollegeTabActivity extends RoboTabActivity implements ECollegeActivity {
@@ -46,18 +45,6 @@ public class ECollegeTabActivity extends RoboTabActivity implements ECollegeActi
         ECollegeActivityHelper.onCreate(this,savedInstanceState);
 	}
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
-        ECollegeActivityHelper.onResume(this);
-	}
-    
-    @Override
-    public void setContentView(int layoutResID) {
-    	super.setContentView(layoutResID);
-    	ECollegeActivityHelper.afterSetContentView(this,layoutResID);
-    }	
-	
     @Override
     protected Dialog onCreateDialog(int id) {
     	super.onCreateDialog(id);
@@ -73,8 +60,4 @@ public class ECollegeTabActivity extends RoboTabActivity implements ECollegeActi
     public boolean onOptionsItemSelected(MenuItem item) {
     	return ECollegeActivityHelper.onOptionsItemSelected(this,item);
     }    
-    
-	public HeaderView getHeaderView() {
-    	return ECollegeActivityHelper.getHeaderView(this);
-	}
 }

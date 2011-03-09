@@ -2,7 +2,6 @@ package com.ecollege.android.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import com.ecollege.android.HomeActivity;
 import com.ecollege.android.LoginActivity;
 import com.ecollege.android.MainActivity;
 import com.ecollege.android.R;
-import com.ecollege.android.view.HeaderView;
 
 
 public class ECollegeActivityHelper {
@@ -54,33 +52,11 @@ public class ECollegeActivityHelper {
     public static void onCreate(Activity activity, Bundle savedInstanceState) {
         // Request progress bar
         activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        
 		ECollegeApplication app = (ECollegeApplication)activity.getApplication();
 		app.setActiveContext(activity.getClass().getCanonicalName(), activity);
     }
     
-    public static void afterSetContentView(Activity activity,int layoutResID) {
-		updateProgressVisibility(activity);
-    }
-    
-	public static void onResume(Activity activity) {
-		updateProgressVisibility(activity);
-	}    
-    
-	public static void updateProgressVisibility(Context context) {
-		if (context != null && context instanceof ECollegeActivity) {
-			ECollegeActivity eactivity = (ECollegeActivity)context;
-			HeaderView hv = eactivity.getHeaderView();
-			if (hv != null) {
-				if (eactivity.getApp().getPendingServiceCalls() > 0) {
-					hv.setProgressVisibility(true);
-				} else {
-					hv.setProgressVisibility(false);
-				}
-			}
-		}
-	}
-	
 	public static boolean onCreateOptionsMenu(Activity activity, Menu menu) {
 		if (activity instanceof LoginActivity) {
 			//do nothing for login activity
@@ -128,15 +104,5 @@ public class ECollegeActivityHelper {
 		}
 		return false;
 	}
-
-
-	public static HeaderView getHeaderView(Activity activity) {
-		Object headerView = activity.findViewById(R.id.header_view);
-		if (headerView != null) return (HeaderView)headerView;
-		return null;
-	}
-
-
-
 	
 }

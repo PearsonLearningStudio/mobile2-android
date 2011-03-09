@@ -16,6 +16,8 @@ import com.ecollege.api.services.BaseService;
 public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsyncTask<ServiceT> {
 	
 	private ServiceT service;
+	protected boolean isCached = true;
+	
 	
 	public ServiceCallTask(ECollegeActivity activity, ServiceT service)
 	{
@@ -23,10 +25,20 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		this.service=service;
 	}
 	
+	public ServiceCallTask<ServiceT> noCache() {
+		isCached = false;
+		return this;
+	}
+	
 	public ServiceT call() throws Exception {
-		app.getClient().executeService(service);
+		if (isCached) {
+			app.getClient().executeService(service,app.getServiceCache());
+		} else {
+			app.getClient().executeService(service);
+		}
 		return service;
 	}
+	
 	
 	@Override
 	protected void onException(Exception sourceException) throws RuntimeException {

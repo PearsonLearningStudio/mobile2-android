@@ -18,6 +18,7 @@ import com.ecollege.android.errors.ECollegeAlertException;
 import com.ecollege.android.errors.ECollegeException;
 import com.ecollege.android.errors.ECollegePromptException;
 import com.ecollege.android.errors.ECollegePromptRetryException;
+import com.ecollege.android.util.FileCacheManager;
 import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.User;
@@ -28,6 +29,7 @@ import com.google.inject.Module;
 public class ECollegeApplication extends RoboApplication implements UncaughtExceptionHandler {
 	@Inject SharedPreferences prefs;
 	protected Context lastActiveContext;
+    private FileCacheManager serviceCache;
 	
 	public ECollegeApplication() {
 		super();
@@ -67,6 +69,13 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 //new ServiceCallTask<FetchDiscussionResponseById>(app,new FetchDiscussionResponseById(userResponseId)) {		
 //		
 //	}
+	
+	public FileCacheManager getServiceCache() {
+		if (serviceCache == null) {
+			serviceCache = new FileCacheManager(this, 1000 * 60 * 60); //1 hour cache
+		}
+		return serviceCache;
+	}	
 	
 	private int pendingServiceCalls = 0;
 	private User currentUser;

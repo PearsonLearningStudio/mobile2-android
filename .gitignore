@@ -42,4 +42,7 @@ build
 *.class
 
 # generated GUI files
-*R.java
+#BAD!!!!  ignores things like FileCacheManager.java
+#*R.java
+
+R.java

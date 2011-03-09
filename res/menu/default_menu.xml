@@ -2,6 +2,20 @@
 <menu
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
+		android:id="@+id/home_menu_item"
+		android:icon="@drawable/ic_menu_home"
+		android:title="Home"/>
+	<item
+		android:id="@+id/help_menu_item"
+		android:icon="@drawable/ic_menu_help"
+		android:visible="false"
+		android:title="Help"/>
+	<item
+		android:id="@+id/reply_menu_item"
+		android:icon="@drawable/ic_menu_compose"
+		android:visible="false"
+		android:title="Reply"/>		
+	<item
 		android:id="@+id/settings_menu_item"
 		android:icon="@drawable/ic_menu_preferences"
 		android:title="Settings"/>

@@ -4,14 +4,19 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
+import com.ecollege.android.DiscussionResponseActivity;
+import com.ecollege.android.DiscussionTopicActivity;
 import com.ecollege.android.ECollegeApplication;
+import com.ecollege.android.HomeActivity;
 import com.ecollege.android.LoginActivity;
+import com.ecollege.android.MainActivity;
 import com.ecollege.android.R;
 
 
@@ -58,6 +63,19 @@ public class ECollegeActivityHelper {
 			return false;
 		} else {
 			activity.getMenuInflater().inflate(R.menu.default_menu, menu);
+			
+			if (activity instanceof HomeActivity) {
+				MenuItem homeItem = (MenuItem)menu.findItem(R.id.home_menu_item);	
+				homeItem.setVisible(false);
+				MenuItem helpItem = (MenuItem)menu.findItem(R.id.help_menu_item);	
+				helpItem.setVisible(true);
+			}
+			
+			if (activity instanceof DiscussionTopicActivity || activity instanceof DiscussionResponseActivity) {
+				MenuItem replyItem = (MenuItem)menu.findItem(R.id.reply_menu_item);	
+				replyItem.setVisible(true);
+			}
+			
 			return true;
 		}
 	}
@@ -68,11 +86,22 @@ public class ECollegeActivityHelper {
 			//activity.startActivity(new Intent(activity, MainActivity.class));
 			//return true;
 		}
+		if (item.getItemId() == R.id.help_menu_item) {
+			//TODO
+			//activity.startActivity(new Intent(activity, MainActivity.class));
+			//return true;
+		}
 		if (item.getItemId() == R.id.logout_menu_item) {
 			ECollegeApplication app = (ECollegeApplication)activity.getApplication();
 			app.logout();
 			return true;
 		}		
+		if (item.getItemId() == R.id.home_menu_item) {
+			Intent i = new Intent(activity,MainActivity.class);
+			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			activity.startActivity(i);
+			return true;
+		}
 		return false;
 	}
 	

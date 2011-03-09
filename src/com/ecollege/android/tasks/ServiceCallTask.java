@@ -15,9 +15,9 @@ import com.ecollege.api.services.BaseService;
 
 public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsyncTask<ServiceT> {
 	
-	private ServiceT service;
+	protected ServiceT service;
 	protected boolean isCached = true;
-	
+	protected TaskPostProcessor<ServiceT> postProcessor;
 	
 	public ServiceCallTask(ECollegeActivity activity, ServiceT service)
 	{
@@ -29,6 +29,11 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		isCached = false;
 		return this;
 	}
+
+	public ServiceCallTask<ServiceT> setPostProcessor(TaskPostProcessor<ServiceT> postProcessor) {
+		this.postProcessor = postProcessor;
+		return this;
+	}
 	
 	public ServiceT call() throws Exception {
 		if (isCached) {
@@ -36,6 +41,11 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		} else {
 			app.getClient().executeService(service);
 		}
+		
+		if (postProcessor != null) {
+			service = postProcessor.onPostProcess(service);
+		}
+		
 		return service;
 	}
 	

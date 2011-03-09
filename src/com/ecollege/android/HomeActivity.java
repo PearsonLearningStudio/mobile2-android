@@ -28,6 +28,7 @@ import android.widget.TextView.BufferType;
 import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.android.adapter.HeaderAdapter;
 import com.ecollege.android.adapter.LoadMoreAdapter;
+import com.ecollege.android.tasks.TaskPostProcessor;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ActivityStreamItem;
 import com.ecollege.api.services.activities.FetchMyWhatsHappeningFeed;
@@ -110,9 +111,15 @@ public class HomeActivity extends ECollegeListActivity {
     	if (canLoadMoreActivites) {
     		GregorianCalendar oneMonthAgo = new GregorianCalendar();
     		oneMonthAgo.add(Calendar.MONTH, -2);
-        	buildService(new FetchMyWhatsHappeningFeed(oneMonthAgo)).disableTitlebarBusyIndicator().execute();
+        	buildService(new FetchMyWhatsHappeningFeed(oneMonthAgo))
+        		.setPostProcessor(new ActivityFeedPostProcessor<FetchMyWhatsHappeningFeed>())
+        		.disableTitlebarBusyIndicator()
+        		.execute();
     	} else {
-    		buildService(new FetchMyWhatsHappeningFeed()).disableTitlebarBusyIndicator().execute();	
+    		buildService(new FetchMyWhatsHappeningFeed())
+    			.setPostProcessor(new ActivityFeedPostProcessor<FetchMyWhatsHappeningFeed>())
+    			.disableTitlebarBusyIndicator()
+    			.execute();	
     	}
     }
     
@@ -223,6 +230,32 @@ public class HomeActivity extends ECollegeListActivity {
 
     }
     
+    private class ActivityFeedPostProcessor<ServiceT extends FetchMyWhatsHappeningFeed> extends TaskPostProcessor<ServiceT> {
+
+		@Override
+		public ServiceT onPostProcess(ServiceT service) {
+			ServiceT result = service;
+			if (result != null && result.getResult() != null) {
+				for (ActivityStreamItem asi : result.getResult()) {
+					if (asi.getPostedTime() != null) {
+						DateTime now = new DateTime();
+						DateTime postedTime = new DateTime(asi.getPostedTime());
+						
+						//int daysBetween = Days.daysBetween(postedTime, now).getDays();
+						int monthsBetween = Months.monthsBetween(postedTime, now).getMonths();
+						
+						if (monthsBetween <= 1) {
+							asi.setTag("Past 30 days");
+						} else {
+							asi.setTag("Over " + monthsBetween  + " months ago");
+						}						
+					}
+				}
+			}
+			return result;
+		}
+    }
+    
     private class ActivityFeedHeaderAdapter extends HeaderAdapter {
     	
 		public ActivityFeedHeaderAdapter(Context context,
@@ -233,19 +266,8 @@ public class HomeActivity extends ECollegeListActivity {
 		@Override
 		protected String headerLabelFunction(Object item, int position) {
 			ActivityStreamItem asi = (ActivityStreamItem)item;
-
-			if (asi.getPostedTime() == null) return "Unknown";
-			DateTime now = new DateTime();
-			DateTime postedTime = new DateTime(asi.getPostedTime());
-			
-			//int daysBetween = Days.daysBetween(postedTime, now).getDays();
-			int monthsBetween = Months.monthsBetween(postedTime, now).getMonths();
-			
-			if (monthsBetween <= 1) {
-				return "Past 30 days";
-			} else {
-				return "Over " + monthsBetween  + " months ago";
-			}
+			if (asi.getTag() != null) return asi.getTag().toString();
+			return "Unknown";
 		}
     	
     }

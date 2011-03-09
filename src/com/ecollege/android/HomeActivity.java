@@ -109,9 +109,9 @@ public class HomeActivity extends ECollegeListActivity {
     protected void fetchWhatsHappening() {
 		activityAdapter.setIsLoadingMore(true);
     	if (canLoadMoreActivites) {
-    		GregorianCalendar oneMonthAgo = new GregorianCalendar();
-    		oneMonthAgo.add(Calendar.MONTH, -2);
-        	buildService(new FetchMyWhatsHappeningFeed(oneMonthAgo))
+    		GregorianCalendar fetchSince = new GregorianCalendar();
+    		fetchSince.add(Calendar.DAY_OF_YEAR, -14);
+        	buildService(new FetchMyWhatsHappeningFeed(fetchSince))
         		.setPostProcessor(new ActivityFeedPostProcessor<FetchMyWhatsHappeningFeed>())
         		.disableTitlebarBusyIndicator()
         		.execute();

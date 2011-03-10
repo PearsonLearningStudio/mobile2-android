@@ -67,8 +67,6 @@ public class ECollegeActivityHelper {
 			if (activity instanceof HomeActivity) {
 				MenuItem homeItem = (MenuItem)menu.findItem(R.id.home_menu_item);	
 				homeItem.setVisible(false);
-				MenuItem helpItem = (MenuItem)menu.findItem(R.id.help_menu_item);	
-				helpItem.setVisible(true);
 			}
 			
 			if (activity instanceof DiscussionTopicActivity || activity instanceof DiscussionResponseActivity) {

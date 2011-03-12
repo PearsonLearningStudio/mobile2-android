@@ -8,6 +8,7 @@
     <string name="retry_dialog_button">Retry</string>
     <string name="progress_dialog_default_title">eCollege</string>
     <string name="progress_dialog_default_message">Processing request...</string>
+    <string name="none">None</string>
     
     <!-- Labels -->
     <string name="comments_label">Comments:</string>

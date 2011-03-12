@@ -65,16 +65,6 @@ public class GradeActivity extends ECollegeDefaultActivity {
     }
     
     protected void updateText() {
-    	grade = new Grade();
-    	gradebookItem = new GradebookItem();
-    	grade.setComments("Great Jorb!");
-    	grade.setLetterGrade("B");
-    	grade.setPoints(new BigDecimal(5.4f));
-    	grade.setUpdatedDate(Calendar.getInstance());
-    	gradebookItem.setPointsPossible(new BigDecimal(10.1f));
-    	gradebookItem.setTitle("Haggis");
-    	gradebookItem.setType("thiny");
-    	
     	if (gradebookItem != null){
     		gradeTitleText.setText(gradebookItem.getTitle()); 	
     	}

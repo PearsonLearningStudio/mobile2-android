@@ -10,6 +10,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
@@ -32,6 +33,8 @@ public class GradeActivity extends ECollegeDefaultActivity {
 	@InjectView(R.id.points_text) TextView pointsText;
 	@InjectView(R.id.letter_grade_text) TextView letterGradeText;
 	@InjectView(R.id.date_text) TextView dateText;
+	@InjectView(R.id.view_all_button) Button viewAllButton;
+	
 	protected ECollegeClient client;
 	protected GradebookItem gradebookItem;
 	protected Grade grade;

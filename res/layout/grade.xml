@@ -71,5 +71,10 @@
 		android:id="@+id/date_text"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"/>
+	<Button 
+		android:id="@+id/view_all_button"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/view_all_course_grades" />
 		
 </LinearLayout>

@@ -9,6 +9,10 @@
     <string name="progress_dialog_default_title">eCollege</string>
     <string name="progress_dialog_default_message">Processing request...</string>
     
+    <!-- Labels -->
+    <string name="comments_label">Comments:</string>
+    <string name="letter_grade_label">Letter Grade: </string>
+    <string name="points_label">Points: </string>
     
     
     

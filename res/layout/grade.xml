@@ -9,9 +9,67 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" />
 		
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+		<ImageView
+			android:id="@+id/grade_icon"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:scaleType="fitXY"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:src="@drawable/ic_grade" />
+		<TextView
+			android:id="@+id/course_title_text"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/grade_icon" />
+		<TextView
+			android:id="@+id/grade_title_text"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/grade_icon"
+			android:layout_below="@id/course_title_text" />
+	</RelativeLayout>
+	<RelativeLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+		<TextView
+			android:id="@+id/letter_grade_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/letter_grade_label" />
+		<TextView
+			android:id="@+id/letter_grade_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/letter_grade_label" />
+		<TextView
+			android:id="@+id/points_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/points_label" 
+			android:layout_below="@id/letter_grade_label" />
+		<TextView
+			android:id="@+id/points_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" 
+			android:layout_below="@id/letter_grade_text" 
+			android:layout_toRightOf="@id/points_label" />
+	</RelativeLayout>
 	<TextView
-		android:id="@+id/main_text"
+		android:id="@+id/comments_header"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/comments_label" />
+	<TextView
+		android:id="@+id/comments_text"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"/>
-
+	<TextView
+		android:id="@+id/date_text"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"/>
+		
 </LinearLayout>

@@ -1,5 +1,11 @@
 package com.ecollege.android;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Calendar;
+
+import org.apache.commons.lang.math.NumberUtils;
+
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
@@ -13,16 +19,25 @@ import com.ecollege.api.model.GradebookItem;
 import com.ecollege.api.services.grades.FetchGradebookItemByGuid;
 import com.ecollege.api.services.grades.FetchMyGradebookItemGrade;
 import com.google.inject.Inject;
+import com.ocpsoft.pretty.time.PrettyTime;
 
 public class GradeActivity extends ECollegeDefaultActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectExtra("courseId") long courseId;
 	@InjectExtra("gradebookItemGuid") String gradebookItemGuid;
-	@InjectView(R.id.main_text) TextView mainText;
+	@InjectView(R.id.course_title_text) TextView courseTitleText;
+	@InjectView(R.id.grade_title_text) TextView gradeTitleText;
+	@InjectView(R.id.comments_text) TextView commentsText;
+	@InjectView(R.id.points_text) TextView pointsText;
+	@InjectView(R.id.letter_grade_text) TextView letterGradeText;
+	@InjectView(R.id.date_text) TextView dateText;
 	protected ECollegeClient client;
 	protected GradebookItem gradebookItem;
 	protected Grade grade;
+	
+	private static PrettyTime prettyTimeFormatter = new PrettyTime();
+	private static DecimalFormat decimalFormatter = new DecimalFormat();
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,20 +62,30 @@ public class GradeActivity extends ECollegeDefaultActivity {
     }
     
     protected void updateText() {
-    	StringBuilder content = new StringBuilder();
+    	grade = new Grade();
+    	gradebookItem = new GradebookItem();
+    	grade.setComments("Great Jorb!");
+    	grade.setLetterGrade("B");
+    	grade.setPoints(new BigDecimal(5.4f));
+    	grade.setUpdatedDate(Calendar.getInstance());
+    	gradebookItem.setPointsPossible(new BigDecimal(10.1f));
+    	gradebookItem.setTitle("Haggis");
+    	gradebookItem.setType("thiny");
     	
     	if (gradebookItem != null){
-    		content.append("Item: " + gradebookItem.getTitle() + " (" + gradebookItem.getType() + ")\n");
+    		gradeTitleText.setText(gradebookItem.getTitle()); 	
     	}
     	
     	if (grade != null) {
-    		content.append("Grade: " + grade.getLetterGrade() + "\n");
-    		content.append("Points: " + grade.getPoints());
-    		if (gradebookItem != null) content.append(" / " + gradebookItem.getPointsPossible());
-    		content.append("\n");
-    		content.append("Comments: " + grade.getComments());
+    		commentsText.setText(grade.getComments());
+    		letterGradeText.setText(grade.getLetterGrade());
+    		dateText.setText(prettyTimeFormatter.format(grade.getUpdatedDate().getTime()));
+    		
+    		StringBuilder pointsContent = new StringBuilder();
+    		pointsContent.append(decimalFormatter.format(grade.getPoints()));
+    		if (gradebookItem != null) pointsContent.append(" / " + decimalFormatter.format(gradebookItem.getPointsPossible()));
+    		pointsText.setText(pointsContent.toString());
     	}
     	
-    	mainText.setText(content);    	
     }
 }

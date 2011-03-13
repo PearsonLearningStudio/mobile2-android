@@ -1,10 +1,6 @@
 package com.ecollege.android;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Calendar;
-
-import org.apache.commons.lang.math.NumberUtils;
 
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectResource;

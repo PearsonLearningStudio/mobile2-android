@@ -38,4 +38,7 @@ public class VolatileCacheManager {
 			}
 		}
 	}
+	 public void clear() {
+		 cacheMap.clear();
+	 }
 }

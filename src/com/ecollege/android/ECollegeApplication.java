@@ -75,7 +75,7 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 		volatileCache.put(keyQualifier + "-" + key, object);
 	}
 	
-	public <CachedT extends Type> CachedT fetchObjectOfTypeFromVolatileCache(String keyQualifier, String key, CachedT clazz) {
+	public <CachedT extends Type> CachedT getObjectOfTypeFromVolatileCache(String keyQualifier, String key, CachedT clazz) {
 		CachedT cachedObject = volatileCache.get(keyQualifier + "-" + key, clazz);
 		return cachedObject;
 	}

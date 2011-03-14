@@ -2,7 +2,6 @@ package com.ecollege.android;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +79,7 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 		volatileCache.put(key + "-" + getSessionIdentifier(), object);
 	}
 	
-	public <CachedT extends Type> CachedT getObjectOfTypeFromVolatileCache(String key, CachedT clazz) {
+	public <CachedT> CachedT getObjectOfTypeFromVolatileCache(String key, Class<CachedT> clazz) {
 		CachedT cachedObject = volatileCache.get(key + "-" + getSessionIdentifier(), clazz);
 		return cachedObject;
 	}

@@ -1,6 +1,5 @@
 package com.ecollege.android.util;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 
 import android.util.Log;
@@ -17,8 +16,7 @@ public class VolatileCacheManager {
 		cacheMap.put(key, value);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <CachedT extends Type> CachedT get(Object key, CachedT clazz) {
+	public <CachedT> CachedT get(Object key, Class<CachedT> clazz) {
 		Object cachedObject = cacheMap.get(key);
 		if (null == cachedObject) {
 			Log.i(TAG, String.format("Cache miss for key: %s", key));
@@ -27,7 +25,7 @@ public class VolatileCacheManager {
 			Log.i(TAG, String.format("Cache hit for key: %s", key));
 			if (null != clazz) {
 				try {
-					CachedT castObject = (CachedT)cachedObject;
+					CachedT castObject = clazz.cast(cachedObject);
 					return castObject;
 				} catch (ClassCastException cce) {
 					Log.i(TAG, String.format("Cache failed to cast object to Class: ", clazz.toString()));

@@ -72,12 +72,12 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 		startActivity(i);
 	}
 		
-	public void putObjectInVolatileCache(String keyQualifier, String key, Object object) {
-		volatileCache.put(keyQualifier + "-" + key, object);
+	public void putObjectInVolatileCache(String key, Object object) {
+		volatileCache.put(key, object);
 	}
 	
-	public <CachedT extends Type> CachedT getObjectOfTypeFromVolatileCache(String keyQualifier, String key, CachedT clazz) {
-		CachedT cachedObject = volatileCache.get(keyQualifier + "-" + key, clazz);
+	public <CachedT extends Type> CachedT getObjectOfTypeFromVolatileCache(String key, CachedT clazz) {
+		CachedT cachedObject = volatileCache.get(key, clazz);
 		return cachedObject;
 	}
 	

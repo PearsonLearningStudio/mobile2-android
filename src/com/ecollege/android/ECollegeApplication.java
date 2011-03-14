@@ -77,11 +77,11 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 	}
 		
 	public void putObjectInVolatileCache(String key, Object object) {
-		volatileCache.put(key, object);
+		volatileCache.put(key + "-" + getSessionIdentifier(), object);
 	}
 	
 	public <CachedT extends Type> CachedT getObjectOfTypeFromVolatileCache(String key, CachedT clazz) {
-		CachedT cachedObject = volatileCache.get(key, clazz);
+		CachedT cachedObject = volatileCache.get(key + "-" + getSessionIdentifier(), clazz);
 		return cachedObject;
 	}
 	

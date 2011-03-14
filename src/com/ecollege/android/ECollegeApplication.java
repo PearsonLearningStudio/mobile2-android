@@ -34,7 +34,6 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
     final protected VolatileCacheManager volatileCache = new VolatileCacheManager();
 	protected Context lastActiveContext;
     private FileCacheManager serviceCache;
-    
 	
 	public ECollegeApplication() {
 		super();
@@ -48,6 +47,11 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 			client = new ECollegeClient(getString(R.string.client_string), getString(R.string.client_id));
 		}
 		return client;
+	}
+	
+	public String getSessionIdentifier() {
+		String id = getClient().getGrantToken();
+		return (id == null) ? "" : id;
 	}
 	
 	@Override

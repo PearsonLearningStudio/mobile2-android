@@ -17,18 +17,30 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	
 	protected ServiceT service;
 	protected boolean isCached = true;
+	protected boolean cacheExecutedResult = true;
+	protected boolean useResultCache = true;
 	protected TaskPostProcessor<ServiceT> postProcessor;
 	
-	public ServiceCallTask(ECollegeActivity activity, ServiceT service)
-	{
+	public ServiceCallTask(ECollegeActivity activity, ServiceT service) {
 		super(activity);
 		this.service=service;
 	}
 	
-	public ServiceCallTask<ServiceT> noCache() {
+	public ServiceCallTask<ServiceT> doNotFileCache() {
 		isCached = false;
 		return this;
 	}
+	
+	public ServiceCallTask<ServiceT> doNotResultCache() {
+		cacheExecutedResult = false;
+		return this;
+	}
+	
+	public ServiceCallTask<ServiceT> bypassResultCache() {
+		useResultCache = false;
+		return this;
+	}
+
 
 	public ServiceCallTask<ServiceT> setPostProcessor(TaskPostProcessor<ServiceT> postProcessor) {
 		this.postProcessor = postProcessor;
@@ -36,6 +48,16 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	}
 	
 	public ServiceT call() throws Exception {
+		if (useResultCache) {
+			ServiceT executedService = getExecutedService(service);
+			// We found an identical service that was already executed and cached,
+			// so just return that one
+			if (executedService != null) {
+				Ln.i(String.format("Returning cached result for %s instead of performing service call", service.toString()));
+				return executedService;
+			}
+		}
+		
 		if (isCached) {
 			app.getClient().executeService(service,app.getServiceCache());
 		} else {
@@ -46,10 +68,24 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 			service = postProcessor.onPostProcess(service);
 		}
 		
+		if (cacheExecutedResult) {
+			app.putObjectInVolatileCache(
+				service.getCacheKey(app.getSessionIdentifier()),
+				service);
+		}
+		
 		return service;
 	}
 	
 	
+	@SuppressWarnings("unchecked")
+	protected ServiceT getExecutedService(ServiceT newService) {
+		ServiceT completedService = app.getObjectOfTypeFromVolatileCache(
+				newService.getCacheKey(app.getSessionIdentifier()),
+				(Class<ServiceT>)newService.getClass());
+		return completedService;
+	}
+
 	@Override
 	protected void onException(Exception sourceException) throws RuntimeException {
 		boolean errorHandled = false;

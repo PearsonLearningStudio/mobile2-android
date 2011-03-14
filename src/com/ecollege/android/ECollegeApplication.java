@@ -63,6 +63,7 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 	public void logout() {
 		client = null;
 		currentUser = null;
+		volatileCache.clear();
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.remove("grantToken");
 		editor.commit(); //change to apply if android 2.2

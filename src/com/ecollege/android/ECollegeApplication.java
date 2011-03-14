@@ -2,6 +2,7 @@ package com.ecollege.android;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,6 @@ import roboguice.util.Ln;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.ecollege.android.errors.ECollegeAlertException;
@@ -20,6 +20,7 @@ import com.ecollege.android.errors.ECollegeException;
 import com.ecollege.android.errors.ECollegePromptException;
 import com.ecollege.android.errors.ECollegePromptRetryException;
 import com.ecollege.android.util.FileCacheManager;
+import com.ecollege.android.util.VolatileCacheManager;
 import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.User;
@@ -29,10 +30,8 @@ import com.google.inject.Module;
 
 public class ECollegeApplication extends RoboApplication implements UncaughtExceptionHandler {
 	
-	private static final String TAG = ECollegeApplication.class.getName();
-	
 	@Inject SharedPreferences prefs;
-    final protected HashMap<Object, Object> volatileCache = new HashMap<Object, Object>();
+    final protected VolatileCacheManager volatileCache = new VolatileCacheManager();
 	protected Context lastActiveContext;
     private FileCacheManager serviceCache;
     
@@ -73,32 +72,12 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 	}
 		
 	public void putObjectInVolatileCache(String keyQualifier, String key, Object object) {
-		// TODO: limit the size of the cache
-		// TODO: Add a TTL
 		volatileCache.put(keyQualifier + "-" + key, object);
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public <CachedT extends Class> CachedT fetchObjectOfTypeFromVolatileCache(String keyQualifier, String key, CachedT clazz) {
-		Object cachedObject = volatileCache.get(keyQualifier + "-" + key);
-		if (null == cachedObject) {
-			Log.i(TAG, String.format("Application volatile cache miss for qualifier: %s, key: %s", keyQualifier, key));
-			return null;
-		} else {
-			Log.i(TAG, String.format("Application volatile cache hit for qualifier: %s, key: %s", keyQualifier, key));
-			if (null != clazz) {
-				try {
-					CachedT castObject = (CachedT)cachedObject;
-					return castObject;
-				} catch (ClassCastException cce) {
-					Log.i(TAG, String.format("Application volatile cache failed to cast object to Class: ", clazz.toString()));
-					return null;
-				}
-			} else {
-				Log.i(TAG, "Application volatile cache failed to cast object: type information was null");
-				return null;
-			}
-		}
+	public <CachedT extends Type> CachedT fetchObjectOfTypeFromVolatileCache(String keyQualifier, String key, CachedT clazz) {
+		CachedT cachedObject = volatileCache.get(keyQualifier + "-" + key, clazz);
+		return cachedObject;
 	}
 	
 	public FileCacheManager getServiceCache() {

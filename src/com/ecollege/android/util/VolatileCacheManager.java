@@ -13,6 +13,7 @@ public class VolatileCacheManager {
 	public void put(Object key, Object value) {
 		// TODO: limit the size of the cache
 		// TODO: Add a TTL
+		Log.i(TAG, String.format("Cache put key: %s, value: %s", key, value.toString()));
 		cacheMap.put(key, value);
 	}
 	

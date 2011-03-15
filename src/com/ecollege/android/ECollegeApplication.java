@@ -30,7 +30,7 @@ import com.google.inject.Module;
 public class ECollegeApplication extends RoboApplication implements UncaughtExceptionHandler {
 	
 	@Inject SharedPreferences prefs;
-    final protected VolatileCacheManager volatileCache = new VolatileCacheManager();
+    final protected VolatileCacheManager volatileCache = new VolatileCacheManager(1000 * 60 * 30); // 30 minute cache
 	protected Context lastActiveContext;
     private FileCacheManager serviceCache;
 	

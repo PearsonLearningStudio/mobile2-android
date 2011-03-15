@@ -8,21 +8,53 @@ import roboguice.util.Ln;
 public class VolatileCacheManager {
 	
 	private static final int INITIAL_CACHE_CAPACITY = 255;
-
-	final protected ConcurrentHashMap<Object, SoftReference<Object>> cacheMap = new ConcurrentHashMap<Object, SoftReference<Object>>(INITIAL_CACHE_CAPACITY);
 	
+	protected class CacheEntry {
+		public Object value;
+		public long cachedAt;
+		public CacheEntry(Object value, long cachedAt) {
+			super();
+			this.value = value;
+			this.cachedAt = cachedAt;
+		}
+		public Boolean valueIsOlderThanMillis(long expirationInMillis) {
+			if (System.currentTimeMillis() - cachedAt <= expirationInMillis) {
+				return false;
+			}
+			return true;
+		}
+	}
+
+	final protected ConcurrentHashMap<Object, SoftReference<CacheEntry>> cacheMap = new ConcurrentHashMap<Object, SoftReference<CacheEntry>>(INITIAL_CACHE_CAPACITY);
+	
+	protected final long expirationInMillis;
+	
+	public VolatileCacheManager(long expirationInMillis) {
+		super();
+		this.expirationInMillis = expirationInMillis;
+	}
+
 	public void put(Object key, Object value) {
 		// TODO: limit the size of the cache more manually than with SoftReference?
 		// TODO: Add a TTL
 		Ln.i(String.format("Cache put key: %s, value: %s", key, value.toString()));
-		cacheMap.put(key, new SoftReference<Object>(value));
+		cacheMap.put(key, new SoftReference<CacheEntry>(new CacheEntry(value, System.currentTimeMillis())));
 	}
 	
 	public <CachedT> CachedT get(Object key, Class<CachedT> clazz) {
-		SoftReference<Object> ref = cacheMap.get(key);
+		SoftReference<CacheEntry> ref = cacheMap.get(key);
+		CacheEntry cacheEntry = null;
 		Object cachedObject = null;
 		if (null != ref) {
-			cachedObject = ref.get();
+			cacheEntry = ref.get();
+			if (cacheEntry != null) {
+				if (cacheEntry.valueIsOlderThanMillis(expirationInMillis)) {
+					cacheMap.remove(key);
+					Ln.i(String.format("Cache key was expired: %s", key));
+				} else {
+					cachedObject = cacheEntry.value;
+				}
+			}
 		}
 		if (null == cachedObject) {
 			Ln.i( String.format("Cache miss for key: %s", key));

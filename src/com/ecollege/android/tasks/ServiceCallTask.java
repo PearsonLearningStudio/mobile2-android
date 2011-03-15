@@ -53,7 +53,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 			// We found an identical service that was already executed and cached,
 			// so just return that one
 			if (executedService != null) {
-				Ln.i(String.format("Returning cached result for %s instead of performing service call", service.toString()));
+				Ln.i(String.format("Returning cached result: %s for %s instead of performing service call", executedService.toString(), service.toString()));
 				return executedService;
 			}
 		}

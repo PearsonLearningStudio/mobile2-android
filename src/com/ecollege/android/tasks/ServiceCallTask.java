@@ -49,7 +49,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	
 	public ServiceT call() throws Exception {
 		if (useResultCache) {
-			ServiceT executedService = getExecutedService(service);
+			ServiceT executedService = getServiceFromResultCache(service);
 			// We found an identical service that was already executed and cached,
 			// so just return that one
 			if (executedService != null) {
@@ -79,7 +79,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	
 	
 	@SuppressWarnings("unchecked")
-	protected ServiceT getExecutedService(ServiceT newService) {
+	protected ServiceT getServiceFromResultCache(ServiceT newService) {
 		ServiceT completedService = app.getObjectOfTypeFromVolatileCache(
 				newService.getCacheKey(app.getSessionIdentifier()),
 				(Class<ServiceT>)newService.getClass());

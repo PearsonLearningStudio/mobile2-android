@@ -19,7 +19,7 @@ public class FileCacheManager implements ECollegeHttpResponseCache {
 	
 	private final File cacheDir;
 	private final long expirationInMillis;	// in ms
-
+	
 	/**
 	 * FileCacheManager implements a cache system with the application cache directory on android.
 	 * 
@@ -42,14 +42,14 @@ public class FileCacheManager implements ECollegeHttpResponseCache {
 		}
 	}
 
-	public String get(String cacheKey) {
+	public CacheEntry get(String cacheKey) {
 		File cacheFile = null;
-
+		long lastModified = Calendar.getInstance().getTimeInMillis();
 		synchronized (cacheDir) {
 			cacheFile = new File(cacheDir, cacheKey);
 			
 			if (cacheFile.exists()) {
-				long lastModified = cacheFile.lastModified();
+				lastModified = cacheFile.lastModified();
 				long now = Calendar.getInstance().getTimeInMillis();
 				
 				if (now - lastModified > expirationInMillis) {
@@ -64,7 +64,7 @@ public class FileCacheManager implements ECollegeHttpResponseCache {
 			try {
 				fin = new GZIPInputStream(new FileInputStream(cacheFile));
 				String cacheData = ECollegeHttpResponseHandler.streamToString(fin, null);
-				return cacheData;
+				return new CacheEntry(cacheData, lastModified);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -80,7 +80,7 @@ public class FileCacheManager implements ECollegeHttpResponseCache {
 			}
 		}
 		
-		return null;//cacheFile;		
+		return null;
 	}
 
 	public void put(String cacheKey, String responseContent) {

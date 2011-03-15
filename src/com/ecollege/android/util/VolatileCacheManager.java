@@ -1,13 +1,14 @@
 package com.ecollege.android.util;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import roboguice.util.Ln;
 
 public class VolatileCacheManager {
+	
+	private static final int INITIAL_CACHE_CAPACITY = 255;
 
-	private static final String TAG = VolatileCacheManager.class.getName();
-	final protected HashMap<Object, Object> cacheMap = new HashMap<Object, Object>();
+	final protected ConcurrentHashMap<Object, Object> cacheMap = new ConcurrentHashMap<Object, Object>(INITIAL_CACHE_CAPACITY);
 	
 	public void put(Object key, Object value) {
 		// TODO: limit the size of the cache

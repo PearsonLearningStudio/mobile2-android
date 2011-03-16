@@ -1,5 +1,6 @@
 package com.ecollege.android;
 
+import roboguice.util.Ln;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -8,6 +9,7 @@ import android.widget.TabHost;
 
 import com.ecollege.android.activities.ECollegeTabActivity;
 import com.ecollege.api.ECollegeClient;
+import com.ecollege.api.services.courses.FetchMyCoursesService;
 import com.ecollege.api.services.users.FetchMeService;
 import com.google.inject.Inject;
 
@@ -15,6 +17,8 @@ public class MainActivity extends ECollegeTabActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	protected ECollegeClient client;
+	private boolean meLoaded;
+	private boolean coursesLoaded;
 	
 	
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -26,7 +30,7 @@ public class MainActivity extends ECollegeTabActivity {
 	        String grantToken = prefs.getString("grantToken", null);
 	        if (grantToken != null) {
 	    		client.setupAuthentication(grantToken);
-	        	fetchCurrentUser();
+	        	fetchCurrentUserAndCourses();
 	        } else {
 	        	Intent myIntent = new Intent(this, LoginActivity.class);
 	        	startActivityForResult(myIntent, LOGIN_REQUEST_CODE);
@@ -45,13 +49,29 @@ public class MainActivity extends ECollegeTabActivity {
     	}
     }
     
-    protected void fetchCurrentUser() {
+    protected void fetchCurrentUserAndCourses() {
     	buildService(new FetchMeService()).execute();
+    	buildService(new FetchMyCoursesService()).execute();
     }    
     
     public void onServiceCallSuccess(FetchMeService service) {
 		app.setCurrentUser(service.getResult());	
-		setupActivity();
+    	Ln.i("User loaded from the Main activity");
+		meLoaded = true;
+		setupActivityIfServiceCallsAreComplete();
+    }
+    
+    public void onServiceCallSuccess(FetchMyCoursesService service) {
+    	app.setCurrentCourseList(service.getResult());
+    	Ln.i("Courses loaded from the Main activity");
+    	coursesLoaded = true;
+    	setupActivityIfServiceCallsAreComplete();
+    }
+    
+    protected void setupActivityIfServiceCallsAreComplete() {
+    	if (meLoaded && coursesLoaded) {
+    		setupActivity();
+    	}
     }
     
     protected void setupActivity() {

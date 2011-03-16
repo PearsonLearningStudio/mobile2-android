@@ -5,6 +5,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import roboguice.application.RoboApplication;
 import roboguice.inject.SharedPreferencesName;
@@ -22,6 +23,7 @@ import com.ecollege.android.util.FileCacheManager;
 import com.ecollege.android.util.VolatileCacheManager;
 import com.ecollege.android.view.HeaderView;
 import com.ecollege.api.ECollegeClient;
+import com.ecollege.api.model.Course;
 import com.ecollege.api.model.User;
 import com.google.inject.Binder;
 import com.google.inject.Inject;
@@ -66,6 +68,8 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 	public void logout() {
 		client = null;
 		currentUser = null;
+		currentCourseList = null;
+		courseIdMap.clear();
 		volatileCache.clear();
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.remove("grantToken");
@@ -93,6 +97,8 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 	
 	private int pendingServiceCalls = 0;
 	private User currentUser;
+	private List<Course> currentCourseList;
+	final private ConcurrentHashMap<Long, Course> courseIdMap = new ConcurrentHashMap<Long, Course>(8);
 	private int nextProgressDialogTitleId = -1;
     private int nextProgressDialogMsgId = -1;
     
@@ -124,6 +130,21 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
+	}
+
+	public void setCurrentCourseList(List<Course> currentCourseList) {
+		this.currentCourseList = currentCourseList;
+		for (Course course : currentCourseList) {
+			courseIdMap.put(course.getId(), course);
+		}
+	}
+
+	public List<Course> getCurrentCourseList() {
+		return currentCourseList;
+	}
+	
+	public Course getCourseById(long id) {
+		return courseIdMap.get(id);
 	}
 
 	public int getNextProgressDialogTitleId() {

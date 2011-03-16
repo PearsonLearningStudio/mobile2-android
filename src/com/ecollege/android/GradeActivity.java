@@ -17,7 +17,6 @@ import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.Course;
 import com.ecollege.api.model.Grade;
 import com.ecollege.api.model.GradebookItem;
-import com.ecollege.api.services.courses.FetchCourseByIdService;
 import com.ecollege.api.services.grades.FetchGradebookItemByGuid;
 import com.ecollege.api.services.grades.FetchMyGradebookItemGrade;
 import com.google.inject.Inject;
@@ -51,11 +50,11 @@ public class GradeActivity extends ECollegeDefaultActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grade);
         client = app.getClient();
+    	course = app.getCourseById(courseId);
         fetchData();
     }
     
     protected void fetchData() {
-    	buildService(new FetchCourseByIdService(courseId)).execute();
     	buildService(new FetchGradebookItemByGuid(courseId,gradebookItemGuid)).execute();
     	buildService(new FetchMyGradebookItemGrade(courseId,gradebookItemGuid)).execute();
     }
@@ -68,11 +67,6 @@ public class GradeActivity extends ECollegeDefaultActivity {
     public void onServiceCallSuccess(FetchMyGradebookItemGrade service) {
     	grade = service.getResult(); 
     	updateText();
-    }
-    
-    public void onServiceCallSuccess(FetchCourseByIdService service) {
-    	 course = service.getResult();
-    	 updateText();
     }
     
     protected void updateText() {

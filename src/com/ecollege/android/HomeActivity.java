@@ -315,6 +315,7 @@ public class HomeActivity extends ECollegeListActivity {
             String objectType = ob.getObjectType();
             
             long courseId = ob.getCourseId();
+            Course course = app.getCourseById(courseId);
             
             if ("thread-topic".equals(objectType)) {
             	title = "Topic: " + si.getTarget().getTitle();
@@ -340,9 +341,10 @@ public class HomeActivity extends ECollegeListActivity {
             holder.titleText.setText(title);
             holder.descriptionText.setText(Html.fromHtml(desc),BufferType.SPANNABLE);
             holder.timeText.setText(prettyTimeFormatter.format(si.getPostedTime().getTime()));
-            holder.courseTitleText.setText("<Course Title>");
+            if (course != null) {
+            	holder.courseTitleText.setText(course.getTitle());
+            }
             
-            //holder.iconPlaceholder.setText(si.getObject().getObjectType().substring(0, 1));
             return convertView;
         }
     	

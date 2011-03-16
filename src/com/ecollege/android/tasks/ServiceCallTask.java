@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import com.ecollege.android.R;
 import com.ecollege.android.activities.ECollegeActivity;
 import com.ecollege.android.errors.ECollegePromptRetryException;
+import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.api.exceptions.TimeoutException;
 import com.ecollege.api.services.BaseService;
 
@@ -26,7 +27,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		this.service=service;
 	}
 	
-	public ServiceCallTask<ServiceT> doNotFileCache() {
+	public ServiceCallTask<ServiceT> bypassFileCache() {
 		isCached = false;
 		return this;
 	}
@@ -38,6 +39,14 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	
 	public ServiceCallTask<ServiceT> bypassResultCache() {
 		useResultCache = false;
+		return this;
+	}
+	
+	public ServiceCallTask<ServiceT> configureCaching(CacheConfiguration config) {
+		assert(config != null);
+		isCached = !config.bypassFileCache;
+		cacheExecutedResult = config.cacheResult;
+		useResultCache = !config.bypassResultCache;
 		return this;
 	}
 
@@ -57,11 +66,14 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 				service = executedService;
 				return executedService;
 			}
+		} else {
+			Ln.i(String.format("Bypassing result cache for %s", service));
 		}
 		
 		if (isCached) {
 			app.getClient().executeService(service,app.getServiceCache());
 		} else {
+			Ln.i(String.format("Bypassing file cache for %s", service));
 			app.getClient().executeService(service);
 		}
 		

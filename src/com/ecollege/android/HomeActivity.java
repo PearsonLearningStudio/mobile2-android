@@ -29,6 +29,7 @@ import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.android.adapter.HeaderAdapter;
 import com.ecollege.android.adapter.LoadMoreAdapter;
 import com.ecollege.android.tasks.TaskPostProcessor;
+import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ActivityStreamItem;
 import com.ecollege.api.model.ActivityStreamObject;
@@ -54,31 +55,33 @@ public class HomeActivity extends ECollegeListActivity {
         setContentView(R.layout.home);
         mInflater = getLayoutInflater();
         client = app.getClient();
-    }
-    
-    @Override
-    protected void onResume() {
-    	super.onResume();
-    	boolean showWhatsDue = prefs.getBoolean("showWhatsDue", true); 
-    	whatsDueRadioButton.setChecked(showWhatsDue);
-    	activityRadioButton.setChecked(!showWhatsDue);
-        refreshList();
+        
+        if (savedInstanceState != null) {
+        	canLoadMoreActivites = savedInstanceState.getBoolean("canLoadMoreActivites", true);
+        }
+        
+        boolean showWhatsDue = prefs.getBoolean("showWhatsDue", true);
+        whatsDueRadioButton.setChecked(showWhatsDue);
+        activityRadioButton.setChecked(!showWhatsDue);
 
+        loadAndDisplayListForSelectedType();
     }
     
     @Override
-    protected void onPause() {
-    	super.onPause();
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		outState.putBoolean("canLoadMoreActivites", canLoadMoreActivites);
     	if (whatsDueRadioButton != null) {
     		prefs.edit().putBoolean("showWhatsDue", whatsDueRadioButton.isChecked()).commit();
     	}
-    }
+	}
 
     public void onRadioGroupCheckedChanged(View v) {
-    	refreshList();
+    	loadAndDisplayListForSelectedType();
     }
     
-    protected void refreshList() {
+    protected void loadAndDisplayListForSelectedType() {
     	ListAdapter chosenAdapter;
     	if (whatsDueRadioButton.isChecked()) {
     		chosenAdapter = createOrReturnWhatsHappeningAdapter();
@@ -109,17 +112,30 @@ public class HomeActivity extends ECollegeListActivity {
     }
     
     protected void fetchWhatsHappening() {
+    	fetchWhatsHappening(null);
+    }
+    
+    protected void reloadWhatsHappening() {
+    	fetchWhatsHappening(new CacheConfiguration(true, true, true));
+    }
+    
+    protected void fetchWhatsHappening(CacheConfiguration cacheConfiguration) {
+    	if (null == cacheConfiguration) {
+    		cacheConfiguration = new CacheConfiguration(); // default hits the most caches
+    	}
 		activityAdapter.setIsLoadingMore(true);
     	if (canLoadMoreActivites) {
     		GregorianCalendar fetchSince = new GregorianCalendar();
     		fetchSince.add(Calendar.DAY_OF_YEAR, -14);
         	buildService(new FetchMyWhatsHappeningFeed(fetchSince))
         		.setPostProcessor(new ActivityFeedPostProcessor<FetchMyWhatsHappeningFeed>())
+        		.configureCaching(cacheConfiguration)
         		.disableTitlebarBusyIndicator()
         		.execute();
     	} else {
     		buildService(new FetchMyWhatsHappeningFeed())
     			.setPostProcessor(new ActivityFeedPostProcessor<FetchMyWhatsHappeningFeed>())
+        		.configureCaching(cacheConfiguration)
     			.disableTitlebarBusyIndicator()
     			.execute();	
     	}
@@ -129,7 +145,7 @@ public class HomeActivity extends ECollegeListActivity {
 		ActivityFeedAdapter baseAdapter = new ActivityFeedAdapter(this,service.getResult());
 		ActivityFeedHeaderAdapter headerAdapter = new ActivityFeedHeaderAdapter(this, baseAdapter);
     	activityAdapter.update(headerAdapter,canLoadMoreActivites);
-    	refreshList();
+    	loadAndDisplayListForSelectedType();
     }
     
     @Override

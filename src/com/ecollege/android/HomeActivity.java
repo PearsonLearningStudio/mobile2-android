@@ -2,6 +2,7 @@ package com.ecollege.android;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -36,6 +38,7 @@ import com.ecollege.api.model.ActivityStreamObject;
 import com.ecollege.api.model.Course;
 import com.ecollege.api.services.activities.FetchMyWhatsHappeningFeed;
 import com.google.inject.Inject;
+import com.ocpsoft.pretty.time.Duration;
 import com.ocpsoft.pretty.time.PrettyTime;
 
 public class HomeActivity extends ECollegeListActivity {
@@ -43,6 +46,8 @@ public class HomeActivity extends ECollegeListActivity {
 	@Inject SharedPreferences prefs;
 	@InjectView(R.id.radio_whats_due) RadioButton whatsDueRadioButton;
 	@InjectView(R.id.radio_activity) RadioButton activityRadioButton;
+	@InjectView(R.id.last_updated_text) TextView lastUpdatedText;
+	@InjectView(R.id.reload_button) Button reloadButton;
 	
 	protected ECollegeClient client;
 	private LayoutInflater mInflater;
@@ -58,12 +63,24 @@ public class HomeActivity extends ECollegeListActivity {
         
         if (savedInstanceState != null) {
         	canLoadMoreActivites = savedInstanceState.getBoolean("canLoadMoreActivites", true);
+        	whatsDueLastUpdated = savedInstanceState.getLong("whatsDueLastUpdated");
+        	whatsHappeningLastUpdated = savedInstanceState.getLong("whatsHappeningLastUpdated");
         }
         
         boolean showWhatsDue = prefs.getBoolean("showWhatsDue", true);
         whatsDueRadioButton.setChecked(showWhatsDue);
         activityRadioButton.setChecked(!showWhatsDue);
-
+        
+        reloadButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+		    	if (whatsDueRadioButton.isChecked()) {
+		    		//TODO: reload what's due
+		    	} else {
+		    		reloadWhatsHappening();
+		    	}
+			}
+		});
+        
         loadAndDisplayListForSelectedType();
     }
     
@@ -72,6 +89,8 @@ public class HomeActivity extends ECollegeListActivity {
 		super.onSaveInstanceState(outState);
 		
 		outState.putBoolean("canLoadMoreActivites", canLoadMoreActivites);
+		outState.putLong("whatsDueLastUpdated", whatsDueLastUpdated);
+		outState.putLong("whatsHappeneingLastUpdated", whatsHappeningLastUpdated);
     	if (whatsDueRadioButton != null) {
     		prefs.edit().putBoolean("showWhatsDue", whatsDueRadioButton.isChecked()).commit();
     	}
@@ -83,11 +102,19 @@ public class HomeActivity extends ECollegeListActivity {
     
     protected void loadAndDisplayListForSelectedType() {
     	ListAdapter chosenAdapter;
+    	String formattedLastUpdated = getString(R.string.never);
     	if (whatsDueRadioButton.isChecked()) {
     		chosenAdapter = createOrReturnWhatsHappeningAdapter();
+    		if (whatsDueLastUpdated != 0) {
+    			formattedLastUpdated = new Date(whatsDueLastUpdated).toString();
+    		}
     	} else {
     		chosenAdapter = createOrReturnActivitiesAdapter();
+    		if (whatsHappeningLastUpdated != 0) {
+    			formattedLastUpdated = new Date(whatsHappeningLastUpdated).toString();
+    		}
     	}
+    	lastUpdatedText.setText(formattedLastUpdated);
     	setListAdapter(chosenAdapter);
     }
 
@@ -101,6 +128,8 @@ public class HomeActivity extends ECollegeListActivity {
 
 	private LoadMoreAdapter activityAdapter;
 	private boolean canLoadMoreActivites = true;
+	private long whatsHappeningLastUpdated;
+	private long whatsDueLastUpdated;
 	
     private ListAdapter createOrReturnActivitiesAdapter() {
     	if (activityAdapter == null) {
@@ -116,7 +145,20 @@ public class HomeActivity extends ECollegeListActivity {
     }
     
     protected void reloadWhatsHappening() {
-    	fetchWhatsHappening(new CacheConfiguration(true, true, true));
+    	CacheConfiguration cacheConfiguration = new CacheConfiguration(true, true, true);
+    	if (canLoadMoreActivites) {
+    		GregorianCalendar fetchSince = new GregorianCalendar();
+    		fetchSince.add(Calendar.DAY_OF_YEAR, -14);
+        	buildService(new FetchMyWhatsHappeningFeed(fetchSince))
+        		.setPostProcessor(new ActivityFeedPostProcessor<FetchMyWhatsHappeningFeed>())
+        		.configureCaching(cacheConfiguration)
+        		.execute();
+    	} else {
+    		buildService(new FetchMyWhatsHappeningFeed())
+    			.setPostProcessor(new ActivityFeedPostProcessor<FetchMyWhatsHappeningFeed>())
+        		.configureCaching(cacheConfiguration)
+    			.execute();	
+    	}
     }
     
     protected void fetchWhatsHappening(CacheConfiguration cacheConfiguration) {
@@ -145,6 +187,7 @@ public class HomeActivity extends ECollegeListActivity {
 		ActivityFeedAdapter baseAdapter = new ActivityFeedAdapter(this,service.getResult());
 		ActivityFeedHeaderAdapter headerAdapter = new ActivityFeedHeaderAdapter(this, baseAdapter);
     	activityAdapter.update(headerAdapter,canLoadMoreActivites);
+    	whatsHappeningLastUpdated = service.getCompletedAt();
     	loadAndDisplayListForSelectedType();
     }
     

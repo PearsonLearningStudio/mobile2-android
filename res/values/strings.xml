@@ -23,5 +23,7 @@
     <string name="e_invalid_login">Incorrect username and/or password</string>
     <string name="e_network_timeout">Your request has timed out</string>
     <string name="e_no_login_provided">You must provide both a username and password</string>
+    <string name="never">Never</string>
+    <string name="last_updated_label">Last updated: </string>
 
 </resources>

@@ -31,6 +31,8 @@ import com.ecollege.android.adapter.LoadMoreAdapter;
 import com.ecollege.android.tasks.TaskPostProcessor;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ActivityStreamItem;
+import com.ecollege.api.model.ActivityStreamObject;
+import com.ecollege.api.model.Course;
 import com.ecollege.api.services.activities.FetchMyWhatsHappeningFeed;
 import com.google.inject.Inject;
 import com.ocpsoft.pretty.time.PrettyTime;
@@ -178,6 +180,7 @@ public class HomeActivity extends ECollegeListActivity {
         TextView titleText;
         TextView descriptionText;
         TextView timeText;
+        TextView courseTitleText;
         ImageView icon;
     }
     
@@ -295,6 +298,7 @@ public class HomeActivity extends ECollegeListActivity {
                 holder.titleText = (TextView) convertView.findViewById(R.id.title_text);
                 holder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
                 holder.timeText = (TextView) convertView.findViewById(R.id.time_text);
+                holder.courseTitleText = (TextView) convertView.findViewById(R.id.course_title_text);
                 holder.icon = (ImageView) convertView.findViewById(R.id.icon);
                 convertView.setTag(holder);
             } else {
@@ -304,10 +308,13 @@ public class HomeActivity extends ECollegeListActivity {
             }
             // Bind the data efficiently with the holder.
             ActivityStreamItem si = getItem(position);
+            ActivityStreamObject ob = si.getObject();
 
-            String title = si.getObject().getObjectType();
-            String desc = si.getObject().getSummary();
-            String objectType = si.getObject().getObjectType();
+            String title = ob.getObjectType();
+            String desc = ob.getSummary();
+            String objectType = ob.getObjectType();
+            
+            long courseId = ob.getCourseId();
             
             if ("thread-topic".equals(objectType)) {
             	title = "Topic: " + si.getTarget().getTitle();
@@ -333,6 +340,7 @@ public class HomeActivity extends ECollegeListActivity {
             holder.titleText.setText(title);
             holder.descriptionText.setText(Html.fromHtml(desc),BufferType.SPANNABLE);
             holder.timeText.setText(prettyTimeFormatter.format(si.getPostedTime().getTime()));
+            holder.courseTitleText.setText("<Course Title>");
             
             //holder.iconPlaceholder.setText(si.getObject().getObjectType().substring(0, 1));
             return convertView;

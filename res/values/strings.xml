@@ -2,7 +2,7 @@
 <resources>
     <string name="hello">Hello World, TempLoginActivity!</string>
     <string name="app_name">eCollege</string>
-    <string name="client_string">ctstate</string>
+    <string name="client_string">sandbox</string>
     <string name="client_id">30bb1d4f-2677-45d1-be13-339174404402</string>
     <string name="error_dialog_default_title">Alert</string>
     <string name="retry_dialog_button">Retry</string>
@@ -16,6 +16,11 @@
     <string name="letter_grade_label">Letter Grade: </string>
     <string name="points_label">Points: </string>
     <string name="view_all_course_grades">View All Course Grades</string>
+    <string name="d_total_reponses">%d total responses</string>
+    <string name="d_responses_by_you">%d responses by you</string>
+    <string name="d_total_reponse">%d total response</string>
+    <string name="d_response_by_you">%d response by you</string>
+    <string name="no_responses">No responses</string>
     
     
     <!-- errors -->

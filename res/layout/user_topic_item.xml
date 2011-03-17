@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp" >
+
+<ImageView
+	android:id="@+id/icon"
+	android:src="@drawable/ic_thread_topic"
+	android:layout_marginRight="5dp"
+	android:layout_width="40dp"
+	android:layout_height="40dp"
+	android:scaleType="fitXY"
+	android:layout_alignParentTop="true"
+	android:layout_alignParentLeft="true"
+	/>
+
+<TextView
+	android:id="@+id/title_text"
+	android:text="some title"
+	android:singleLine="true"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:layout_toLeftOf="@+id/time_text"
+	android:layout_toRightOf="@id/icon"
+	android:layout_alignParentTop="true"
+	/>
+	
+<TextView
+	android:id="@id/time_text"
+	android:text="yesterday"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_alignParentTop="true"
+	android:layout_alignParentRight="true"	
+	/>
+	
+<TextView
+	android:id="@+id/unread_response_count_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_below="@id/time_text"
+	android:layout_alignParentRight="true"	
+	/>
+	
+<TextView
+	android:id="@+id/total_response_count_text"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_below="@id/title_text"
+	android:layout_toRightOf="@id/icon"
+	/>
+<TextView
+	android:id="@+id/user_response_count_text"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_below="@id/total_response_count_text"
+	android:layout_toRightOf="@id/icon"
+/>
+		
+</RelativeLayout>

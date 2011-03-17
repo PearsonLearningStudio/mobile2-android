@@ -9,6 +9,7 @@ import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -37,6 +39,9 @@ import com.ecollege.api.services.discussions.FetchDiscussionTopicsForCourseIds;
 import com.google.inject.Inject;
 
 public class DiscussionsActivity extends ECollegeListActivity {
+	
+	public static final String USER_TOPIC_EXTRA = "USER_TOPIC_EXTRA";
+	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectView(R.id.last_updated_text) TextView lastUpdatedText;
@@ -173,7 +178,16 @@ public class DiscussionsActivity extends ECollegeListActivity {
 		return ids;
 	}
 	
-    static class ViewHolder {
+    @Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		UserDiscussionTopic selectedTopic = (UserDiscussionTopic)getListAdapter().getItem(position);
+		Intent intent = new Intent(this, UserTopicActivity.class);
+		intent.putExtra(USER_TOPIC_EXTRA, selectedTopic);
+		startActivity(intent);
+	}
+    
+	static class ViewHolder {
         ImageView icon;
         TextView titleText;
         TextView timeText;

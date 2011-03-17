@@ -29,6 +29,7 @@
 		<activity android:name="DiscussionTopicActivity"></activity>
 		<activity android:name="DropboxMessageActivity"></activity>
 		<activity android:name="GradeActivity"></activity>
+		<activity android:name="UserTopicActivity"></activity>
 		
     </application>
 </manifest>

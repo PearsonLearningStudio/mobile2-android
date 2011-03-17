@@ -38,7 +38,6 @@ import com.ecollege.api.model.ActivityStreamObject;
 import com.ecollege.api.model.Course;
 import com.ecollege.api.services.activities.FetchMyWhatsHappeningFeed;
 import com.google.inject.Inject;
-import com.ocpsoft.pretty.time.Duration;
 import com.ocpsoft.pretty.time.PrettyTime;
 
 public class HomeActivity extends ECollegeListActivity {

@@ -10,6 +10,7 @@ import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,10 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
+import com.ecollege.android.adapter.HeaderAdapter;
 import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.api.ECollegeClient;
+import com.ecollege.api.model.ContainerInfo;
 import com.ecollege.api.model.Course;
 import com.ecollege.api.model.DiscussionTopic;
 import com.ecollege.api.model.ResponseCount;
@@ -42,6 +45,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	
 	protected ECollegeClient client;
 	private long topicsLastUpdated;
+	private TopicsHeaderAdapter topicHeaderAdapter;
 	private TopicsAdapter topicAdapter;
 	private LayoutInflater viewInflater;
 	
@@ -71,16 +75,17 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	
 	private void reloadAndDisplayTopicsForSelectedCourses() {
 		topicAdapter = new TopicsAdapter(this, new ArrayList<UserDiscussionTopic>());
-		setListAdapter(topicAdapter);
+		topicHeaderAdapter = new TopicsHeaderAdapter(this, topicAdapter);
 		fetchTopicsForSelectedCourses(true);
 	}
 
 	private ListAdapter createOrReturnTopicAdapter(boolean reload) {
-		if (topicAdapter == null) {
+		if (topicAdapter == null && topicHeaderAdapter == null) {
 			topicAdapter = new TopicsAdapter(this, new ArrayList<UserDiscussionTopic>());
+			topicHeaderAdapter = new TopicsHeaderAdapter(this, topicAdapter);
 			fetchTopicsForSelectedCourses(reload);
 		}
-		return topicAdapter;
+		return topicHeaderAdapter;
 	}
 	
 	private void fetchTopicsForSelectedCourses(boolean reload) {
@@ -99,6 +104,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 			topicAdapter.add(topic);
 		}
 		topicAdapter.setNotifyOnChange(true);
+		topicAdapter.notifyDataSetChanged();
 		topicsLastUpdated = service.getCompletedAt();
 		loadAndDisplayTopicsForSelectedCourses();
 	}
@@ -124,6 +130,20 @@ public class DiscussionsActivity extends ECollegeListActivity {
         TextView totalResponseCountText;
         TextView unreadResponseCountText;
         TextView userResponseCountText;
+    }
+    
+    protected class TopicsHeaderAdapter extends HeaderAdapter {
+
+		public TopicsHeaderAdapter(Context context, ListAdapter baseAdapter) {
+			super(context, baseAdapter);
+		}
+		
+		@Override public String headerLabelFunction(Object item, int position) {
+			UserDiscussionTopic userTopic = (UserDiscussionTopic)item;
+			DiscussionTopic topic = userTopic.getTopic();
+			ContainerInfo info = topic.getContainerInfo();
+			return Html.fromHtml(info.getCourseTitle()).toString();
+		}
     }
     
 	protected class TopicsAdapter extends ArrayAdapter<UserDiscussionTopic> {
@@ -156,7 +176,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 			ResponseCount responseCount = userTopic.getChildResponseCounts();
 			String correctFormat = "%d";
 			
-			holder.titleText.setText(topic.getTitle());
+			holder.titleText.setText(Html.fromHtml(topic.getTitle()).toString());
 			if (responseCount.getUnreadResponseCount() == 0) {
 				holder.unreadResponseCountText.setVisibility(View.GONE);
 			} else {

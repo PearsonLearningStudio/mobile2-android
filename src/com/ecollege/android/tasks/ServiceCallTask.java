@@ -81,7 +81,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 			service = postProcessor.onPostProcess(service);
 		}
 		
-		if (cacheExecutedResult) {
+		if (cacheExecutedResult && service.isCacheable()) {
 			app.putObjectInVolatileCache(
 				service.getCacheKey(app.getSessionIdentifier()),
 				service);

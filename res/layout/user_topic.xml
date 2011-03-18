@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-    
-<com.ecollege.android.view.HeaderView
-	android:id="@+id/header_view"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content" />
-
-<TextView
-	android:id="@+id/topic_title_text"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_below="@id/header_view"/>
-
-<!--  due to some sort of bug, relative layout includes need to be nested in a relative layout -->
-<RelativeLayout 
-	android:id="@+id/user_topic_item"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-	android:layout_below="@id/topic_title_text">
-	<include
-		layout="@layout/user_topic_item"
+    android:layout_height="fill_parent">
+	<com.ecollege.android.view.HeaderView
+		android:id="@+id/header_view"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-	/>
-</RelativeLayout>
-<ListView
-	android:id="@android:id/list"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:layout_below="@id/user_topic_item" />
-
-<TextView
-	android:id="@android:id/empty"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:text="@string/no_items"
-	android:layout_below="@id/user_topic_item" 
-	android:visibility="invisible" />
+		android:layout_height="wrap_content" />
+	<ScrollView
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content">
+	    <LinearLayout
+		    android:orientation="vertical"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent">
 		
-</RelativeLayout>
+		<TextView
+			android:id="@+id/topic_title_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+		
+		<!--  due to some sort of bug, relative layout includes need to be nested in a relative layout -->
+		<RelativeLayout 
+			android:id="@+id/user_topic_item"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content">
+			<include
+				layout="@layout/user_topic_item"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+			/>
+		</RelativeLayout>
+		<TextView
+			android:id="@+id/description_text"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content" />
+			
+		</LinearLayout>
+	</ScrollView>
+	<ListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
+	
+	<TextView
+		android:id="@android:id/empty"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"  />
+</LinearLayout>

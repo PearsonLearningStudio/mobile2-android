@@ -16,11 +16,18 @@
 	android:layout_height="wrap_content"
 	android:layout_below="@id/header_view"/>
 
-<include
+<!--  due to some sort of bug, relative layout includes need to be nested in a relative layout -->
+<RelativeLayout 
 	android:id="@+id/user_topic_item"
-	layout="@layout/user_topic_item"
-	android:layout_below="@id/topic_title_text" />
-
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+	android:layout_below="@id/topic_title_text">
+	<include
+		layout="@layout/user_topic_item"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	/>
+</RelativeLayout>
 <ListView
 	android:id="@android:id/list"
 	android:layout_width="fill_parent"

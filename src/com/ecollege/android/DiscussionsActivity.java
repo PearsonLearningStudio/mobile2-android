@@ -190,7 +190,6 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	static class ViewHolder {
         ImageView icon;
         TextView titleText;
-        TextView timeText;
         TextView totalResponseCountText;
         TextView unreadResponseCountText;
         TextView userResponseCountText;
@@ -214,7 +213,6 @@ public class DiscussionsActivity extends ECollegeListActivity {
 
 		public TopicsAdapter(Context context, List<UserDiscussionTopic> topicList) {
 			super(context, R.layout.user_topic_item, topicList);
-			// TODO Auto-generated constructor stub
 		}
 		
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -226,7 +224,6 @@ public class DiscussionsActivity extends ECollegeListActivity {
 				holder = new ViewHolder();
 				holder.icon = (ImageView) convertView.findViewById(R.id.icon);
 				holder.titleText = (TextView) convertView.findViewById(R.id.title_text);
-				holder.timeText = (TextView) convertView.findViewById(R.id.time_text);
 				holder.totalResponseCountText = (TextView) convertView.findViewById(R.id.total_response_count_text);
 				holder.unreadResponseCountText = (TextView) convertView.findViewById(R.id.unread_response_count_text);
 				holder.userResponseCountText = (TextView) convertView.findViewById(R.id.user_response_count_text);

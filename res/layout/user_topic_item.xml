@@ -27,19 +27,9 @@
 	/>
 	
 <TextView
-	android:id="@id/time_text"
-	android:text="yesterday"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_alignParentTop="true"
-	android:layout_alignParentRight="true"	
-	/>
-	
-<TextView
 	android:id="@+id/unread_response_count_text"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:layout_below="@id/time_text"
 	android:layout_alignParentRight="true"	
 	/>
 	

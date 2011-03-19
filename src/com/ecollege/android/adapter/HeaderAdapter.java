@@ -23,14 +23,14 @@ public class HeaderAdapter extends BaseAdapter {
 	
 	protected ListAdapter baseAdapter;
 	private Context context;
-	private SimpleObserver baseObserver;
+	private ParentAdapterObserver baseObserver;
 	private List<HeaderDataItem> dataItems;
 	
 	public HeaderAdapter(Context context, ListAdapter baseAdapter) {
 		this.baseAdapter = baseAdapter;
 		this.context = context;
 		calculateHeaders();
-		baseObserver = new SimpleObserver(this);
+		baseObserver = new ParentAdapterObserver(this);
 		baseAdapter.registerDataSetObserver(baseObserver);
 	}
 	
@@ -186,26 +186,6 @@ public class HeaderAdapter extends BaseAdapter {
         TextView headerLabelText;
     }
     
-	private class SimpleObserver extends DataSetObserver {
-		
-		private HeaderAdapter adapter;
-		
-		public SimpleObserver(HeaderAdapter adapter) {
-			this.adapter = adapter;
-		}
-		
-		@Override
-		public void onChanged() {
-			adapter.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onInvalidated() {
-			adapter.notifyDataSetInvalidated();
-		}
-		
-	}
-	
 	private class HeaderDataItem {
 		private String headerLabel;
 		private int originalPosition = -1;

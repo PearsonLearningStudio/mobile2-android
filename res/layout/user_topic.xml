@@ -7,44 +7,15 @@
 		android:id="@+id/header_view"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content" />
-	<ScrollView
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content">
-	    <LinearLayout
-		    android:orientation="vertical"
-		    android:layout_width="fill_parent"
-		    android:layout_height="fill_parent">
-		
-		<TextView
-			android:id="@+id/topic_title_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-		
-		<!--  due to some sort of bug, relative layout includes need to be nested in a relative layout -->
-		<RelativeLayout 
-			android:id="@+id/user_topic_item"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content">
-			<include
-				layout="@layout/user_topic_item"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-			/>
-		</RelativeLayout>
-		<TextView
-			android:id="@+id/description_text"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content" />
+	<TextView
+		android:id="@+id/topic_title_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
 			
-		</LinearLayout>
-	</ScrollView>
 	<ListView
 		android:id="@android:id/list"
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" />
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom" />
 	
-	<TextView
-		android:id="@android:id/empty"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"  />
 </LinearLayout>

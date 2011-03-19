@@ -122,27 +122,17 @@ public class HeaderAdapter extends BaseAdapter {
 	}	
 	
 	public View getHeaderView(int position, View convertView, ViewGroup parent, String label) {
-        // A ViewHolder keeps references to children views to avoid unneccessary calls
-        // to findViewById() on each row.
         ViewHolder holder;
 
-        // When convertView is not null, we can reuse it directly, there is no need
-        // to reinflate it. We only inflate a new View when the convertView supplied
-        // by ListView is null.
         if (convertView == null) {
             convertView = ((Activity)context).getLayoutInflater().inflate(R.layout.list_header_item, null);
 
-            // Creates a ViewHolder and store references to the two children views
-            // we want to bind data to.
             holder = new ViewHolder();
             holder.headerLabelText = (TextView) convertView.findViewById(R.id.header_label_text);
             convertView.setTag(holder);
         } else {
-            // Get the ViewHolder back to get fast access to the TextView
-            // and the ImageView.
             holder = (ViewHolder) convertView.getTag();
         }
-        // Bind the data efficiently with the holder.
         
         holder.headerLabelText.setText(label);
         return convertView;

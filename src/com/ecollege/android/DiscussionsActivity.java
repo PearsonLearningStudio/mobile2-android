@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 
 import android.content.Context;
@@ -29,6 +28,7 @@ import android.widget.TextView;
 import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.android.adapter.HeaderAdapter;
 import com.ecollege.android.util.CacheConfiguration;
+import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ContainerInfo;
 import com.ecollege.api.model.Course;
@@ -48,11 +48,6 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	@InjectView(R.id.reload_button) Button reloadButton;
 	@InjectView(R.id.course_dropdown) Spinner courseDropdown;
 	@InjectView(android.R.id.empty) View noResultsView;
-	@InjectResource(R.string.d_total_reponses) String totalResponsesFormat;
-	@InjectResource(R.string.d_total_reponse) String totalResponseFormat;
-	@InjectResource(R.string.d_responses_by_you) String responsesByYouFormat;
-	@InjectResource(R.string.d_response_by_you) String responseByYouFormat;
-	@InjectResource(R.string.no_responses) String noResponsesString;
 	
 	protected ECollegeClient client;
 	private long topicsLastUpdated;
@@ -235,30 +230,17 @@ public class DiscussionsActivity extends ECollegeListActivity {
 			UserDiscussionTopic userTopic = getItem(position);
 			DiscussionTopic topic = userTopic.getTopic();
 			ResponseCount responseCount = userTopic.getChildResponseCounts();
-			String correctFormat = "%d";
-			
 			holder.titleText.setText(Html.fromHtml(topic.getTitle()).toString());
-			if (responseCount.getUnreadResponseCount() == 0) {
-				holder.unreadResponseCountText.setVisibility(View.GONE);
-			} else {
-				holder.unreadResponseCountText.setText(Long.toString(responseCount.getUnreadResponseCount()));
-				holder.unreadResponseCountText.setVisibility(View.VISIBLE);
-			}
 			
-			if (responseCount.getTotalResponseCount() == 0) {
-				holder.totalResponseCountText.setText(noResponsesString);
-			} else {
-				correctFormat = (responseCount.getTotalResponseCount() == 1) ? totalResponseFormat : totalResponsesFormat; 
-				holder.totalResponseCountText.setText(String.format(correctFormat, responseCount.getTotalResponseCount()));
-			}
+			ResponseCountViewHelper responseCountViewHelper = new ResponseCountViewHelper(
+					getBaseContext(),
+					holder.icon,
+					holder.unreadResponseCountText,
+					holder.totalResponseCountText,
+					holder.userResponseCountText
+			);
+			responseCountViewHelper.setResponseCount(responseCount);
 			
-			if (responseCount.getPersonalResponseCount() == 0) {
-				holder.userResponseCountText.setVisibility(View.GONE);
-			} else {
-				correctFormat = (responseCount.getPersonalResponseCount() == 1) ? responseByYouFormat : responsesByYouFormat; 
-				holder.userResponseCountText.setText(String.format(correctFormat, responseCount.getPersonalResponseCount()));
-				holder.userResponseCountText.setVisibility(View.VISIBLE);
-			}
 			return convertView;
 		}
 

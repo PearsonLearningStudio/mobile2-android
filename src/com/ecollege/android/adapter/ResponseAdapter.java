@@ -12,11 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ecollege.android.R;
+import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.model.DiscussionResponse;
 import com.ecollege.api.model.ResponseCount;
 import com.ecollege.api.model.User;
 import com.ecollege.api.model.UserDiscussionResponse;
-import com.ecollege.api.model.UserDiscussionTopic;
 import com.ocpsoft.pretty.time.PrettyTime;
 
 public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
@@ -33,23 +33,12 @@ public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
     }
 
 	final private PrettyTime prettyTimeFormatter = new PrettyTime();
-	final private String totalResponsesFormat;
-	final private String totalResponseFormat;
-	final private String responsesByYouFormat;
-	final private String responseByYouFormat;
-	final private String noResponsesString;
 	final private LayoutInflater viewInflater;
 	
 	protected boolean loading;
 	
 	public ResponseAdapter(Context context, List<UserDiscussionResponse> topicList) {
 		super(context, R.layout.user_topic_item, topicList);
-		totalResponsesFormat = context.getResources().getString(R.string.d_total_reponses);
-		totalResponseFormat = context.getResources().getString(R.string.d_total_reponse);
-		responsesByYouFormat = context.getResources().getString(R.string.d_responses_by_you);
-		responseByYouFormat = context.getResources().getString(R.string.d_response_by_you);
-		noResponsesString = context.getResources().getString(R.string.no_responses);
-		
 		viewInflater = LayoutInflater.from(context);
 	}
 	
@@ -101,7 +90,6 @@ public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
 		DiscussionResponse response = userResponse.getResponse();
 		ResponseCount responseCount = userResponse.getChildResponseCounts();
 		User author = response.getAuthor();
-		String correctFormat = "%d";
 		
 		holder.timeText.setVisibility(View.VISIBLE);
 		holder.authorText.setVisibility(View.VISIBLE);
@@ -111,27 +99,13 @@ public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
 		holder.authorText.setText(author.getFirstName() + " " + author.getLastName());
 		holder.descriptionText.setText(Html.fromHtml(response.getDescription()));
 		holder.timeText.setText(prettyTimeFormatter.format(response.getPostedDate().getTime()));
-		if (responseCount.getUnreadResponseCount() == 0) {
-			holder.unreadResponseCountText.setVisibility(View.GONE);
-		} else {
-			holder.unreadResponseCountText.setText(Long.toString(responseCount.getUnreadResponseCount()));
-			holder.unreadResponseCountText.setVisibility(View.VISIBLE);
-		}
-		
-		if (responseCount.getTotalResponseCount() == 0) {
-			holder.totalResponseCountText.setText(noResponsesString);
-		} else {
-			correctFormat = (responseCount.getTotalResponseCount() == 1) ? totalResponseFormat : totalResponsesFormat; 
-			holder.totalResponseCountText.setText(String.format(correctFormat, responseCount.getTotalResponseCount()));
-		}
-		
-		if (responseCount.getPersonalResponseCount() == 0) {
-			holder.userResponseCountText.setVisibility(View.GONE);
-		} else {
-			correctFormat = (responseCount.getPersonalResponseCount() == 1) ? responseByYouFormat : responsesByYouFormat; 
-			holder.userResponseCountText.setText(String.format(correctFormat, responseCount.getPersonalResponseCount()));
-			holder.userResponseCountText.setVisibility(View.VISIBLE);
-		}
+		ResponseCountViewHelper responseCountViewHelper = new ResponseCountViewHelper(getContext(),
+				holder.icon,
+				holder.unreadResponseCountText,
+				holder.totalResponseCountText,
+				holder.userResponseCountText
+		);
+		responseCountViewHelper.setResponseCount(responseCount);
 		return convertView;
 	}
 

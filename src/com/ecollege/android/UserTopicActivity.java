@@ -3,7 +3,6 @@ package com.ecollege.android;
 import java.util.ArrayList;
 
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.os.Bundle;
 import android.text.Html;
@@ -19,6 +18,7 @@ import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.android.adapter.ParentAdapterObserver;
 import com.ecollege.android.adapter.ResponseAdapter;
 import com.ecollege.android.util.CacheConfiguration;
+import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.model.DiscussionTopic;
 import com.ecollege.api.model.ResponseCount;
 import com.ecollege.api.model.UserDiscussionResponse;
@@ -28,11 +28,6 @@ import com.ecollege.api.services.discussions.FetchDiscussionResponsesForTopic;
 public class UserTopicActivity extends ECollegeListActivity {
 	
 	@InjectExtra(DiscussionsActivity.USER_TOPIC_EXTRA) protected UserDiscussionTopic userTopic;
-	@InjectResource(R.string.d_total_reponses) String totalResponsesFormat;
-	@InjectResource(R.string.d_total_reponse) String totalResponseFormat;
-	@InjectResource(R.string.d_responses_by_you) String responsesByYouFormat;
-	@InjectResource(R.string.d_response_by_you) String responseByYouFormat;
-	@InjectResource(R.string.no_responses) String noResponsesString;
 	@InjectView(R.id.topic_title_text) TextView topicTitleText;
 	
 	protected DiscussionTopic topic;
@@ -165,28 +160,15 @@ public class UserTopicActivity extends ECollegeListActivity {
 			String htmlSafeTitle = Html.fromHtml(topic.getTitle()).toString();
 			holder.userTopicTitleText.setText(htmlSafeTitle);
 			
-			String correctFormat = "%d";
-			if (responseCount.getUnreadResponseCount() == 0) {
-				holder.unreadResponseCountText.setVisibility(View.GONE);
-			} else {
-				holder.unreadResponseCountText.setText(Long.toString(responseCount.getUnreadResponseCount()));
-				holder.unreadResponseCountText.setVisibility(View.VISIBLE);
-			}
+			ResponseCountViewHelper responseCountViewHelper = new ResponseCountViewHelper(
+				UserTopicActivity.this,
+				holder.topicIcon,
+				holder.unreadResponseCountText,
+				holder.totalResponseCountText,
+				holder.userResponseCountText
+			);
+			responseCountViewHelper.setResponseCount(responseCount);
 			
-			if (responseCount.getTotalResponseCount() == 0) {
-				holder.totalResponseCountText.setText(noResponsesString);
-			} else {
-				correctFormat = (responseCount.getTotalResponseCount() == 1) ? totalResponseFormat : totalResponsesFormat; 
-				holder.totalResponseCountText.setText(String.format(correctFormat, responseCount.getTotalResponseCount()));
-			}
-			
-			if (responseCount.getPersonalResponseCount() == 0) {
-				holder.userResponseCountText.setVisibility(View.GONE);
-			} else {
-				correctFormat = (responseCount.getPersonalResponseCount() == 1) ? responseByYouFormat : responsesByYouFormat; 
-				holder.userResponseCountText.setText(String.format(correctFormat, responseCount.getPersonalResponseCount()));
-				holder.userResponseCountText.setVisibility(View.VISIBLE);
-			}
 			return convertView;
 		}
 		

@@ -33,4 +33,7 @@
     <string name="all_courses">All Courses</string>
     <string name="no_items">No items</string>
     <string name="post_a_response">Post a response</string>
+    <string name="post">Post</string>
+    <string name="cancel">Cancel</string>
+    <string name="subject">Subject</string>
 </resources>

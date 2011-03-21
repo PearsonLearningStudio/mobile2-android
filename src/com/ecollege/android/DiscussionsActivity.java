@@ -41,6 +41,8 @@ import com.google.inject.Inject;
 public class DiscussionsActivity extends ECollegeListActivity {
 	
 	public static final String USER_TOPIC_EXTRA = "USER_TOPIC_EXTRA";
+
+	private static final int VIEW_TOPIC_REQUEST = 0;
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
@@ -68,7 +70,13 @@ public class DiscussionsActivity extends ECollegeListActivity {
         configureControls();
         loadAndDisplayTopicsForSelectedCourses();
     }
-
+    
+    @Override protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+    	if (requestCode == VIEW_TOPIC_REQUEST) {
+    		reloadAndDisplayTopicsForSelectedCourses();
+    	}
+    }
+    
 	private void loadCourseTitles() {
         courseDropdownTitles = new ArrayList<String>();
         courseTitleToCourseMap = new HashMap<String, Course>();
@@ -179,7 +187,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 		UserDiscussionTopic selectedTopic = (UserDiscussionTopic)getListAdapter().getItem(position);
 		Intent intent = new Intent(this, UserTopicActivity.class);
 		intent.putExtra(USER_TOPIC_EXTRA, selectedTopic);
-		startActivity(intent);
+		startActivityForResult(intent, VIEW_TOPIC_REQUEST);
 	}
     
 	static class ViewHolder {

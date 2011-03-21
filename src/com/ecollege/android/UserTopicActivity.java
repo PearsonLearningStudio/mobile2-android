@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -24,6 +27,7 @@ import com.ecollege.api.model.ResponseCount;
 import com.ecollege.api.model.UserDiscussionResponse;
 import com.ecollege.api.model.UserDiscussionTopic;
 import com.ecollege.api.services.discussions.FetchDiscussionResponsesForTopic;
+import com.ecollege.api.services.discussions.PostResponseToTopic;
 
 public class UserTopicActivity extends ECollegeListActivity {
 	
@@ -35,9 +39,13 @@ public class UserTopicActivity extends ECollegeListActivity {
 	private ResponseCount responseCount;
 	public LayoutInflater viewInflater;
 	private UserTopicViewAdapter userTopicAdapter;
+	private AlertDialog postDialog;
+	private Button cancelPostButton;
+	private Button postButton;
+	private EditText postResponseText;
+	private EditText postTitleText;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_topic);
 		topic = userTopic.getTopic();
@@ -47,6 +55,14 @@ public class UserTopicActivity extends ECollegeListActivity {
 		topicTitleText.setText(Html.fromHtml(topic.getTitle()));
 		
 		loadAndDisplayResponsesForTopic();
+	}
+	
+	@Override protected void onPause() {
+		super.onPause();
+		if (postDialog != null) {
+			postDialog.dismiss();
+			postDialog = null;
+		}
 	}
 
 	private void loadAndDisplayResponsesForTopic() {
@@ -58,6 +74,8 @@ public class UserTopicActivity extends ECollegeListActivity {
 			responseAdapter = new ResponseAdapter(this, new ArrayList<UserDiscussionResponse>());
 			if (userTopicAdapter == null) {
 				userTopicAdapter = new UserTopicViewAdapter(responseAdapter);
+			} else {
+				userTopicAdapter.setResponseAdapter(responseAdapter);
 			}
 			responseAdapter.setLoading(true);
 			fetchResponsesForTopic(false);
@@ -65,6 +83,33 @@ public class UserTopicActivity extends ECollegeListActivity {
 		return userTopicAdapter;
 	}
 
+	protected void showPostDialog() {
+		if (postDialog == null) {
+			View responseView = viewInflater.inflate(R.layout.post_response, null);
+			postDialog = new AlertDialog.Builder(UserTopicActivity.this)
+				.setView(responseView)
+				.setTitle(R.string.post_a_response)
+				.show();
+			cancelPostButton = (Button) responseView.findViewById(R.id.cancel_button);
+			postButton = (Button) responseView.findViewById(R.id.post_button);
+			postTitleText = (EditText) responseView.findViewById(R.id.post_title_text);
+			postResponseText = (EditText) responseView.findViewById(R.id.post_response_text);
+			cancelPostButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					postDialog.hide();
+				}
+			});
+			postButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					postResponse();
+				}
+			});
+		} else {
+			postDialog.show();
+		}
+	}
+
+	
 	private void fetchResponsesForTopic(boolean reload) {
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
 		cacheConfiguration.bypassFileCache = reload;
@@ -85,6 +130,28 @@ public class UserTopicActivity extends ECollegeListActivity {
 		loadAndDisplayResponsesForTopic();
 	}
 	
+	protected void postResponse() {
+		String title = postTitleText.getText().toString();
+		String response = postResponseText.getText().toString();
+		buildService(new PostResponseToTopic(topic.getId(), title, response))
+			.makeModal()
+			.execute();
+	}
+	
+	public void onServiceCallSuccess(PostResponseToTopic service) {
+		postTitleText.setText("");
+		postResponseText.setText("");
+		postDialog.hide();
+		responseAdapter = new ResponseAdapter(this, new ArrayList<UserDiscussionResponse>());
+		responseAdapter.setLoading(true);
+		userTopicAdapter.setResponseAdapter(responseAdapter);
+		fetchResponsesForTopic(true);
+		// reach in and change the response counts on the topic
+		responseCount.setPersonalResponseCount(responseCount.getPersonalResponseCount() + 1);
+		responseCount.setTotalResponseCount(responseCount.getTotalResponseCount() + 1);
+		responseCount.setLast24HourResponseCount(responseCount.getLast24HourResponseCount() + 1);
+	}
+
 	protected class UserTopicViewAdapter extends BaseAdapter {
 		
 		final int STATIC_VIEWS = 3;
@@ -101,6 +168,12 @@ public class UserTopicActivity extends ECollegeListActivity {
 			responseAdapter.registerDataSetObserver(adapterObserver);
 		}
 		
+		public void setResponseAdapter(ResponseAdapter responseAdapter) {
+			this.responseAdapter.unregisterDataSetObserver(adapterObserver);
+			this.responseAdapter = responseAdapter;
+			this.responseAdapter.registerDataSetObserver(adapterObserver);
+		}
+
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
 		}
@@ -190,23 +263,31 @@ public class UserTopicActivity extends ECollegeListActivity {
 			return convertView;
 		}
 		
-		public class ExpandablePostViewHolder {
-			public TextView contractedTextView;
+		public class PostResponseItemViewHolder {
+			public Button postResponseButton;
 		}
 
 		private View getViewForPostItem(View convertView) {
-			ExpandablePostViewHolder holder;
+			final PostResponseItemViewHolder holder;
 			if (convertView == null) {
-				holder = new ExpandablePostViewHolder();
-				convertView = viewInflater.inflate(R.layout.expandable_post_response_item, null);
-				holder.contractedTextView = (TextView) convertView.findViewById(R.id.post_response_text);
+				holder = new PostResponseItemViewHolder();
+				convertView = viewInflater.inflate(R.layout.post_response_item, null);
+				holder.postResponseButton = (Button) convertView.findViewById(R.id.post_response_button);
 				
 				convertView.setTag(holder);
 			} else {
-				holder = (ExpandablePostViewHolder) convertView.getTag();
+				holder = (PostResponseItemViewHolder) convertView.getTag();
 			}
+			
+			holder.postResponseButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					showPostDialog();
+				}
+			});
+			
 			return convertView;
 		}
+
 
 	}
 

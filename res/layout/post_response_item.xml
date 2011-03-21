@@ -3,9 +3,9 @@
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
-	<EditText
-		android:id="@+id/post_response_text"
+	<Button
+		android:id="@+id/post_response_button"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:hint="@string/post_a_response" />
+		android:text="@string/post_a_response" />
 </LinearLayout>

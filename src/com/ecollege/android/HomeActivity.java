@@ -144,7 +144,7 @@ public class HomeActivity extends ECollegeListActivity {
     }
     
     protected void reloadWhatsHappening() {
-    	CacheConfiguration cacheConfiguration = new CacheConfiguration(true, true, true);
+    	CacheConfiguration cacheConfiguration = new CacheConfiguration(true, true, true, true);
     	if (canLoadMoreActivites) {
     		GregorianCalendar fetchSince = new GregorianCalendar();
     		fetchSince.add(Calendar.DAY_OF_YEAR, -14);

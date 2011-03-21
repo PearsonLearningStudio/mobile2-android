@@ -17,9 +17,10 @@ import com.ecollege.api.services.BaseService;
 public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsyncTask<ServiceT> {
 	
 	protected ServiceT service;
-	protected boolean isCached = true;
+	protected boolean useFileCache = true;
 	protected boolean cacheExecutedResult = true;
 	protected boolean useResultCache = true;
+	protected boolean cacheInFileCache = true;
 	protected TaskPostProcessor<ServiceT> postProcessor;
 	
 	public ServiceCallTask(ECollegeActivity activity, ServiceT service) {
@@ -28,7 +29,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	}
 	
 	public ServiceCallTask<ServiceT> bypassFileCache() {
-		isCached = false;
+		useFileCache = false;
 		return this;
 	}
 	
@@ -42,10 +43,16 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 		return this;
 	}
 	
+	public ServiceCallTask<ServiceT> doNotFileCache() {
+		cacheInFileCache = false;
+		return this;
+	}
+	
 	public ServiceCallTask<ServiceT> configureCaching(CacheConfiguration config) {
 		assert(config != null);
-		isCached = !config.bypassFileCache;
-		cacheExecutedResult = config.cacheResult;
+		cacheInFileCache = config.cacheResultInFileCache;
+		useFileCache = !config.bypassFileCache;
+		cacheExecutedResult = config.cacheResultInResultCache;
 		useResultCache = !config.bypassResultCache;
 		return this;
 	}
@@ -70,12 +77,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 			Ln.i(String.format("Bypassing result cache for %s", service));
 		}
 		
-		if (isCached) {
-			app.getClient().executeService(service,app.getServiceCache());
-		} else {
-			Ln.i(String.format("Bypassing file cache for %s", service));
-			app.getClient().executeService(service);
-		}
+		app.getClient().executeService(service, app.getServiceCache(), useFileCache, cacheInFileCache);
 		
 		if (postProcessor != null) {
 			service = postProcessor.onPostProcess(service);

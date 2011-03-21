@@ -24,27 +24,24 @@ import com.ecollege.android.adapter.ParentAdapterObserver;
 import com.ecollege.android.adapter.ResponseAdapter;
 import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.android.view.helpers.ResponseCountViewHelper;
-import com.ecollege.api.model.DiscussionTopic;
+import com.ecollege.api.model.DiscussionResponse;
 import com.ecollege.api.model.ResponseCount;
 import com.ecollege.api.model.UserDiscussionResponse;
-import com.ecollege.api.model.UserDiscussionTopic;
-import com.ecollege.api.services.discussions.FetchDiscussionResponsesForTopic;
-import com.ecollege.api.services.discussions.PostResponseToTopic;
+import com.ecollege.api.services.discussions.FetchDiscussionResponsesForResponse;
+import com.ecollege.api.services.discussions.PostResponseToResponse;
 
-public class UserTopicActivity extends ECollegeListActivity {
-	
-	public static final String USER_RESPONSE_EXTRA = "USER_RESPONSE_EXTRA";
+public class UserResponseActivity extends ECollegeListActivity {
 
+	private static final String USER_RESPONSE_EXTRA = "USER_RESPONSE_EXTRA";
 	private static final int VIEW_RESPONSE_REQUEST = 0;
+	@InjectExtra(UserTopicActivity.USER_RESPONSE_EXTRA) protected UserDiscussionResponse userResponse;
+	@InjectView(R.id.topic_title_text) TextView responseTitleText;
 	
-	@InjectExtra(DiscussionsActivity.USER_TOPIC_EXTRA) protected UserDiscussionTopic userTopic;
-	@InjectView(R.id.topic_title_text) TextView topicTitleText;
-	
-	protected DiscussionTopic topic;
+	protected DiscussionResponse response;
 	protected ResponseAdapter responseAdapter;
 	private ResponseCount responseCount;
 	public LayoutInflater viewInflater;
-	private UserTopicViewAdapter userTopicAdapter;
+	private UserResponseViewAdapter userResponseAdapter;
 	private AlertDialog postDialog;
 	private Button cancelPostButton;
 	private Button postButton;
@@ -54,13 +51,13 @@ public class UserTopicActivity extends ECollegeListActivity {
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_topic);
-		topic = userTopic.getTopic();
-		responseCount = userTopic.getChildResponseCounts();
+		response = userResponse.getResponse();
+		responseCount = userResponse.getChildResponseCounts();
 		viewInflater = getLayoutInflater();
 		
-		topicTitleText.setText(Html.fromHtml(topic.getTitle()));
+		responseTitleText.setText(Html.fromHtml(response.getTitle()));
 		
-		loadAndDisplayResponsesForTopic();
+		loadAndDisplayResponsesForResponse();
 	}
 	
 	@Override protected void onPause() {
@@ -81,39 +78,39 @@ public class UserTopicActivity extends ECollegeListActivity {
 
     @Override protected void onActivityResult (int requestCode, int resultCode, Intent data) {
     	if (requestCode == VIEW_RESPONSE_REQUEST) {
-    		reloadAndDisplayResponsesForTopic();
+    		reloadAndDisplayResponsesForResponse();
     	}
     }
     
-	private void loadAndDisplayResponsesForTopic() {
+	private void loadAndDisplayResponsesForResponse() {
 		setListAdapter(createOrReturnResponseAdapter());
 	}
 	
-	private void reloadAndDisplayResponsesForTopic() {
+	private void reloadAndDisplayResponsesForResponse() {
 		responseAdapter = new ResponseAdapter(this, new ArrayList<UserDiscussionResponse>());
 		responseAdapter.setLoading(true);
-		userTopicAdapter.setResponseAdapter(responseAdapter);
-		fetchResponsesForTopic(true);
+		userResponseAdapter.setResponseAdapter(responseAdapter);
+		fetchResponsesForResponse(true);
 	}
 
 	private ListAdapter createOrReturnResponseAdapter() {
 		if (responseAdapter == null) {
 			responseAdapter = new ResponseAdapter(this, new ArrayList<UserDiscussionResponse>());
-			if (userTopicAdapter == null) {
-				userTopicAdapter = new UserTopicViewAdapter(responseAdapter);
+			if (userResponseAdapter == null) {
+				userResponseAdapter = new UserResponseViewAdapter(responseAdapter);
 			} else {
-				userTopicAdapter.setResponseAdapter(responseAdapter);
+				userResponseAdapter.setResponseAdapter(responseAdapter);
 			}
 			responseAdapter.setLoading(true);
-			fetchResponsesForTopic(false);
+			fetchResponsesForResponse(false);
 		}
-		return userTopicAdapter;
+		return userResponseAdapter;
 	}
 
 	protected void showPostDialog() {
 		if (postDialog == null) {
 			View responseView = viewInflater.inflate(R.layout.post_response, null);
-			postDialog = new AlertDialog.Builder(UserTopicActivity.this)
+			postDialog = new AlertDialog.Builder(UserResponseActivity.this)
 				.setView(responseView)
 				.setTitle(R.string.post_a_response)
 				.show();
@@ -137,16 +134,16 @@ public class UserTopicActivity extends ECollegeListActivity {
 	}
 
 	
-	private void fetchResponsesForTopic(boolean reload) {
+	private void fetchResponsesForResponse(boolean reload) {
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
 		cacheConfiguration.bypassFileCache = reload;
 		cacheConfiguration.bypassResultCache = reload;
-		buildService(new FetchDiscussionResponsesForTopic(userTopic))
+		buildService(new FetchDiscussionResponsesForResponse(userResponse))
 			.configureCaching(cacheConfiguration)
 			.execute();
 	}
 	
-	public void onServiceCallSuccess(FetchDiscussionResponsesForTopic service) {
+	public void onServiceCallSuccess(FetchDiscussionResponsesForResponse service) {
 		responseAdapter.setNotifyOnChange(false);
 		for (UserDiscussionResponse response : service.getResult()) {
 			responseAdapter.add(response);
@@ -154,29 +151,29 @@ public class UserTopicActivity extends ECollegeListActivity {
 		responseAdapter.setNotifyOnChange(true);
 		responseAdapter.setLoading(false);
 		responseAdapter.notifyDataSetChanged();
-		loadAndDisplayResponsesForTopic();
+		loadAndDisplayResponsesForResponse();
 	}
 	
 	protected void postResponse() {
 		String title = postTitleText.getText().toString();
-		String response = postResponseText.getText().toString();
-		buildService(new PostResponseToTopic(topic.getId(), title, response))
+		String responseText = postResponseText.getText().toString();
+		buildService(new PostResponseToResponse(response.getId(), title, responseText))
 			.makeModal()
 			.execute();
 	}
 	
-	public void onServiceCallSuccess(PostResponseToTopic service) {
+	public void onServiceCallSuccess(PostResponseToResponse service) {
 		postTitleText.setText("");
 		postResponseText.setText("");
 		postDialog.hide();
-		reloadAndDisplayResponsesForTopic();
+		reloadAndDisplayResponsesForResponse();
 		// reach in and change the response counts on the topic
 		responseCount.setPersonalResponseCount(responseCount.getPersonalResponseCount() + 1);
 		responseCount.setTotalResponseCount(responseCount.getTotalResponseCount() + 1);
 		responseCount.setLast24HourResponseCount(responseCount.getLast24HourResponseCount() + 1);
 	}
 
-	protected class UserTopicViewAdapter extends BaseAdapter {
+	protected class UserResponseViewAdapter extends BaseAdapter {
 		
 		final int STATIC_VIEWS = 3;
 		final long FAKE_ID = 1000000000;
@@ -185,7 +182,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 		private ParentAdapterObserver adapterObserver;
 		public boolean isLoading;
 
-		public UserTopicViewAdapter(ResponseAdapter responseAdapter) {
+		public UserResponseViewAdapter(ResponseAdapter responseAdapter) {
 			assert(responseAdapter != null);
 			this.responseAdapter = responseAdapter;
 			this.adapterObserver = new ParentAdapterObserver(this);
@@ -222,28 +219,28 @@ public class UserTopicActivity extends ECollegeListActivity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			switch (position) {
-			case 0 : return getViewForTopic(convertView);
+			case 0 : return getViewForParentResponse(convertView);
 			case 1 : return getViewForDescription(convertView);
 			case 2 : return getViewForPostItem(convertView);
 			default : return responseAdapter.getView(position - STATIC_VIEWS, convertView, parent);
 			}
 		}
 		
-		public class TopicViewHolder {
-			public TextView topicTitleText;
-			public ImageView topicIcon;
+		public class ParentResponseViewHolder {
+			public TextView responseTitleText;
+			public ImageView responseIcon;
 			public TextView userTopicTitleText;
 			public TextView totalResponseCountText;
 			public TextView unreadResponseCountText;
 			public TextView userResponseCountText;
 		}
 		
-		private View getViewForTopic(View convertView) {
-			TopicViewHolder holder;
+		private View getViewForParentResponse(View convertView) {
+			ParentResponseViewHolder holder;
 			if (convertView == null) {
-				holder = new TopicViewHolder();
+				holder = new ParentResponseViewHolder();
 				convertView = viewInflater.inflate(R.layout.user_topic_item, null);
-				holder.topicIcon = (ImageView)convertView.findViewById(R.id.icon);
+				holder.responseIcon = (ImageView)convertView.findViewById(R.id.icon);
 				holder.userTopicTitleText = (TextView)convertView.findViewById(R.id.title_text);
 				holder.totalResponseCountText = (TextView)convertView.findViewById(R.id.total_response_count_text);
 				holder.unreadResponseCountText = (TextView)convertView.findViewById(R.id.unread_response_count_text);
@@ -251,15 +248,15 @@ public class UserTopicActivity extends ECollegeListActivity {
 				
 				convertView.setTag(holder);
 			} else {
-				holder = (TopicViewHolder)convertView.getTag();
+				holder = (ParentResponseViewHolder)convertView.getTag();
 			}
 			
-			String htmlSafeTitle = Html.fromHtml(topic.getTitle()).toString();
+			String htmlSafeTitle = Html.fromHtml(response.getTitle()).toString();
 			holder.userTopicTitleText.setText(htmlSafeTitle);
 			
 			ResponseCountViewHelper responseCountViewHelper = new ResponseCountViewHelper(
-				UserTopicActivity.this,
-				holder.topicIcon,
+				UserResponseActivity.this,
+				holder.responseIcon,
 				holder.unreadResponseCountText,
 				holder.totalResponseCountText,
 				holder.userResponseCountText
@@ -283,7 +280,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 			} else {
 				holder = (ExpandableDescriptionHolder) convertView.getTag();
 			}
-			holder.descriptionText.setText(Html.fromHtml(topic.getDescription()));
+			holder.descriptionText.setText(Html.fromHtml(response.getDescription()));
 			return convertView;
 		}
 		
@@ -314,5 +311,4 @@ public class UserTopicActivity extends ECollegeListActivity {
 
 
 	}
-
 }

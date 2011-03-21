@@ -30,6 +30,7 @@
 		<activity android:name="DropboxMessageActivity"></activity>
 		<activity android:name="GradeActivity"></activity>
 		<activity android:name="UserTopicActivity"></activity>
+		<activity android:name="UserResponseActivity"></activity>
 		
     </application>
 </manifest>

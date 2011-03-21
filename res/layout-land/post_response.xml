@@ -18,7 +18,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="top|left"
 		android:hint="@string/post_a_response"
-		android:minLines="10"
+		android:minLines="4"
 		android:inputType="textCapSentences|textAutoCorrect|textMultiLine" />
 	<LinearLayout
 		android:id="@+id/post_response_button_container"

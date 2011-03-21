@@ -11,6 +11,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,8 +62,28 @@ public class UserTopicActivity extends ECollegeListActivity {
 		topicTitleText.setText(Html.fromHtml(topic.getTitle()));
 		
 		loadAndDisplayResponsesForTopic();
+		
+		if (savedInstanceState != null) {
+			boolean wasEditingPost = savedInstanceState.getBoolean("editingPost");
+			if (wasEditingPost) {
+				showPostDialog();
+				String postSubject = savedInstanceState.getString("postSubject");
+				String postBody = savedInstanceState.getString("postBody");
+				postTitleText.setText(postSubject);
+				postResponseText.setText(postBody);
+			}
+		}
 	}
 	
+	@Override protected void onSaveInstanceState(Bundle outState) {
+		if (postDialog != null && postDialog.isShowing()) {
+			outState.putBoolean("editingPost", true);
+			outState.putString("postSubject", postTitleText.getText().toString());
+			outState.putString("postBody", postResponseText.getText().toString());
+		}
+		super.onSaveInstanceState(outState);
+	}
+
 	@Override protected void onPause() {
 		super.onPause();
 		if (postDialog != null) {
@@ -117,13 +138,14 @@ public class UserTopicActivity extends ECollegeListActivity {
 				.setView(responseView)
 				.setTitle(R.string.post_a_response)
 				.show();
+			postDialog.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 			cancelPostButton = (Button) responseView.findViewById(R.id.cancel_button);
 			postButton = (Button) responseView.findViewById(R.id.post_button);
 			postTitleText = (EditText) responseView.findViewById(R.id.post_title_text);
 			postResponseText = (EditText) responseView.findViewById(R.id.post_response_text);
 			cancelPostButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					postDialog.hide();
+					postDialog.dismiss();
 				}
 			});
 			postButton.setOnClickListener(new View.OnClickListener() {

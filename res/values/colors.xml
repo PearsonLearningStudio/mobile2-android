@@ -4,4 +4,5 @@
 	<color name="header_text">#FFFFFF</color>
 	<color name="list_header_background">#004422</color>
 	<color name="list_header_text">#FFFFFF</color>
+	<color name="background_color">#000000</color>
 </resources>

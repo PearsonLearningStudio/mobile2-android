@@ -396,11 +396,11 @@ public class HomeActivity extends ECollegeListActivity {
             } 
             if (title == null) title = "";
             if (desc == null) desc = "";
-            holder.titleText.setText(title);
+            holder.titleText.setText(Html.fromHtml(title));
             holder.descriptionText.setText(Html.fromHtml(desc),BufferType.SPANNABLE);
             holder.timeText.setText(prettyTimeFormatter.format(si.getPostedTime().getTime()));
             if (course != null) {
-            	holder.courseTitleText.setText(course.getTitle());
+            	holder.courseTitleText.setText(Html.fromHtml(course.getTitle()));
             }
             
             return convertView;

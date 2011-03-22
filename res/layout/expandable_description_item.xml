@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
@@ -7,6 +7,16 @@
 		android:id="@+id/description_text"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:lines="2"
 		android:maxLines="2" />
-</LinearLayout>
+	<ImageView
+		android:id="@+id/text_fade_view"
+		android:layout_width="fill_parent"
+		android:layout_height="30dip"
+		android:src="@drawable/expandable_text_fade_cover"
+		android:layout_alignParentBottom="true" />
+	<Button
+		android:id="@+id/expand_toggle_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true" />
+</RelativeLayout>

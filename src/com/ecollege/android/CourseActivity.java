@@ -1,5 +1,6 @@
 package com.ecollege.android;
 
+import java.util.Iterator;
 import java.util.List;
 
 import roboguice.inject.InjectExtra;
@@ -64,11 +65,18 @@ public class CourseActivity extends ECollegeListActivity {
 		setListAdapter(courseMenuAdapter);
 	}
 
-	private void displayFirstInstructor() {
+	private void displayInstructorList() {
 		showInstructorLoadingProgress(false);
 		if (!instructors.isEmpty()) {
-			User firstInstructor = instructors.get(0);
-			instructorText.setText(firstInstructor.getFirstName() + " " + firstInstructor.getLastName());
+			Iterator<User> i = instructors.listIterator();
+			StringBuffer sb = new StringBuffer("");
+			User instructor;
+			while (i.hasNext()) {
+				instructor = i.next();
+				sb.append(instructor.getFirstName() + " " + instructor.getLastName());
+				if (i.hasNext()) sb.append(", ");
+			}
+			instructorText.setText(sb.toString());
 		} else {
 			instructorText.setText(R.string.no_instructor);
 		}
@@ -124,7 +132,7 @@ public class CourseActivity extends ECollegeListActivity {
 
 	public void onServiceCallSuccess(FetchInstructorsForCourse service) {
 		instructors = service.getResult();
-		displayFirstInstructor();
+		displayInstructorList();
 	}
 	
 	public void onServiceCallSuccess(FetchAnnouncementsForCourse service) {

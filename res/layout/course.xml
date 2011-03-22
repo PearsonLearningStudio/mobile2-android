@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:orientation="vertical"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent">
+      
+	<com.ecollege.android.view.HeaderView
+		android:id="@+id/header_view"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+
+	<FrameLayout
+		android:id="@+id/icon_holder"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/header_view">
+		<ImageView 
+			android:id="@+id/course_icon"
+			android:src="@drawable/ic_course"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</FrameLayout>
+	
+	<TextView
+		android:id="@+id/course_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/header_view"
+		android:layout_toRightOf="@id/icon_holder"
+		/>
+	<TextView
+		android:id="@+id/instructor_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/icon_holder"
+		android:layout_below="@id/course_title"
+		/>
+	
+	<LinearLayout
+		android:id="@+id/announcement_view"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/instructor_text">
+		<TextView
+			android:id="@+id/announcement_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			/>
+		<TextView
+			android:id="@+id/announcement_description"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			/>
+	</LinearLayout>
+	<ListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_below="@id/announcement_view" />
+</RelativeLayout>

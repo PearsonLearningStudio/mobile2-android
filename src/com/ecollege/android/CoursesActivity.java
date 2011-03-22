@@ -6,6 +6,7 @@ import java.util.List;
 import roboguice.inject.InjectView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
@@ -25,6 +27,9 @@ import com.ecollege.api.services.courses.FetchMyCoursesService;
 import com.google.inject.Inject;
 
 public class CoursesActivity extends ECollegeListActivity {
+	
+	public static final String COURSE_EXTRA = "COURSE_EXTRA";
+	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectView(R.id.last_updated_label) TextView lastUpdatedText;
@@ -82,6 +87,14 @@ public class CoursesActivity extends ECollegeListActivity {
 			courseAdapter = new CourseArrayAdapter(this, courses);
 		}
 		return courseAdapter;
+	}
+
+	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Course selectedCourse = courseAdapter.getItem(position);
+		Intent intent = new Intent(this, CourseActivity.class);
+		intent.putExtra(COURSE_EXTRA, selectedCourse);
+		startActivity(intent);
 	}
 
 	protected class CourseViewHolder {

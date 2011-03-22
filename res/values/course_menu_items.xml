@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<!--  Note that order matters here. Keep the order the same in other locales. -->
+	<string-array name="course_menu_items">
+		<item>Announcements</item>
+		<item>Activity</item>
+		<item>Discussions</item>
+		<item>Dropbox</item>
+		<item>Gradebook</item>
+	</string-array>
+</resources>

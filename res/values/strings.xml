@@ -36,4 +36,6 @@
     <string name="post">Post</string>
     <string name="cancel">Cancel</string>
     <string name="subject">Subject</string>
+    <string name="no_instructor">No instructor listed</string>
+    <string name="no_announcements">No new announcements</string>
 </resources>

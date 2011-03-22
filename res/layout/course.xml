@@ -34,22 +34,40 @@
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/icon_holder"
 		android:layout_below="@id/course_title"
+		android:visibility="gone"
 		/>
+	<ProgressBar
+		android:id="@+id/instructor_loading_indicator"
+		android:indeterminateOnly="true"
+		android:layout_toRightOf="@id/icon_holder"
+		android:layout_below="@id/course_title"
+		android:layout_width="10dp"
+		android:layout_height="10dp" />
 	
 	<LinearLayout
 		android:id="@+id/announcement_view"
+		android:orientation="vertical"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/instructor_text">
+		<ProgressBar
+			android:id="@+id/announcement_loading_indicator"
+			android:indeterminateOnly="true"
+			android:layout_width="10dp"
+			android:layout_height="10dp" />
 		<TextView
 			android:id="@+id/announcement_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:visibility="gone"
 			/>
 		<TextView
 			android:id="@+id/announcement_description"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:maxLines="2"
+			android:ellipsize="end"
+			android:visibility="gone"
 			/>
 	</LinearLayout>
 	<ListView

@@ -97,6 +97,7 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 	
 	private int pendingServiceCalls = 0;
 	private User currentUser;
+	private long currentCourseListLastLoaded;
 	private List<Course> currentCourseList;
 	final private ConcurrentHashMap<Long, Course> courseIdMap = new ConcurrentHashMap<Long, Course>(8);
 	private int nextProgressDialogTitleId = -1;
@@ -137,12 +138,21 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 		for (Course course : currentCourseList) {
 			courseIdMap.put(course.getId(), course);
 		}
+		currentCourseListLastLoaded = System.currentTimeMillis();
 	}
 
 	public List<Course> getCurrentCourseList() {
 		return currentCourseList;
 	}
 	
+	public void setCurrentCourseListLastLoaded(long currentCourseListLastLoaded) {
+		this.currentCourseListLastLoaded = currentCourseListLastLoaded;
+	}
+
+	public long getCurrentCourseListLastLoaded() {
+		return currentCourseListLastLoaded;
+	}
+
 	public Course getCourseById(long id) {
 		return courseIdMap.get(id);
 	}

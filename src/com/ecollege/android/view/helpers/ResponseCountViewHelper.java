@@ -57,6 +57,14 @@ public class ResponseCountViewHelper {
 			userResponseCountText.setText(String.format(correctFormat, responseCount.getPersonalResponseCount()));
 			userResponseCountText.setVisibility(View.VISIBLE);
 		}
+		
+		if (responseCount.getLast24HourResponseCount() >= 10) {
+			topicIcon.setImageResource(R.drawable.ic_discussions_hot_topic);
+		} else if (responseCount.getTotalResponseCount() == 0) {
+			topicIcon.setImageResource(R.drawable.ic_discussions_no_responses);
+		} else {
+			topicIcon.setImageResource(R.drawable.ic_discussions_responses);
+		}
 	}
 
 }

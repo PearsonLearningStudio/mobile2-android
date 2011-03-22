@@ -377,10 +377,10 @@ public class HomeActivity extends ECollegeListActivity {
             
             if ("thread-topic".equals(objectType)) {
             	title = "Topic: " + si.getTarget().getTitle();
-            	holder.icon.setImageResource(R.drawable.ic_thread_topic);
+            	holder.icon.setImageResource(R.drawable.ic_discussions_responses);
             } else if ("thread-post".equals(objectType)) {
             	title = "Re: " + si.getTarget().getTitle();
-            	holder.icon.setImageResource(R.drawable.ic_thread_post);
+            	holder.icon.setImageResource(R.drawable.ic_discussions_responses);
             } else if ("grade".equals(objectType)) {
             	title = "Grade: " + si.getTarget().getTitle();
             	holder.icon.setImageResource(R.drawable.ic_grade);

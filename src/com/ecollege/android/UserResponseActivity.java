@@ -8,7 +8,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ecollege.android.UserResponseActivity.UserResponseViewAdapter.ExpandableDescriptionHolder;
 import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.android.adapter.ParentAdapterObserver;
 import com.ecollege.android.adapter.ResponseAdapter;
@@ -50,7 +50,15 @@ public class UserResponseActivity extends ECollegeListActivity {
 	private Button postButton;
 	private EditText postResponseText;
 	private EditText postTitleText;
+	private ExpandableDescriptionHolder expandableDescriptionHolder;
 	private Spanned styledDescriptionHtml;
+	private boolean descriptionExpanded;
+	
+	protected View.OnClickListener onDescriptionExpandToggle = new View.OnClickListener() {
+		public void onClick(View v) {
+			toggleDescription();
+		}
+	};
 
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -199,6 +207,18 @@ public class UserResponseActivity extends ECollegeListActivity {
 		responseCount.setLast24HourResponseCount(responseCount.getLast24HourResponseCount() + 1);
 	}
 
+	protected void toggleDescription() {
+		if (descriptionExpanded) {
+			expandableDescriptionHolder.descriptionText.setText(response.getRawDescription());
+			expandableDescriptionHolder.descriptionText.setMaxLines(2);
+		} else {
+			expandableDescriptionHolder.descriptionText.setText(styledDescriptionHtml);
+			expandableDescriptionHolder.descriptionText.setMaxLines(999);
+		}
+		userResponseAdapter.notifyDataSetChanged();
+		descriptionExpanded = !descriptionExpanded;
+	}
+	
 	protected class UserResponseViewAdapter extends BaseAdapter {
 		
 		final int STATIC_VIEWS = 3;
@@ -294,19 +314,22 @@ public class UserResponseActivity extends ECollegeListActivity {
 		
 		public class ExpandableDescriptionHolder {
 			public TextView descriptionText;
+			public Button expandButton;
 		}
 		
 		private View getViewForDescription(View convertView) {
-			ExpandableDescriptionHolder holder;
 			if (convertView == null) {
-				holder = new ExpandableDescriptionHolder();
+				expandableDescriptionHolder = new ExpandableDescriptionHolder();
 				convertView = viewInflater.inflate(R.layout.expandable_description_item, null);
-				holder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
-				convertView.setTag(holder);
+				expandableDescriptionHolder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
+				expandableDescriptionHolder.expandButton = (Button) convertView.findViewById(R.id.expand_toggle_button);
+				convertView.setTag(expandableDescriptionHolder);
+				expandableDescriptionHolder.expandButton.setOnClickListener(onDescriptionExpandToggle);
+				descriptionExpanded = false;
+				expandableDescriptionHolder.descriptionText.setText(response.getRawDescription());
 			} else {
-				holder = (ExpandableDescriptionHolder) convertView.getTag();
+				expandableDescriptionHolder = (ExpandableDescriptionHolder) convertView.getTag();
 			}
-			holder.descriptionText.setText(Html.fromHtml(response.getDescription()));
 			return convertView;
 		}
 		

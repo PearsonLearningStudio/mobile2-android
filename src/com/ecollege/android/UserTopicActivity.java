@@ -60,7 +60,6 @@ public class UserTopicActivity extends ECollegeListActivity {
 	protected View.OnClickListener onDescriptionExpandToggle = new View.OnClickListener() {
 		public void onClick(View v) {
 			toggleDescription();
-			
 		}
 	};
 

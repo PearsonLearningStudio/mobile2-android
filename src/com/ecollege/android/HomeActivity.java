@@ -51,7 +51,6 @@ public class HomeActivity extends ECollegeListActivity {
 	protected ECollegeClient client;
 	private LayoutInflater mInflater;
 	
-	
 	private static PrettyTime prettyTimeFormatter = new PrettyTime();
 	
     @Override public void onCreate(Bundle savedInstanceState) {

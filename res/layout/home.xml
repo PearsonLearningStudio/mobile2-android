@@ -13,16 +13,16 @@
 	android:layout_alignParentTop="true"
 	>
 	
-	<RadioButton android:checked="true"
-		android:id="@+id/radio_whats_due"
-		android:onClick="onRadioGroupCheckedChanged"
-		android:text="What's Due"/>
-		
 	<RadioButton
 		android:id="@+id/radio_activity"
 		android:onClick="onRadioGroupCheckedChanged"
 		android:text="Activity"/>		
 	
+	<RadioButton android:checked="true"
+		android:id="@+id/radio_whats_due"
+		android:onClick="onRadioGroupCheckedChanged"
+		android:text="What's Due"/>
+		
 </RadioGroup>
 	
 <Button 

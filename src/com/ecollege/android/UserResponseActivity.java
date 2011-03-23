@@ -152,6 +152,7 @@ public class UserResponseActivity extends ECollegeListActivity {
 			postButton = (Button) responseView.findViewById(R.id.post_button);
 			postTitleText = (EditText) responseView.findViewById(R.id.post_title_text);
 			postResponseText = (EditText) responseView.findViewById(R.id.post_response_text);
+			postResponseText.setHint(getString(R.string.post_a_response_to_s, Html.fromHtml(response.getTitle())));
 			cancelPostButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					postDialog.dismiss();

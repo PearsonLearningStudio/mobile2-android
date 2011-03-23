@@ -213,10 +213,12 @@ public class UserTopicActivity extends ECollegeListActivity {
 	protected void toggleDescription() {
 		if (descriptionExpanded) {
 			expandableDescriptionHolder.descriptionText.setText(topic.getRawDescription());
-			expandableDescriptionHolder.descriptionText.setMaxLines(2);
+			expandableDescriptionHolder.descriptionText.setMaxLines(4);
+			expandableDescriptionHolder.textFadeView.setVisibility(View.VISIBLE);
 		} else {
 			expandableDescriptionHolder.descriptionText.setText(styledDescriptionHtml);
 			expandableDescriptionHolder.descriptionText.setMaxLines(999);
+			expandableDescriptionHolder.textFadeView.setVisibility(View.GONE);
 		}
 		userTopicAdapter.notifyDataSetChanged();
 		descriptionExpanded = !descriptionExpanded;
@@ -318,6 +320,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 		public class ExpandableDescriptionHolder {
 			public TextView descriptionText;
 			public Button expandButton;
+			public View textFadeView;
 		}
 		
 		private View getViewForDescription(View convertView) {
@@ -326,6 +329,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 				convertView = viewInflater.inflate(R.layout.expandable_description_item, null);
 				expandableDescriptionHolder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
 				expandableDescriptionHolder.expandButton = (Button) convertView.findViewById(R.id.expand_toggle_button);
+				expandableDescriptionHolder.textFadeView = convertView.findViewById(R.id.text_fade_view);
 				convertView.setTag(expandableDescriptionHolder);
 				expandableDescriptionHolder.expandButton.setOnClickListener(onDescriptionExpandToggle);
 				descriptionExpanded = false;

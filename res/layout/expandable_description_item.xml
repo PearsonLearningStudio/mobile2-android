@@ -7,15 +7,17 @@
 		android:id="@+id/description_text"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:maxLines="2" />
+		android:layout_alignParentLeft="true"
+		android:layout_toLeftOf="@+id/expand_toggle_button"
+		android:maxLines="4" />
 	<ImageView
 		android:id="@+id/text_fade_view"
 		android:layout_width="fill_parent"
-		android:layout_height="30dip"
+		android:layout_height="22dip"
 		android:src="@drawable/expandable_text_fade_cover"
 		android:layout_alignParentBottom="true" />
 	<Button
-		android:id="@+id/expand_toggle_button"
+		android:id="@id/expand_toggle_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true" />

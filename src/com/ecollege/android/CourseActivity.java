@@ -89,7 +89,7 @@ public class CourseActivity extends ECollegeListActivity {
 		if (!announcements.isEmpty()) {
 			Announcement firstAnnouncement = announcements.get(0);
 			announcementTitle.setText(firstAnnouncement.getSubject());
-			announcementDescription.setText(Html.fromHtml(firstAnnouncement.getText()));
+			announcementDescription.setText(firstAnnouncement.getRawText());
 		} else {
 			announcementTitle.setText(R.string.no_announcements);
 			announcementDescription.setText(null);

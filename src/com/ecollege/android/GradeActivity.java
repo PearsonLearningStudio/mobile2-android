@@ -8,6 +8,7 @@ import roboguice.inject.InjectView;
 import roboguice.util.Strings;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -71,11 +72,11 @@ public class GradeActivity extends ECollegeDefaultActivity {
     
     protected void updateText() {
     	if (course != null) {
-    		courseTitleText.setText(course.getTitle());
+    		courseTitleText.setText(Html.fromHtml(course.getTitle()));
     	}
     	
     	if (gradebookItem != null){
-    		gradeTitleText.setText(gradebookItem.getTitle()); 	
+    		gradeTitleText.setText(gradebookItem.getTitle());
     	}
     	
     	if (grade != null) {

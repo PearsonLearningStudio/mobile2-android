@@ -4,6 +4,7 @@
 	<string-array name="course_menu_items">
 		<item>Announcements</item>
 		<item>Activity</item>
+		<item>What\'s Due</item>
 		<item>Discussions</item>
 		<item>Dropbox</item>
 		<item>Gradebook</item>

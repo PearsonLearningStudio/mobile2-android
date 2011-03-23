@@ -3,6 +3,8 @@ package com.ecollege.android;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -135,6 +137,13 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 
 	public void setCurrentCourseList(List<Course> currentCourseList) {
 		this.currentCourseList = currentCourseList;
+		Collections.sort(this.currentCourseList, new Comparator<Course>() {
+			public int compare(Course course1, Course course2) {
+				assert(course1 != null);
+				assert(course2 != null);
+				return (course1.getTitle().compareToIgnoreCase(course2.getTitle()));
+			}
+		});
 		for (Course course : currentCourseList) {
 			courseIdMap.put(course.getId(), course);
 		}

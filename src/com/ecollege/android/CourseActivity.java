@@ -30,7 +30,8 @@ public class CourseActivity extends ECollegeListActivity {
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
-	@InjectView(R.id.course_title) TextView courseTitleText;
+	@InjectView(R.id.course_title_text) TextView courseTitleText;
+	@InjectView(R.id.course_code_text) TextView courseCodeText;
 	@InjectView(R.id.instructor_text) TextView instructorText;
 	@InjectView(R.id.announcement_title) TextView announcementTitle;
 	@InjectView(R.id.announcement_description) TextView announcementDescription;
@@ -58,6 +59,7 @@ public class CourseActivity extends ECollegeListActivity {
 	
 	private void displayCourse() {
 		courseTitleText.setText(Html.fromHtml(course.getTitle()));
+		courseCodeText.setText(Html.fromHtml(course.getDisplayCourseCode()));
 	}
 
 	private void createMenu() {

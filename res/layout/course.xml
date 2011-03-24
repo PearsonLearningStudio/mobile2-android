@@ -35,18 +35,25 @@
 		android:layout_below="@id/course_title_text"
 		android:layout_toRightOf="@id/icon_holder"
 		/>
+	<ImageView
+		android:id="@+id/instructor_icon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/icon_holder"
+		android:layout_below="@id/course_code_text"
+		android:src="@drawable/ic_person_small" />
 	<TextView
 		android:id="@+id/instructor_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_toRightOf="@id/icon_holder"
+		android:layout_toRightOf="@id/instructor_icon"
 		android:layout_below="@id/course_code_text"
 		android:visibility="gone"
 		/>
 	<ProgressBar
 		android:id="@+id/instructor_loading_indicator"
 		android:indeterminateOnly="true"
-		android:layout_toRightOf="@id/icon_holder"
+		android:layout_toRightOf="@id/instructor_icon"
 		android:layout_below="@id/course_code_text"
 		android:layout_width="10dp"
 		android:layout_height="10dp" />

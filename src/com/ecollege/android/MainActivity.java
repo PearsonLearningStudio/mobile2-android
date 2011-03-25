@@ -78,7 +78,7 @@ public class MainActivity extends ECollegeTabActivity {
         addHomeTab();
         addDiscussionsTab();
         addCoursesTab();
-        addPeopleTab();
+        //addPeopleTab();
         addProfileTab();
     }
     

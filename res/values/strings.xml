@@ -2,8 +2,6 @@
 <resources>
     <string name="hello">Hello World, TempLoginActivity!</string>
     <string name="app_name">eCollege</string>
-    <string name="client_string">sandbox</string>
-    <string name="client_id">30bb1d4f-2677-45d1-be13-339174404402</string>
     <string name="error_dialog_default_title">Alert</string>
     <string name="retry_dialog_button">Retry</string>
     <string name="progress_dialog_default_title">eCollege</string>

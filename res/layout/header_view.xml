@@ -6,20 +6,17 @@
 
 	<RelativeLayout
 		android:layout_width="fill_parent"
-		android:layout_height="30dp"
+		android:layout_height="40dp"
 		android:layout_gravity="top"
-		android:background="@color/header_background"
-		>		
-		<TextView
-			android:id="@+id/header_title"
+		android:background="@drawable/header_background">		
+		<ImageView
+			android:id="@+id/header_image"
 			android:layout_alignParentLeft="true"
 			android:layout_centerVertical="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="2mm"
-			android:layout_marginLeft="5dp"
-			android:textColor="@color/header_text"
-			android:text="eCollege App"/>
+			android:src="@drawable/logo_small" />
+			
 		<ProgressBar
 			android:id="@+id/busy_indicator"
 			android:indeterminateOnly="true"

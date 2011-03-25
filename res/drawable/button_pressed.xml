@@ -3,10 +3,10 @@
 	android:shape="rectangle">
     <gradient
        android:angle="270"
-       android:startColor="@color/button_color_top"
-       android:endColor="@color/button_color_bottom"
+       android:startColor="@color/button_color_bottom"
+       android:endColor="@color/button_color_top"
     />
-	<stroke android:color="@color/button_focused_border" android:width="2dip" />
+	<stroke android:color="@color/button_pressed_border" android:width="2dip" />
     <padding android:left="8dip" android:top="8dip" android:right="8dip" android:bottom="8dip" />
     <corners
 		android:bottomRightRadius="6dip"

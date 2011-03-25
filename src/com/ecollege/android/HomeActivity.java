@@ -385,7 +385,7 @@ public class HomeActivity extends ECollegeListActivity {
             	holder.icon.setImageResource(R.drawable.ic_grade);
             } else if ("dropbox-submission".equals(objectType)) {
             	title = "Dropbox: " + si.getTarget().getTitle();
-            	holder.icon.setImageResource(R.drawable.ic_dropbox_submission);
+            	holder.icon.setImageResource(R.drawable.ic_dropbox);
             } else if ("exam-submission".equals(objectType)) {
             	title = "Exam: " + si.getTarget().getTitle();
             	holder.icon.setImageResource(R.drawable.ic_exam_submission);

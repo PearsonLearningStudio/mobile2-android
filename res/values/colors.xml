@@ -5,11 +5,12 @@
 	<color name="color_secondary">#347BAD</color>
 	<color name="color_tertiary">#ECE8DB</color>
 
-	<color name="color_foreground">#FF000000</color>
-	<color name="color_foreground_semi_transparent">#EE000000</color>
+	<color name="color_foreground">#FFFFFFFF</color>
+	<color name="color_foreground_semi_transparent">#EEFFFFFF</color>
 	<color name="color_background">#FFFFFFFF</color>
 	<color name="color_background_semi_transparent">#EEFFFFFF</color>
-	<color name="color_foreground_inverse">#FFFFFFFF</color>
+	<color name="color_foreground_inverse">#FF000000</color>
+	<color name="color_disabled">#FFCCCCCC</color>
 
 	<color name="header_background">#666666</color>
 	<color name="header_text">#FFFFFF</color>
@@ -30,10 +31,15 @@
 	<color name="button_color_disabled">#FFCCCCCC</color>
 	<color name="button_default_border">#FF444444</color>
 	<color name="button_focused_border">@color/color_primary</color>
+	<color name="button_pressed_border">@color/color_secondary</color>
 	<color name="button_disabled_focused_border">@color/color_primary</color>
 
-	<color name="list_header_background">#444444</color>
+	<color name="list_header_background_top_stripe">#FF969696</color>
+	<color name="list_header_background_bottom_stripe">#FF797979</color>
+	<color name="list_header_background_top">#FF666666</color>
+	<color name="list_header_background_bottom">#FF969696</color>
 	<color name="list_header_text">#FFFFFF</color>
+	<color name="list_header_text_shadow">#FFFFFF</color>
 
 	<color name="list_item_color_light">#FFEEEEEE</color>
 	<color name="list_item_color_dark">#FFBBBBBB</color>

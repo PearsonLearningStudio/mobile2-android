@@ -86,7 +86,7 @@ public class MainActivity extends ECollegeTabActivity {
     {
         TabHost host = getTabHost();
         Intent i= new Intent(this,HomeActivity.class);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_home);
+        Drawable icon = getResources().getDrawable(R.drawable.ic_home_up);
         host.addTab(host.newTabSpec("home").setIndicator(null,icon).setContent(i));
     }
     
@@ -94,7 +94,7 @@ public class MainActivity extends ECollegeTabActivity {
     {
         TabHost host = getTabHost();
         Intent i= new Intent(this,DiscussionsActivity.class);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_discussions);
+        Drawable icon = getResources().getDrawable(R.drawable.ic_discussions_up);
         host.addTab(host.newTabSpec("discussions").setIndicator(null,icon).setContent(i));
     }
     
@@ -102,23 +102,15 @@ public class MainActivity extends ECollegeTabActivity {
     {
         TabHost host = getTabHost();
         Intent i= new Intent(this,CoursesActivity.class);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_courses);
+        Drawable icon = getResources().getDrawable(R.drawable.ic_courses_up);
         host.addTab(host.newTabSpec("courses").setIndicator(null,icon).setContent(i));
-    }
-    
-    protected void addPeopleTab()
-    {
-        TabHost host = getTabHost();
-        Intent i= new Intent(this,PeopleActivity.class);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_people);
-        host.addTab(host.newTabSpec("people").setIndicator(null,icon).setContent(i));
     }
     
     protected void addProfileTab()
     {
         TabHost host = getTabHost();
         Intent i= new Intent(this,ProfileActivity.class);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_tab_profile);
+        Drawable icon = getResources().getDrawable(R.drawable.ic_my_profile_up);
         host.addTab(host.newTabSpec("profile").setIndicator(null,icon).setContent(i));
     }
 }

@@ -5,6 +5,20 @@
         <item name="android:textColorLink">#FFEE0000</item>
     </style>
     
+    <style name="TextAppearance.ListHeader">
+    	<item name="android:textColor">@color/color_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+ 
+    <style name="TextAppearance.Small">
+        <item name="android:textSize">12sp</item>
+    </style>
+ 
+    <style name="TextAppearance.Sub">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+ 
     <style name="TextAppearance.Label">
         <item name="android:textSize">18sp</item>
     	<item name="android:textColor">@color/color_primary</item>
@@ -52,6 +66,6 @@
         <item name="android:listSelector">@drawable/list_selector_background</item>
         <item name="android:cacheColorHint">@color/color_foreground</item>
         <item name="android:divider">@drawable/list_item_divider</item>
-        <item name="android:dividerHeight">1dp</item>
+        <item name="android:dividerHeight">0.5dp</item>
     </style>
 </resources>

@@ -1,19 +1,16 @@
 package com.ecollege.android.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.ecollege.android.ECollegeApplication;
 import com.ecollege.android.R;
 
 public class HeaderView extends FrameLayout {
     private final ProgressBar busyIndicator;
-    private final TextView headerTitle;
 
 	public HeaderView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
@@ -30,12 +27,8 @@ public class HeaderView extends FrameLayout {
         	app.registerHeaderView(this);
         }
         
-        headerTitle = (TextView) findViewById(R.id.header_title);
         busyIndicator = (ProgressBar) findViewById(R.id.busy_indicator);
         
-        if (context instanceof Activity) {
-        	headerTitle.setText(((Activity)context).getTitle());	
-        }
 	}
 	
 	public void setProgressVisibility(boolean visible) {

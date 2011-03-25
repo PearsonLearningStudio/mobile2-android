@@ -39,4 +39,9 @@
     <string name="subject">Subject</string>
     <string name="no_instructor">No instructor listed</string>
     <string name="no_announcements">No new announcements</string>
+    <string name="username">Username</string>
+    <string name="student_id">Student ID</string>
+    <string name="password">Password</string>
+    <string name="keep_me_logged_in">Keep me logged in</string>
+    <string name="sign_in">Sign in</string>
 </resources>

@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-	<style name="ECollegeTheme" parent="@android:style/Theme.Light">
+	<style name="ECollegeTheme" parent="@android:Theme.Light">
 		<item name="android:windowNoTitle">true</item>
-<!-- 		<item name="android:windowBackground">@drawable/light_bg</item> -->
+		<!-- Colors -->
+        <item name="android:windowBackground">@color/color_foreground</item>
+        <item name="android:colorForeground">@color/color_foreground</item>
+        <item name="android:colorForegroundInverse">@color/color_foreground_inverse</item>
+		<item name="android:colorBackground">@color/color_background</item>
+		<!-- Text -->
+        <item name="android:textAppearance">@style/TextAppearance</item>
+		<!-- Components -->
+        <item name="android:buttonStyle">@style/Widget.Button</item>
+        <item name="android:editTextStyle">@style/Widget.EditText</item>
+        <item name="android:listViewStyle">@style/Widget.ListView</item>
+        <!-- item name="android:checkboxStyle">@style/Widget.CompoundButton.CheckBox</item-->
 	</style>
-		
 </resources>

@@ -21,7 +21,7 @@
 	android:text="some title"
 	android:singleLine="true"
 	android:ellipsize="end"
-	style="@style/TextAppearance.ListHeader"
+	style="@style/TextAppearance.ListItemHeader"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:layout_toLeftOf="@+id/time_text"

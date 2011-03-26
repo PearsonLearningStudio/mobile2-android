@@ -19,6 +19,7 @@
 	android:id="@+id/title_text"
 	android:text="some title"
 	android:singleLine="true"
+	style="@style/TextAppearance.ListItemHeader"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:layout_toLeftOf="@+id/time_text"
@@ -28,6 +29,7 @@
 	
 <TextView
 	android:id="@+id/time_text"
+	style="@style/TextAppearance.Small"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_alignParentRight="true"	

@@ -29,13 +29,14 @@
 	android:id="@+id/reload_button"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:text=" R "
+	android:text="R"
 	android:layout_alignParentRight="true"/>
 <TextView
 	android:id="@+id/last_updated_label"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_below="@id/radiogrp"
+	style="@style/TextAppearance.Sub"
 	android:text="@string/last_updated_label" />
 	
 <TextView
@@ -44,6 +45,7 @@
 	android:layout_height="wrap_content"
 	android:layout_below="@id/radiogrp"
 	android:layout_toRightOf="@id/last_updated_label"
+	style="@style/TextAppearance.Sub"
 	android:text="@string/never" />
 	
 <ListView

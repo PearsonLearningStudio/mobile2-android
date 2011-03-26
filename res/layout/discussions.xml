@@ -24,16 +24,18 @@
 	android:id="@+id/last_updated_label"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
+	android:layout_below="@id/reload_button" 
 	android:text="@string/last_updated_label"
-	android:layout_below="@id/reload_button" />
+	style="@style/TextAppearance.Sub" />
 
 <TextView
 	android:id="@+id/last_updated_text"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:text="@string/never"
 	android:layout_below="@id/reload_button" 
-	android:layout_toRightOf="@id/last_updated_label" />
+	android:layout_toRightOf="@id/last_updated_label" 
+	android:text="@string/never"
+	style="@style/TextAppearance.Sub" />
 	
 <ListView
 	android:id="@android:id/list"

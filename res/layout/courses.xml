@@ -7,15 +7,21 @@
 	android:id="@+id/reload_button"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:text=" R "
+	android:text="R"
 	android:layout_alignParentTop="true" 
 	android:layout_alignParentRight="true" />
 <TextView
 	android:id="@+id/last_updated_label"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:text="@string/last_updated_label"
-	android:layout_alignParentLeft="true"
+	android:layout_alignBottom="@id/reload_button"
+	android:text="@string/last_updated_label" />
+<TextView
+	android:id="@+id/last_updated_text"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_alignBottom="@id/reload_button"
+	android:layout_toRightOf="@id/last_updated_label"
 	android:layout_toLeftOf="@id/reload_button" />
 <ListView
 	android:id="@android:id/list"

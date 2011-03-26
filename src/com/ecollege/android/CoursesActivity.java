@@ -32,7 +32,7 @@ public class CoursesActivity extends ECollegeListActivity {
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
-	@InjectView(R.id.last_updated_label) TextView lastUpdatedText;
+	@InjectView(R.id.last_updated_text) TextView lastUpdatedText;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	protected ECollegeClient client;
 	protected LayoutInflater viewInflater;

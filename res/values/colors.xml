@@ -2,6 +2,10 @@
 <resources>
 
 	<color name="color_primary">#2E3A81</color>
+	<color name="color_primary_light_stripe">#737CB5</color>
+	<color name="color_primary_dark_stripe">#1A1E43</color>
+	<color name="color_primary_light">#364294</color>
+	<color name="color_primary_dark">#222C61</color>
 	<color name="color_secondary">#347BAD</color>
 	<color name="color_tertiary">#ECE8DB</color>
 
@@ -12,9 +16,6 @@
 	<color name="color_foreground_inverse">#FF000000</color>
 	<color name="color_disabled">#FFCCCCCC</color>
 
-	<color name="header_background">#666666</color>
-	<color name="header_text">#FFFFFF</color>
-	
 	<color name="title_color_light">#FFC01414</color>
 	<color name="title_color_dark">#FF860000</color>
 	<color name="title_border">#FF282828</color>
@@ -26,12 +27,12 @@
 	<color name="textfield_focused_border">@color/color_primary</color>
 	<color name="textfield_disabled_focused_border">#FFCCCCCC</color>
 
-	<color name="button_color_top">@color/color_secondary</color>
-	<color name="button_color_bottom">@color/color_primary</color>
+	<color name="button_color_top">@color/color_primary_light</color>
+	<color name="button_color_middle">@color/color_primary</color>
+	<color name="button_color_bottom">@color/color_primary_dark</color>
 	<color name="button_color_disabled">#FFCCCCCC</color>
-	<color name="button_default_border">#FF444444</color>
-	<color name="button_focused_border">@color/color_primary</color>
-	<color name="button_pressed_border">@color/color_secondary</color>
+	<color name="button_focused_border">@color/color_primary_light_stripe</color>
+	<color name="button_pressed_border">@color/color_primary_dark_stripe</color>
 	<color name="button_disabled_focused_border">@color/color_primary</color>
 
 	<color name="list_header_background_top_stripe">#FF969696</color>

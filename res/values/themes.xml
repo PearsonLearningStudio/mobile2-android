@@ -10,7 +10,7 @@
 		<!-- Text -->
         <item name="android:textAppearance">@style/TextAppearance</item>
 		<!-- Components -->
-        <item name="android:buttonStyle">@style/Widget.Button</item>
+        <item name="android:buttonStyle">@style/Widget.ButtonPrimary</item>
         <item name="android:editTextStyle">@style/Widget.EditText</item>
         <item name="android:listViewStyle">@style/Widget.ListView</item>
         <!-- item name="android:checkboxStyle">@style/Widget.CompoundButton.CheckBox</item-->

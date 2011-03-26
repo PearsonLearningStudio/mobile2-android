@@ -5,9 +5,18 @@
         <item name="android:textColorLink">#FFEE0000</item>
     </style>
     
-    <style name="TextAppearance.ListHeader">
+    <style name="TextAppearance.ListItemHeader">
     	<item name="android:textColor">@color/color_primary</item>
         <item name="android:textStyle">bold</item>
+    </style>
+ 
+    <style name="TextAppearance.ListHeader">
+    	<item name="android:textColor">@color/color_foreground</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">-1</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">1</item>
     </style>
  
     <style name="TextAppearance.Small">

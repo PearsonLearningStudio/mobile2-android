@@ -20,19 +20,21 @@
 	<color name="title_color_dark">#FF860000</color>
 	<color name="title_border">#FF282828</color>
 
-	<color name="textfield_color_light">#FFFFFFFF</color>
-	<color name="textfield_color_dark">#FFDDDDDD</color>
+	<color name="textfield_top">#F5F5F5</color>
+	<color name="textfield_bottom">#FFFFFF</color>
+	<color name="textfield_border_top">#A2A2A2</color>
+	<color name="textfield_border_bottom">#C5C5C5</color>
 	<color name="textfield_color_disabled">#FFCCCCCC</color>
-	<color name="textfield_default_border">#FFA2A2A2</color>
-	<color name="textfield_focused_border">@color/color_primary</color>
-	<color name="textfield_disabled_focused_border">#FFCCCCCC</color>
+	<color name="textfield_focused_border">@color/color_primary_light_stripe</color>
+	<color name="textfield_pressed_border">@color/color_primary_dark_stripe</color>
+	<color name="textfield_disabled_focused_border">@color/color_primary</color>
 
 	<color name="button_color_top">@color/color_primary_light</color>
 	<color name="button_color_middle">@color/color_primary</color>
 	<color name="button_color_bottom">@color/color_primary_dark</color>
 	<color name="button_color_disabled">#FFCCCCCC</color>
 	<color name="button_focused_border">@color/color_primary_light_stripe</color>
-	<color name="button_pressed_border">@color/color_primary_dark_stripe</color>
+	<color name="button_pressed_border">@color/color_primary_dark</color>
 	<color name="button_disabled_focused_border">@color/color_primary</color>
 
 	<color name="list_header_background_top_stripe">#FF969696</color>

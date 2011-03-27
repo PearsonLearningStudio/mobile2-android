@@ -3,7 +3,6 @@ package com.ecollege.android;
 import java.util.ArrayList;
 
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,7 +40,6 @@ public class UserTopicActivity extends ECollegeListActivity {
 	private static final int VIEW_RESPONSE_REQUEST = 0;
 	
 	@InjectExtra(DiscussionsActivity.USER_TOPIC_EXTRA) protected UserDiscussionTopic userTopic;
-	@InjectView(R.id.topic_title_text) TextView topicTitleText;
 	
 	protected DiscussionTopic topic;
 	protected ResponseAdapter responseAdapter;
@@ -70,7 +68,6 @@ public class UserTopicActivity extends ECollegeListActivity {
 		responseCount = userTopic.getChildResponseCounts();
 		viewInflater = getLayoutInflater();
 		
-		topicTitleText.setText(Html.fromHtml(topic.getTitle()));
 		styledDescriptionHtml = Html.fromHtml(topic.getDescription());
 		
 		loadAndDisplayResponsesForTopic();
@@ -216,10 +213,12 @@ public class UserTopicActivity extends ECollegeListActivity {
 			expandableDescriptionHolder.descriptionText.setText(topic.getRawDescription());
 			expandableDescriptionHolder.descriptionText.setMaxLines(4);
 			expandableDescriptionHolder.textFadeView.setVisibility(View.VISIBLE);
+			expandableDescriptionHolder.expandButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_text));
 		} else {
 			expandableDescriptionHolder.descriptionText.setText(styledDescriptionHtml);
 			expandableDescriptionHolder.descriptionText.setMaxLines(999);
 			expandableDescriptionHolder.textFadeView.setVisibility(View.GONE);
+			expandableDescriptionHolder.expandButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_expand_text_upside_down));
 		}
 		userTopicAdapter.notifyDataSetChanged();
 		descriptionExpanded = !descriptionExpanded;
@@ -227,7 +226,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 
 	protected class UserTopicViewAdapter extends BaseAdapter {
 		
-		final int STATIC_VIEWS = 3;
+		final int STATIC_VIEWS = 4;
 		final long FAKE_ID = 1000000000;
 		
 		private ResponseAdapter responseAdapter;
@@ -271,11 +270,30 @@ public class UserTopicActivity extends ECollegeListActivity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			switch (position) {
-			case 0 : return getViewForTopic(convertView);
-			case 1 : return getViewForDescription(convertView);
-			case 2 : return getViewForPostItem(convertView);
+			case 0 : return getViewForTitle(convertView);
+			case 1 : return getViewForTopic(convertView);
+			case 2 : return getViewForDescription(convertView);
+			case 3 : return getViewForPostItem(convertView);
 			default : return responseAdapter.getView(position - STATIC_VIEWS, convertView, parent);
 			}
+		}
+		
+		public class TitleViewHolder {
+			public TextView parentTitleText;
+		}
+		
+		private View getViewForTitle(View convertView) {
+			TitleViewHolder holder;
+			if (convertView == null) {
+				holder = new TitleViewHolder();
+				convertView = viewInflater.inflate(R.layout.user_topic_title_view, null);
+				holder.parentTitleText = (TextView) convertView.findViewById(R.id.topic_title_text);
+				convertView.setTag(holder);
+			} else {
+				holder = (TitleViewHolder) convertView.getTag();
+			}
+			holder.parentTitleText.setText(Html.fromHtml(topic.getTitle()));
+			return convertView;
 		}
 		
 		public class TopicViewHolder {
@@ -291,7 +309,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 			TopicViewHolder holder;
 			if (convertView == null) {
 				holder = new TopicViewHolder();
-				convertView = viewInflater.inflate(R.layout.user_topic_item, null);
+				convertView = viewInflater.inflate(R.layout.user_topic_on_tertiary, null);
 				holder.topicIcon = (ImageView)convertView.findViewById(R.id.icon);
 				holder.userTopicTitleText = (TextView)convertView.findViewById(R.id.title_text);
 				holder.totalResponseCountText = (TextView)convertView.findViewById(R.id.total_response_count_text);
@@ -320,7 +338,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 		
 		public class ExpandableDescriptionHolder {
 			public TextView descriptionText;
-			public Button expandButton;
+			public ImageView expandButton;
 			public View textFadeView;
 		}
 		
@@ -329,7 +347,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 				expandableDescriptionHolder = new ExpandableDescriptionHolder();
 				convertView = viewInflater.inflate(R.layout.expandable_description_item, null);
 				expandableDescriptionHolder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
-				expandableDescriptionHolder.expandButton = (Button) convertView.findViewById(R.id.expand_toggle_button);
+				expandableDescriptionHolder.expandButton = (ImageView) convertView.findViewById(R.id.expand_toggle_button);
 				expandableDescriptionHolder.textFadeView = convertView.findViewById(R.id.text_fade_view);
 				convertView.setTag(expandableDescriptionHolder);
 				expandableDescriptionHolder.expandButton.setOnClickListener(onDescriptionExpandToggle);

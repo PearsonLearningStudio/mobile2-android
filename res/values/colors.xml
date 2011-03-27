@@ -12,6 +12,8 @@
 	<color name="color_secondary_light">#306EA1</color>
 	<color name="color_secondary_dark">#295089</color>
 	<color name="color_tertiary">#ECE8DB</color>
+	<color name="color_tertiary_dark">#A7A49B</color>
+	<color name="color_tertiary_transparent">#00ECE8DB</color>
 
 	<color name="color_foreground">#FFFFFFFF</color>
 	<color name="color_foreground_semi_transparent">#EEFFFFFF</color>

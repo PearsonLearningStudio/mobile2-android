@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="45dp"
+    android:padding="5dp"
+    android:background="@drawable/secondary_gradient_background">
+	<TextView
+		android:id="@+id/topic_title_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:singleLine="true"
+		android:ellipsize="end"
+		style="@style/TextAppearance.HeaderInverse"/>
+</LinearLayout>

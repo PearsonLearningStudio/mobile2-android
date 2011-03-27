@@ -351,6 +351,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 				expandableDescriptionHolder.textFadeView = convertView.findViewById(R.id.text_fade_view);
 				convertView.setTag(expandableDescriptionHolder);
 				expandableDescriptionHolder.expandButton.setOnClickListener(onDescriptionExpandToggle);
+				expandableDescriptionHolder.descriptionText.setOnClickListener(onDescriptionExpandToggle);
 				descriptionExpanded = false;
 				expandableDescriptionHolder.descriptionText.setText(topic.getRawDescription());
 			} else {

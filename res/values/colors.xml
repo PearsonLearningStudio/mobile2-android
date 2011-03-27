@@ -7,6 +7,10 @@
 	<color name="color_primary_light">#364294</color>
 	<color name="color_primary_dark">#222C61</color>
 	<color name="color_secondary">#347BAD</color>
+	<color name="color_secondary_light_stripe">#5E89B3</color>
+	<color name="color_secondary_dark_stripe">#1E375F</color>
+	<color name="color_secondary_light">#306EA1</color>
+	<color name="color_secondary_dark">#295089</color>
 	<color name="color_tertiary">#ECE8DB</color>
 
 	<color name="color_foreground">#FFFFFFFF</color>

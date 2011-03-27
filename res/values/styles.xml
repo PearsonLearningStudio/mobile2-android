@@ -33,6 +33,12 @@
         <item name="android:textStyle">italic</item>
     </style>
  
+    <style name="TextAppearance.SubInverse">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/color_foreground</item>
+    </style>
+ 
     <style name="TextAppearance.UnreadCount">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>

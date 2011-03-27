@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-<Button
-	android:id="@+id/reload_button"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:text="R"
-	android:layout_alignParentTop="true" 
-	android:layout_alignParentRight="true" />
-<TextView
-	android:id="@+id/last_updated_label"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_alignBottom="@id/reload_button"
-	style="@style/TextAppearance.Sub"
-	android:text="@string/last_updated_label" />
-<TextView
-	android:id="@+id/last_updated_text"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	style="@style/TextAppearance.Sub"
-	android:layout_alignBottom="@id/reload_button"
-	android:layout_toRightOf="@id/last_updated_label"
-	android:layout_toLeftOf="@id/reload_button" />
-<ListView
-	android:id="@android:id/list"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:layout_below="@id/reload_button"/>
-		
-<TextView
-	android:id="@android:id/empty"
-	android:text="@string/no_items"	
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:layout_below="@id/reload_button"/>
+    android:layout_height="fill_parent">
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@drawable/secondary_gradient_background">
+		<Button
+			android:id="@+id/reload_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="R"
+			android:layout_alignParentTop="true" 
+			android:layout_alignParentRight="true" />
+		<TextView
+			android:id="@+id/last_updated_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignBottom="@id/reload_button"
+			style="@style/TextAppearance.SubInverse"
+			android:text="@string/last_updated_label" />
+		<TextView
+			android:id="@+id/last_updated_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="@style/TextAppearance.SubInverse"
+			android:layout_alignBottom="@id/reload_button"
+			android:layout_toRightOf="@id/last_updated_label"
+			android:layout_toLeftOf="@id/reload_button" />
+	</RelativeLayout>
+	<ListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
+			
+	<TextView
+		android:id="@android:id/empty"
+		android:text="@string/no_items"	
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
 	
-</RelativeLayout>
+</LinearLayout>

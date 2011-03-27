@@ -5,12 +5,24 @@
         <item name="android:textColorLink">#FFEE0000</item>
     </style>
     
+    <style name="TextAppearance.Header">
+        <item name="android:textSize">20dp</item>
+    	<item name="android:textColor">@color/color_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="TextAppearance.SecondaryHeader">
+        <item name="android:textSize">18dp</item>
+    	<item name="android:textColor">@color/color_secondary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
     <style name="TextAppearance.HeaderInverse">
         <item name="android:textSize">18sp</item>
     	<item name="android:textColor">@color/color_foreground</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:shadowColor">#000</item>
-        <item name="android:shadowDx">-1</item>
+        <item name="android:shadowColor">#CCC</item>
+        <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">-1</item>
         <item name="android:shadowRadius">1</item>
     </style>
@@ -29,6 +41,23 @@
         <item name="android:shadowRadius">1</item>
     </style>
  
+    <style name="TextAppearance.InverseLabel">
+        <item name="android:textSize">16sp</item>
+    	<item name="android:textColor">@color/color_foreground</item>
+        <item name="android:shadowColor">#CCC</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+    
+    <style name="TextAppearance.Inverse">
+    	<item name="android:textColor">@color/color_foreground</item>
+        <item name="android:shadowColor">#CCC</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+    
     <style name="TextAppearance.Small">
         <item name="android:textSize">12sp</item>
     </style>

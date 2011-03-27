@@ -169,8 +169,10 @@ public class CourseActivity extends ECollegeListActivity {
 			holder.title.setText(getItem(position));
 			// first position should be "Announcements"
 			if (position == 0 && announcements != null && announcements.size() > 0) {
+				holder.unreadCountText.setVisibility(View.VISIBLE);
 				holder.unreadCountText.setText(announcements.size() + "");
 			} else {
+				holder.unreadCountText.setVisibility(View.GONE);
 				holder.unreadCountText.setText(null);
 			}
 			return convertView;

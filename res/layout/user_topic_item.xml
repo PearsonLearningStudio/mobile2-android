@@ -7,9 +7,9 @@
 <ImageView
 	android:id="@+id/icon"
 	android:src="@drawable/ic_discussions_responses"
-	android:layout_marginRight="5dp"
-	android:layout_width="40dp"
-	android:layout_height="40dp"
+	android:layout_marginRight="8dp"
+	android:layout_width="30dp"
+	android:layout_height="30dp"
 	android:scaleType="fitXY"
 	android:layout_alignParentTop="true"
 	android:layout_alignParentLeft="true"
@@ -41,21 +41,48 @@
 	android:layout_height="wrap_content"
 	android:layout_below="@id/time_text"
 	android:layout_alignParentRight="true"	
+	android:layout_centerVertical="true"
+	style="@style/TextAppearance.UnreadCount"
+	/>
+<ImageView
+	android:id="@+id/author_icon"
+	android:layout_width="15dp"
+	android:layout_height="15dp"
+	android:layout_marginRight="5dp"
+	android:layout_marginBottom="5dp"
+	android:layout_below="@id/title_text"
+	android:layout_toRightOf="@id/icon"
+	android:src="@drawable/ic_person_small"
+	android:visibility="gone"
 	/>
 <TextView
 	android:id="@+id/author_text"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_below="@id/title_text"
-	android:layout_toRightOf="@id/icon"
+	android:layout_toRightOf="@id/author_icon"
+	android:layout_alignTop="@id/author_icon"
+	style="@style/TextAppearance.Sub"
 	android:visibility="gone"
+	/>
+<ImageView
+	android:id="@+id/response_icon"
+	android:layout_width="15dp"
+	android:layout_height="15dp"
+	android:layout_marginRight="5dp"
+	android:layout_marginBottom="5dp"
+	android:layout_below="@id/author_icon"
+	android:layout_toRightOf="@id/icon"
+	android:src="@drawable/ic_response_small"
 	/>
 <TextView
 	android:id="@+id/total_response_count_text"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:layout_toRightOf="@id/icon"
+	style="@style/TextAppearance.SubBold"
+	android:layout_toRightOf="@id/response_icon"
 	android:layout_below="@id/author_text"
+	android:layout_alignTop="@id/response_icon"
 	/>
 <TextView
 	android:id="@+id/user_response_count_text"
@@ -63,6 +90,7 @@
 	android:layout_height="wrap_content"
 	android:layout_below="@id/total_response_count_text"
 	android:layout_toRightOf="@id/icon"
+	style="@style/TextAppearance.Sub"
 />
 <TextView
 	android:id="@+id/description_text"

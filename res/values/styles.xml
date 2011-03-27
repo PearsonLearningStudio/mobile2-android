@@ -6,7 +6,7 @@
     </style>
     
     <style name="TextAppearance.ListItemHeader">
-    	<item name="android:textColor">@color/color_primary</item>
+    	<item name="android:textColor">@color/color_secondary</item>
         <item name="android:textStyle">bold</item>
     </style>
  
@@ -23,9 +23,21 @@
         <item name="android:textSize">12sp</item>
     </style>
  
-    <style name="TextAppearance.Sub">
+    <style name="TextAppearance.SubBold">
         <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+ 
+    <style name="TextAppearance.Sub">
+        <item name="android:textSize">13sp</item>
         <item name="android:textStyle">italic</item>
+    </style>
+ 
+    <style name="TextAppearance.UnreadCount">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_foreground</item>
+        <item name="android:background">@drawable/unread_background</item>
     </style>
  
     <style name="TextAppearance.Label">

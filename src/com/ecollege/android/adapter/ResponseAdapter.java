@@ -25,6 +25,7 @@ public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
         ImageView icon;
         TextView titleText;
         TextView authorText;
+        ImageView authorIcon;
         TextView timeText;
         TextView totalResponseCountText;
         TextView unreadResponseCountText;
@@ -77,6 +78,7 @@ public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
 			holder.titleText = (TextView) convertView.findViewById(R.id.title_text);
 			holder.timeText = (TextView) convertView.findViewById(R.id.time_text);
 			holder.authorText = (TextView) convertView.findViewById(R.id.author_text);
+			holder.authorIcon = (ImageView) convertView.findViewById(R.id.author_icon);
 			holder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
 			holder.totalResponseCountText = (TextView) convertView.findViewById(R.id.total_response_count_text);
 			holder.unreadResponseCountText = (TextView) convertView.findViewById(R.id.unread_response_count_text);
@@ -93,6 +95,7 @@ public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
 		
 		holder.timeText.setVisibility(View.VISIBLE);
 		holder.authorText.setVisibility(View.VISIBLE);
+		holder.authorIcon.setVisibility(View.VISIBLE);
 		holder.descriptionText.setVisibility(View.VISIBLE);
 		
 		holder.titleText.setText(Html.fromHtml(response.getTitle()).toString());

@@ -8,8 +8,8 @@
 	android:id="@+id/icon"
 	android:src="@drawable/ic_course"
 	android:layout_marginRight="5dp"
-	android:layout_width="40dp"
-	android:layout_height="40dp"
+	android:layout_width="30dp"
+	android:layout_height="30dp"
 	android:scaleType="fitXY"
 	android:layout_alignParentTop="true"
 	android:layout_alignParentLeft="true" />

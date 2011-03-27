@@ -35,6 +35,14 @@
 	<color name="textfield_pressed_border">@color/color_primary_dark_stripe</color>
 	<color name="textfield_disabled_focused_border">@color/color_primary</color>
 
+	<color name="secondary_button_color_top">@color/color_secondary_light</color>
+	<color name="secondary_button_color_middle">@color/color_secondary</color>
+	<color name="secondary_button_color_bottom">@color/color_secondary_dark</color>
+	<color name="secondary_button_color_disabled">#FFCCCCCC</color>
+	<color name="secondary_button_focused_border">@color/color_secondary_light_stripe</color>
+	<color name="secondary_button_pressed_border">@color/color_secondary_dark</color>
+	<color name="secondary_button_disabled_focused_border">@color/color_secondary</color>
+	
 	<color name="button_color_top">@color/color_primary_light</color>
 	<color name="button_color_middle">@color/color_primary</color>
 	<color name="button_color_bottom">@color/color_primary_dark</color>

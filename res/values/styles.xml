@@ -90,6 +90,12 @@
     	<item name="android:textColor">@color/color_foreground</item>
      </style>
      
+    <style name="Widget.ButtonSecondary" parent="android:Widget.Button">
+        <item name="android:textAppearance">@style/TextAppearance.Button</item>
+        <item name="android:background">@drawable/secondary_button_background</item>
+    	<item name="android:textColor">@color/color_foreground</item>
+     </style>
+     
    	<style name="Widget.CompoundButton" parent="android:Widget.CompoundButton"> 
         <item name="android:textAppearance">@style/TextAppearance.Label</item>
     </style> 

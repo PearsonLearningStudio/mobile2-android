@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item>
+		<shape android:shape="rectangle">
+			<stroke android:color="@color/color_secondary_dark_stripe" android:width="1dp" />
+			<solid android:color="@android:color/transparent" />
+			<padding android:bottom="1dp"/>
+		    <corners
+				android:bottomRightRadius="6dip"
+				android:bottomLeftRadius="6dip"
+				android:topLeftRadius="6dip"
+				android:topRightRadius="6dip"/> 
+		</shape>
+	</item>
+	<item>
+		<shape android:shape="rectangle">
+			<stroke android:color="@color/color_secondary_light_stripe" android:width="1dp" />
+			<solid android:color="@android:color/transparent" />
+		    <corners
+				android:bottomRightRadius="6dip"
+				android:bottomLeftRadius="6dip"
+				android:topLeftRadius="6dip"
+				android:topRightRadius="6dip"/> 
+		</shape>
+	</item>
+	<item android:top="1dp" android:bottom="1dp">
+		<shape android:shape="rectangle">
+		    <gradient
+		       android:angle="270"
+		       android:startColor="@color/secondary_button_color_top"
+		       android:centerColor="@color/secondary_button_color_middle"
+		       android:endColor="@color/secondary_button_color_bottom"
+		    />
+		    <corners
+				android:bottomRightRadius="6dip"
+				android:bottomLeftRadius="6dip"
+				android:topLeftRadius="6dip"
+				android:topRightRadius="6dip"/> 
+		</shape>
+	</item>
+	<item>
+		<shape android:shape="rectangle">
+			<stroke android:color="@color/secondary_button_pressed_border" android:width="2dp" />
+			<solid android:color="@android:color/transparent" />
+		    <corners
+				android:bottomRightRadius="6dip"
+				android:bottomLeftRadius="6dip"
+				android:topLeftRadius="6dip"
+				android:topRightRadius="6dip"/> 
+		</shape>
+	</item>
+</layer-list>

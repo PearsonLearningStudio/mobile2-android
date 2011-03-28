@@ -17,8 +17,8 @@
 		android:id="@+id/busy_indicator"
 		android:indeterminateOnly="true"
 		android:layout_margin="5dp"
-		android:layout_width="25dp"
-		android:layout_height="25dp"
+		android:layout_width="20dp"
+		android:layout_height="20dp"
 		android:layout_alignParentTop="true"
 		android:layout_alignParentRight="true"
 		android:visibility="invisible" />

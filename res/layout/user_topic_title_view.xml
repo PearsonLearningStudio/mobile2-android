@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="45dp"
-    android:padding="5dp"
+    android:padding="10dp"
     android:background="@drawable/secondary_gradient_background">
 	<TextView
 		android:id="@+id/topic_title_text"

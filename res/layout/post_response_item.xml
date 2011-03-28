@@ -4,7 +4,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:background="@drawable/background_tertiary_gradient_dark"
-	android:padding="5dp">
+	android:padding="10dp">
 	<Button
 		android:id="@+id/post_response_button"
 		android:layout_width="fill_parent"

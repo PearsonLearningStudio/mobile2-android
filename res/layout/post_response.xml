@@ -12,7 +12,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:hint="@string/subject"
-		android:layout_margin="2dp"
+		android:layout_marginBottom="2dp"
 		android:inputType="textCapWords|textAutoCorrect" />
 	<EditText
 		android:id="@+id/post_response_text"
@@ -21,7 +21,8 @@
 		android:gravity="top|left"
 		android:hint="@string/post_a_response"
 		android:minLines="10"
-		android:layout_margin="2dp"
+		android:layout_marginBottom="4dp"
+		android:layout_marginTop="2dp"
 		android:inputType="textCapSentences|textAutoCorrect|textMultiLine" />
 	<LinearLayout
 		android:id="@+id/post_response_button_container"
@@ -33,7 +34,7 @@
 			android:layout_width="0dip"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:layout_margin="2dp"
+			android:layout_margin="4dp"
 			style="@style/Widget.ButtonSecondary"
 			android:text="@string/cancel"/>
 		<Button
@@ -41,7 +42,7 @@
 			android:layout_width="0dip"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:layout_margin="2dp"
+			android:layout_margin="4dp"
 			style="@style/Widget.ButtonSecondary"
 			android:text="@string/post"/>
 	</LinearLayout>

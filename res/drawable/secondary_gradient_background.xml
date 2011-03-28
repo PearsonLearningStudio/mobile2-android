@@ -12,7 +12,6 @@
 		    <gradient
 		       android:angle="270"
 		       android:startColor="@color/color_secondary_light"
-		       android:centerColor="@color/color_secondary"
 		       android:endColor="@color/color_secondary_dark"
 		    />
 		</shape>

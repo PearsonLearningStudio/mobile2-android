@@ -29,7 +29,6 @@
 		    <gradient
 		       android:angle="270"
 		       android:startColor="@color/secondary_button_color_top"
-		       android:centerColor="@color/secondary_button_color_middle"
 		       android:endColor="@color/secondary_button_color_bottom"
 		    />
 		    <corners

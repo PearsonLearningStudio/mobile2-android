@@ -14,7 +14,7 @@
 				android:topRightRadius="6dip"/> 
 		</shape>
 	</item>
-	<item android:top="1.5dp" android:bottom="1.5dp" android:left="1.5dp" android:right="1.5dp">
+	<item android:top="1.5px" android:bottom="1.5px" android:left="1.5px" android:right="1.5px">
 		<shape android:shape="rectangle">
 		    <gradient
 		       android:angle="270"
@@ -30,7 +30,7 @@
 	</item>
 	<item>
 		<shape android:shape="rectangle">
-			<stroke android:color="@color/textfield_pressed_border" android:width="2dp" />
+			<stroke android:color="@color/textfield_pressed_border" android:width="2px" />
 			<solid android:color="@android:color/transparent" />
 		    <corners
 				android:bottomRightRadius="6dip"

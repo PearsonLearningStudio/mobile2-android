@@ -2,9 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 	<item>
 		<shape android:shape="rectangle">
-			<stroke android:color="@color/color_secondary_dark_stripe" android:width="1dp" />
+			<stroke android:color="@color/color_secondary_dark_stripe" android:width="1px" />
 			<solid android:color="@android:color/transparent" />
-			<padding android:bottom="1dp"/>
 		    <corners
 				android:bottomRightRadius="6dip"
 				android:bottomLeftRadius="6dip"
@@ -14,7 +13,7 @@
 	</item>
 	<item>
 		<shape android:shape="rectangle">
-			<stroke android:color="@color/color_secondary_light_stripe" android:width="1dp" />
+			<stroke android:color="@color/color_secondary_light_stripe" android:width="1px" />
 			<solid android:color="@android:color/transparent" />
 		    <corners
 				android:bottomRightRadius="6dip"
@@ -23,7 +22,7 @@
 				android:topRightRadius="6dip"/> 
 		</shape>
 	</item>
-	<item android:top="1dp" android:bottom="1dp">
+	<item android:top="1px" android:bottom="1px">
 		<shape android:shape="rectangle">
 		    <gradient
 		       android:angle="270"
@@ -40,7 +39,7 @@
 	</item>
 	<item>
 		<shape android:shape="rectangle">
-			<stroke android:color="@color/secondary_button_pressed_border" android:width="2dp" />
+			<stroke android:color="@color/secondary_button_pressed_border" android:width="2px" />
 			<solid android:color="@android:color/transparent" />
 		    <corners
 				android:bottomRightRadius="6dip"

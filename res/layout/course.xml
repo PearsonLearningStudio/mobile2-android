@@ -14,15 +14,16 @@
 		android:id="@+id/icon_holder"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_margin="4dp"
+		android:layout_margin="10dp"
 		android:layout_below="@id/header_view"
 		android:background="@drawable/icon_well"
 		android:padding="5dp">
 		<ImageView 
 			android:id="@+id/course_icon"
 			android:src="@drawable/ic_course"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:scaleType="fitXY" />
 	</FrameLayout>
 	
 	<TextView
@@ -30,7 +31,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/header_view"
-		android:layout_margin="2dp"
+		android:layout_marginTop="10dp"
 		android:layout_toRightOf="@id/icon_holder"
 		style="@style/TextAppearance.Header"
 		/>
@@ -44,8 +45,8 @@
 		/>
 	<ImageView
 		android:id="@+id/instructor_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_width="15dp"
+		android:layout_height="15dp"
 		android:layout_toRightOf="@id/icon_holder"
 		android:layout_below="@id/course_code_text"
 		android:layout_margin="2dp"
@@ -75,7 +76,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="65dp"
 		android:layout_below="@id/instructor_text"
-		android:layout_marginTop="5dp"
+		android:layout_marginTop="10dp"
 		android:padding="5dp"
 		android:background="@drawable/secondary_gradient_background">
 		<ProgressBar

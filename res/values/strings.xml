@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, TempLoginActivity!</string>
-    <string name="app_name">eCollege</string>
+	<string name="ep_name">Strata University</string>
+    <string name="app_name">@string/ep_name</string>
     <string name="error_dialog_default_title">Alert</string>
     <string name="retry_dialog_button">Retry</string>
-    <string name="progress_dialog_default_title">eCollege</string>
+    <string name="progress_dialog_default_title">@string/ep_name</string>
     <string name="progress_dialog_default_message">Processing request...</string>
     <string name="none">None</string>
     <string name="loading_">loading...</string>

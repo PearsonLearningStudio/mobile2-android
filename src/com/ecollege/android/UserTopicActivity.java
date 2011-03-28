@@ -315,6 +315,8 @@ public class UserTopicActivity extends ECollegeListActivity {
 				holder.totalResponseCountText = (TextView)convertView.findViewById(R.id.total_response_count_text);
 				holder.unreadResponseCountText = (TextView)convertView.findViewById(R.id.unread_response_count_text);
 				holder.userResponseCountText = (TextView)convertView.findViewById(R.id.user_response_count_text);
+				View listDividerTexture = convertView.findViewById(R.id.list_divider_texture);
+				listDividerTexture.setVisibility(View.VISIBLE);
 				
 				convertView.setTag(holder);
 			} else {

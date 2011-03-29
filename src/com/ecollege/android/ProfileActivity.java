@@ -11,8 +11,7 @@ import com.google.inject.Inject;
 
 public class ProfileActivity extends ECollegeDefaultActivity {
     @InjectView(R.id.username) TextView username;
-    @InjectView(R.id.firstname) TextView firstname;
-    @InjectView(R.id.lastname) TextView lastname;
+    @InjectView(R.id.name_text) TextView nameText;
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	protected ECollegeClient client;
@@ -22,8 +21,7 @@ public class ProfileActivity extends ECollegeDefaultActivity {
         setContentView(R.layout.profile);
         client = app.getClient();
 
-        username.setText("Username: " + app.getCurrentUser().getUserName());
-        firstname.setText("Firstname: " + app.getCurrentUser().getFirstName());
-        lastname.setText("Lastname: " + app.getCurrentUser().getLastName());
+        username.setText(app.getCurrentUser().getUserName());
+        nameText.setText(app.getCurrentUser().getFirstName() + " " + app.getCurrentUser().getLastName());
     }
 }

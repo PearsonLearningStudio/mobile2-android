@@ -3,8 +3,8 @@ package com.ecollege.android;
 import roboguice.util.Ln;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TabHost;
 
 import com.ecollege.android.activities.ECollegeTabActivity;
@@ -78,39 +78,34 @@ public class MainActivity extends ECollegeTabActivity {
         addHomeTab();
         addDiscussionsTab();
         addCoursesTab();
-        //addPeopleTab();
         addProfileTab();
     }
     
-    protected void addHomeTab()
-    {
-        TabHost host = getTabHost();
+	protected void addHomeTab() {
+		TabHost host = getTabHost();
         Intent i= new Intent(this,HomeActivity.class);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_home_up);
-        host.addTab(host.newTabSpec("home").setIndicator(null,icon).setContent(i));
+        View v = getLayoutInflater().inflate(R.layout.home_tab_view, null);
+        host.addTab(host.newTabSpec("home").setIndicator(v).setContent(i));
     }
     
-    protected void addDiscussionsTab()
-    {
+    protected void addDiscussionsTab() {
         TabHost host = getTabHost();
         Intent i= new Intent(this,DiscussionsActivity.class);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_discussions_up);
-        host.addTab(host.newTabSpec("discussions").setIndicator(null,icon).setContent(i));
+        View v = getLayoutInflater().inflate(R.layout.discussions_tab_view, null);
+        host.addTab(host.newTabSpec("discussions").setIndicator(v).setContent(i));
     }
     
-    protected void addCoursesTab()
-    {
+    protected void addCoursesTab() {
         TabHost host = getTabHost();
         Intent i= new Intent(this,CoursesActivity.class);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_courses_up);
-        host.addTab(host.newTabSpec("courses").setIndicator(null,icon).setContent(i));
+        View v = getLayoutInflater().inflate(R.layout.courses_tab_view, null);
+        host.addTab(host.newTabSpec("courses").setIndicator(v).setContent(i));
     }
     
-    protected void addProfileTab()
-    {
+    protected void addProfileTab() {
         TabHost host = getTabHost();
         Intent i= new Intent(this,ProfileActivity.class);
-        Drawable icon = getResources().getDrawable(R.drawable.ic_my_profile_up);
-        host.addTab(host.newTabSpec("profile").setIndicator(null,icon).setContent(i));
+        View v = getLayoutInflater().inflate(R.layout.profile_tab_view, null);
+        host.addTab(host.newTabSpec("profile").setIndicator(v).setContent(i));
     }
 }

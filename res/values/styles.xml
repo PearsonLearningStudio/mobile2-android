@@ -139,10 +139,10 @@
         <item name="android:textAppearance">@style/TextAppearance.Label</item>
     </style> 
  
-    <!-- style name="Widget.CompoundButton.CheckBox">
-        <item name="android:background">@android:drawable/btn_check_label_background</item>
+    <style name="Widget.CompoundButton.CheckBox">
+        <item name="android:background">@drawable/btn_check_label_background</item>
         <item name="android:button">@drawable/btn_check</item>
-    </style--> 
+    </style> 
  
     <style name="Widget.EditText" parent="android:Widget.EditText">
         <item name="android:textAppearance">@style/TextAppearance.EditText</item>

@@ -13,6 +13,7 @@
         <item name="android:buttonStyle">@style/Widget.ButtonPrimary</item>
         <item name="android:editTextStyle">@style/Widget.EditText</item>
         <item name="android:listViewStyle">@style/Widget.ListView</item>
-        <!-- item name="android:checkboxStyle">@style/Widget.CompoundButton.CheckBox</item-->
+        <item name="android:checkboxStyle">@style/Widget.CompoundButton.CheckBox</item>
+        
 	</style>
 </resources>

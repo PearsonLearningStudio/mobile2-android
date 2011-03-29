@@ -14,23 +14,26 @@
 		android:id="@+id/navigation_dropdown"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:prompt="@string/choose_a_course"
 		android:layout_alignParentTop="true" 
 		android:layout_toLeftOf="@+id/reload_button"
-		android:layout_marginRight="5dp"
+		android:layout_marginLeft="5dp"
+		android:prompt="@string/choose_a_course"
 		style="@style/Widget.Spinner.Transparent" />
 	<Button
 		android:id="@id/reload_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text=" R "
 		android:layout_alignParentTop="true" 
-		android:layout_alignParentRight="true" />
+		android:layout_alignParentRight="true" 
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+		style="@style/Widget.ButtonPrimary.Reload" />
 	<TextView
 		android:id="@+id/last_updated_label"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/reload_button" 
+		android:layout_below="@id/navigation_dropdown" 
+		android:layout_marginLeft="5dp"
 		android:text="@string/last_updated_label"
 		style="@style/TextAppearance.SubInverse" />
 	
@@ -38,8 +41,9 @@
 		android:id="@+id/last_updated_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/reload_button" 
+		android:layout_below="@id/navigation_dropdown" 
 		android:layout_toRightOf="@id/last_updated_label" 
+		android:layout_marginRight="5dp"
 		android:text="@string/never"
 		style="@style/TextAppearance.SubInverse" />
 </RelativeLayout>

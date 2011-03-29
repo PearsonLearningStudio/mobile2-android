@@ -163,4 +163,9 @@
         <item name="android:clickable">true</item>
     </style>
     
+    <style name="Widget.ButtonPrimary.Reload">
+        <item name="android:background">@drawable/reload_button_background</item>
+        <item name="android:clickable">true</item>
+    </style>
+    
 </resources>

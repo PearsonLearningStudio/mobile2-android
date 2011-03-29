@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item>
+		<shape android:shape="rectangle">
+			<stroke android:color="@color/color_secondary_light_stripe" android:width="1px" />
+			<solid android:color="@android:color/transparent" />
+			<padding android:left="5dp" android:right="5dp" android:bottom="5dp" android:top="5dp" />
+		    <corners
+				android:bottomRightRadius="2dip"
+				android:bottomLeftRadius="2dip"
+				android:topLeftRadius="2dip"
+				android:topRightRadius="2dip"/> 
+		</shape>
+	</item>
+	<item>
+		<bitmap android:src="@drawable/ic_reload" android:gravity="center_horizontal|center_vertical" /> 
+	</item>
+</layer-list>
+

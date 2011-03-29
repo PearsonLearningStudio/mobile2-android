@@ -41,10 +41,20 @@
         <item name="android:shadowRadius">1</item>
     </style>
  
+    <style name="TextAppearance.TransparentSpinner">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    	<item name="android:textColor">@color/color_foreground</item>
+        <item name="android:shadowColor">@color/color_shadow</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-2</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+    
     <style name="TextAppearance.InverseLabel">
         <item name="android:textSize">16sp</item>
     	<item name="android:textColor">@color/color_foreground</item>
-        <item name="android:shadowColor">#CCC</item>
+        <item name="android:shadowColor">@color/color_shadow</item>
         <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">-1</item>
         <item name="android:shadowRadius">1</item>
@@ -52,7 +62,7 @@
     
     <style name="TextAppearance.Inverse">
     	<item name="android:textColor">@color/color_foreground</item>
-        <item name="android:shadowColor">#CCC</item>
+        <item name="android:shadowColor">@color/color_shadow</item>
         <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">-1</item>
         <item name="android:shadowRadius">1</item>
@@ -146,4 +156,11 @@
         <item name="android:divider">@drawable/list_item_divider</item>
         <item name="android:dividerHeight">0.5dp</item>
     </style>
+    
+    <style name="Widget.Spinner.Transparent" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/transparent_spinner_background</item>
+        <item name="android:textAppearance">@style/TextAppearance.TransparentSpinner</item>
+        <item name="android:clickable">true</item>
+    </style>
+    
 </resources>

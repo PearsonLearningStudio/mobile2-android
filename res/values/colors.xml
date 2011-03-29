@@ -21,6 +21,7 @@
 	<color name="color_background_semi_transparent">#EEFFFFFF</color>
 	<color name="color_foreground_inverse">#FF000000</color>
 	<color name="color_disabled">#FFCCCCCC</color>
+	<color name="color_shadow">#E000</color>
 
 	<color name="title_color_light">#FFC01414</color>
 	<color name="title_color_dark">#FF860000</color>

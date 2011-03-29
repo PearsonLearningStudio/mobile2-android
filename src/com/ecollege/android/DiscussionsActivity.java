@@ -96,7 +96,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 			}
 		});
         
-        ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.simple_spinner_item, courseDropdownTitles);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, R.layout.transparent_spinner_text_view, courseDropdownTitles);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         courseDropdown.setAdapter(adapter);
 		courseDropdown.setOnItemSelectedListener(new OnItemSelectedListener() {

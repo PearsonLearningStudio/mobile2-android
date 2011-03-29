@@ -15,7 +15,9 @@
 		android:layout_height="wrap_content"
 		android:prompt="@string/choose_a_course"
 		android:layout_alignParentTop="true" 
-		android:layout_toLeftOf="@+id/reload_button" />
+		android:layout_toLeftOf="@+id/reload_button"
+		android:layout_marginRight="5dp"
+		style="@style/Widget.Spinner.Transparent" />
 	<Button
 		android:id="@id/reload_button"
 		android:layout_width="wrap_content"

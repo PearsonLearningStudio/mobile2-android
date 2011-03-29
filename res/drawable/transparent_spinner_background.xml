@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_window_focused="false" android:state_enabled="true" android:drawable="@drawable/transparent_spinner_default" />
+﻿    <item android:state_window_focused="false" android:state_enabled="false" android:drawable="@drawable/transparent_spinner_disabled" />
+    <item android:state_pressed="true" android:drawable="@drawable/transparent_spinner_pressed" />
+    <item android:state_focused="true" android:state_enabled="true" android:drawable="@drawable/transparent_spinner_focused" />
+    <item android:state_enabled="true" android:drawable="@drawable/transparent_spinner_default" />
+    <item android:state_focused="true" android:drawable="@drawable/transparent_spinner_disabled_focused" />
+    <item android:drawable="@drawable/transparent_spinner_disabled" />
+</selector>

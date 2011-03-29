@@ -9,6 +9,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 
+import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
@@ -18,12 +19,14 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
@@ -41,12 +44,16 @@ import com.google.inject.Inject;
 import com.ocpsoft.pretty.time.PrettyTime;
 
 public class HomeActivity extends ECollegeListActivity {
+	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
-	@InjectView(R.id.radio_whats_due) RadioButton whatsDueRadioButton;
-	@InjectView(R.id.radio_activity) RadioButton activityRadioButton;
+	@InjectResource(R.array.home_navigation_items) String[] homeNavigationItems;
+	@InjectView(R.id.navigation_dropdown) Spinner navigationSpinner;
 	@InjectView(R.id.last_updated_text) TextView lastUpdatedText;
 	@InjectView(R.id.reload_button) Button reloadButton;
+	
+	protected static final int ACTIVITY_POSITION = 0;
+	protected static final int WHATS_DUE_POSITION = 1;
 	
 	protected ECollegeClient client;
 	private LayoutInflater mInflater;
@@ -58,6 +65,7 @@ public class HomeActivity extends ECollegeListActivity {
         setContentView(R.layout.home);
         mInflater = getLayoutInflater();
         client = app.getClient();
+        setUpNavigation();
         
         if (savedInstanceState != null) {
         	canLoadMoreActivites = savedInstanceState.getBoolean("canLoadMoreActivites", true);
@@ -66,12 +74,15 @@ public class HomeActivity extends ECollegeListActivity {
         }
         
         boolean showWhatsDue = prefs.getBoolean("showWhatsDue", true);
-        whatsDueRadioButton.setChecked(showWhatsDue);
-        activityRadioButton.setChecked(!showWhatsDue);
+        if (showWhatsDue) {
+        	navigationSpinner.setSelection(WHATS_DUE_POSITION);
+        } else {
+        	navigationSpinner.setSelection(ACTIVITY_POSITION);
+        }
         
         reloadButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-		    	if (whatsDueRadioButton.isChecked()) {
+		    	if (navigationSpinner.getSelectedItemPosition() == WHATS_DUE_POSITION) {
 		    		//TODO: reload what's due
 		    	} else {
 		    		reloadWhatsHappening();
@@ -82,26 +93,39 @@ public class HomeActivity extends ECollegeListActivity {
         loadAndDisplayListForSelectedType();
     }
     
-    @Override
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		
 		outState.putBoolean("canLoadMoreActivites", canLoadMoreActivites);
 		outState.putLong("whatsDueLastUpdated", whatsDueLastUpdated);
 		outState.putLong("whatsHappeneingLastUpdated", whatsHappeningLastUpdated);
-    	if (whatsDueRadioButton != null) {
-    		prefs.edit().putBoolean("showWhatsDue", whatsDueRadioButton.isChecked()).commit();
+    	if (navigationSpinner != null) {
+    		prefs.edit().putBoolean("showWhatsDue", whatsDueIsSelected()).commit();
     	}
 	}
 
-    public void onRadioGroupCheckedChanged(View v) {
+    protected void setUpNavigation() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, R.layout.transparent_spinner_text_view, homeNavigationItems);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        navigationSpinner.setAdapter(adapter);
+		navigationSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				navigationChanged(arg2);
+			}
+
+			public void onNothingSelected(AdapterView<?> arg0) { }
+		});
+	}
+
+    protected void navigationChanged(int newPosition) {
     	loadAndDisplayListForSelectedType();
-    }
-    
+	}
+
     protected void loadAndDisplayListForSelectedType() {
     	ListAdapter chosenAdapter;
     	String formattedLastUpdated = getString(R.string.never);
-    	if (whatsDueRadioButton.isChecked()) {
+    	if (whatsDueIsSelected()) {
     		chosenAdapter = createOrReturnWhatsHappeningAdapter();
     		if (whatsDueLastUpdated != 0) {
     			formattedLastUpdated = new Date(whatsDueLastUpdated).toString();
@@ -233,6 +257,10 @@ public class HomeActivity extends ECollegeListActivity {
     	
     }
     
+    private boolean whatsDueIsSelected() {
+    	return (navigationSpinner.getSelectedItemPosition() == WHATS_DUE_POSITION);
+	}
+
     static class ViewHolder {
         TextView titleText;
         TextView descriptionText;

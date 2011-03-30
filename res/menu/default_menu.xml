@@ -6,20 +6,7 @@
 		android:icon="@drawable/menu_home"
 		android:title="Home"/>
 	<item
-		android:id="@+id/help_menu_item"
-		android:icon="@drawable/ic_menu_help"
-		android:title="Help"/>
-	<item
-		android:id="@+id/reply_menu_item"
-		android:icon="@drawable/ic_menu_compose"
-		android:visible="false"
-		android:title="Reply"/>		
-	<item
-		android:id="@+id/settings_menu_item"
-		android:icon="@drawable/ic_menu_preferences"
-		android:title="Settings"/>
-	<item
 		android:id="@+id/logout_menu_item"
 		android:icon="@drawable/menu_sign_out"
-		android:title="Sign out"/>
+		android:title="@string/sign_out"/>
 </menu>

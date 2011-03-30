@@ -42,4 +42,5 @@
     <string name="password">Password</string>
     <string name="keep_me_logged_in">Keep me logged in</string>
     <string name="sign_in">Sign In</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

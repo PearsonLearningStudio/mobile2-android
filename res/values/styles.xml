@@ -114,6 +114,9 @@
         <item name="android:shadowDy">-1</item>
         <item name="android:shadowRadius">1</item>
     </style>
+    <style name="TextAppearance.Button.Small">
+        <item name="android:textSize">12sp</item>
+    </style>
  
     <style name="TextAppearance.EditText">
         <item name="android:textSize">14sp</item>
@@ -133,6 +136,10 @@
         <item name="android:textAppearance">@style/TextAppearance.Button</item>
         <item name="android:background">@drawable/secondary_button_background</item>
     	<item name="android:textColor">@color/color_foreground</item>
+     </style>
+     
+    <style name="Widget.ButtonSecondary.Small">
+        <item name="android:textAppearance">@style/TextAppearance.Button.Small</item>
      </style>
      
    	<style name="Widget.CompoundButton" parent="android:Widget.CompoundButton"> 

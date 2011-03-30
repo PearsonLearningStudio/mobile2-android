@@ -11,8 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
-import com.ecollege.android.DiscussionResponseActivity;
-import com.ecollege.android.DiscussionTopicActivity;
 import com.ecollege.android.ECollegeApplication;
 import com.ecollege.android.HomeActivity;
 import com.ecollege.android.LoginActivity;
@@ -69,26 +67,11 @@ public class ECollegeActivityHelper {
 				homeItem.setVisible(false);
 			}
 			
-			if (activity instanceof DiscussionTopicActivity || activity instanceof DiscussionResponseActivity) {
-				MenuItem replyItem = (MenuItem)menu.findItem(R.id.reply_menu_item);	
-				replyItem.setVisible(true);
-			}
-			
 			return true;
 		}
 	}
 	
 	public static boolean onOptionsItemSelected(Activity activity, MenuItem item) {
-		if (item.getItemId() == R.id.settings_menu_item) {
-			//TODO
-			//activity.startActivity(new Intent(activity, MainActivity.class));
-			//return true;
-		}
-		if (item.getItemId() == R.id.help_menu_item) {
-			//TODO
-			//activity.startActivity(new Intent(activity, MainActivity.class));
-			//return true;
-		}
 		if (item.getItemId() == R.id.logout_menu_item) {
 			ECollegeApplication app = (ECollegeApplication)activity.getApplication();
 			app.logout();

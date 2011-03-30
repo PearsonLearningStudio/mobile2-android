@@ -39,7 +39,7 @@
 		style="@style/TextAppearance.Header"
 		/>
 	<TextView
-		android:id="@+id/username"
+		android:id="@+id/username_text"
 	    android:layout_width="wrap_content" 
 	    android:layout_height="wrap_content" 
 	    android:layout_marginTop="4dp"
@@ -47,4 +47,14 @@
 		android:layout_toRightOf="@id/icon_holder"
 		android:layout_below="@id/name_text" 
 		style="@style/TextAppearance.SubBold" />
+	<Button
+		android:id="@+id/sign_out_button"
+	    android:layout_width="wrap_content" 
+	    android:layout_height="40dp" 
+	    android:layout_marginTop="4dp"
+		android:layout_toRightOf="@id/icon_holder"
+		android:layout_below="@id/username_text" 
+		android:text="@string/sign_out"
+		style="@style/Widget.ButtonSecondary.Small" />
+	 />
 </RelativeLayout>

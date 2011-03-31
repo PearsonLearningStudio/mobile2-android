@@ -1,5 +1,6 @@
 package com.ecollege.android;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
@@ -14,9 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ecollege.android.activities.ECollegeActivity;
 import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.Announcement;
@@ -27,6 +31,8 @@ import com.ecollege.api.services.courses.FetchInstructorsForCourse;
 import com.google.inject.Inject;
 
 public class CourseActivity extends ECollegeListActivity {
+	
+	public static final String ANNOUNCEMENT_LIST_EXTRA = "ANNOUNCEMENT_LIST_EXTRA";
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
@@ -57,6 +63,30 @@ public class CourseActivity extends ECollegeListActivity {
 		loadAndDisplayAnnouncementsForCourse();
 	}
 	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Class<? extends ECollegeActivity> destinationClass;
+		String detailExtraKey = null;
+		Serializable detailExtraValue = null;
+		switch (position) {
+		case 0:
+			destinationClass = AnnouncementsActivity.class;
+			detailExtraKey = ANNOUNCEMENT_LIST_EXTRA;
+			detailExtraValue = (Serializable) announcements;
+			break;
+
+		default:
+			return;
+		}
+		Intent intent = new Intent(this, destinationClass);
+		intent.putExtra(CoursesActivity.COURSE_EXTRA, course);
+		if (detailExtraKey != null && detailExtraValue != null) {
+			intent.putExtra(detailExtraKey, detailExtraValue);
+		}
+		startActivity(intent);
+	}
+
 	private void displayCourse() {
 		courseTitleText.setText(Html.fromHtml(course.getTitle()));
 		courseCodeText.setText(Html.fromHtml(course.getDisplayCourseCode()));

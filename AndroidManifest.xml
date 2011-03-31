@@ -32,6 +32,7 @@
 		<activity android:name="UserTopicActivity"></activity>
 		<activity android:name="UserResponseActivity"></activity>
 		<activity android:name="CourseActivity"></activity>
+		<activity android:name="AnnouncementsActivity"></activity>
 		
     </application>
 </manifest>

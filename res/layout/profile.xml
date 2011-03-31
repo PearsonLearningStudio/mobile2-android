@@ -2,59 +2,105 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/color_tertiary">
+    android:layout_height="fill_parent">
     
-	<FrameLayout
-		android:id="@+id/icon_holder"
-		android:layout_width="wrap_content"
+	<RelativeLayout
+	    android:id="@+id/top_view"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@drawable/secondary_gradient_background">
+	    <TextView
+			android:id="@+id/title_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_alignParentLeft="true"
+			android:layout_marginTop="20dp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginBottom="20dp"
+			android:layout_toRightOf="@+id/vertical_divider"
+			android:text="@string/my_profile"
+			style="@style/TextAppearance.HeaderInverse" />
+	</RelativeLayout>
+	<RelativeLayout
+		android:id="@+id/middle_view"
+		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
-		android:layout_marginLeft="10dp"
-		android:layout_below="@id/header_view"
-		android:background="@drawable/icon_well"
-		android:padding="5dp">
-		<ImageView 
-			android:id="@+id/avatar"
-			android:src="@drawable/ic_person_male"
+		android:layout_below="@id/top_view"
+		android:paddingBottom="8dp"
+	    android:background="@drawable/textured_tertiary_background">
+		<FrameLayout
+			android:id="@+id/icon_holder"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			android:layout_marginLeft="10dp"
+			android:layout_below="@id/top_view"
+			android:background="@drawable/icon_well"
+			android:padding="5dp">
+			<ImageView 
+				android:id="@+id/avatar"
+				android:src="@drawable/ic_person_male"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				android:scaleType="fitXY" />
+		</FrameLayout>
+		<ImageView
+			android:id="@+id/you_banner"
 			android:layout_width="30dp"
 			android:layout_height="30dp"
-			android:scaleType="fitXY" />
-	</FrameLayout>
-	<ImageView
-		android:id="@+id/you_banner"
-		android:layout_width="30dp"
-		android:layout_height="30dp"
-		android:scaleType="fitXY" 
-		android:layout_alignLeft="@id/icon_holder"
-		android:layout_alignTop="@id/icon_holder"
-		android:src="@drawable/ic_you_banner" />
+			android:scaleType="fitXY" 
+			android:layout_alignLeft="@id/icon_holder"
+			android:layout_alignTop="@id/icon_holder"
+			android:src="@drawable/ic_you_banner" />
+		<TextView
+			android:id="@+id/name_text"
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content" 
+		    android:layout_marginTop="10dp"
+		    android:layout_marginLeft="4dp"
+			android:layout_toRightOf="@id/icon_holder"
+			android:layout_below="@id/top_view"
+			style="@style/TextAppearance.Header"
+			/>
+		<TextView
+			android:id="@+id/username_text"
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content" 
+		    android:layout_marginTop="4dp"
+		    android:layout_marginLeft="4dp"
+			android:layout_alignLeft="@id/name_text"
+			android:layout_below="@id/name_text" 
+			style="@style/TextAppearance.SubBold" />
+		<Button
+			android:id="@+id/sign_out_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true" 
+			android:layout_alignTop="@id/you_banner"
+			android:layout_marginRight="10dp"
+			android:layout_below="@id/top_view" 
+			android:text="@string/sign_out"
+			style="@style/Widget.ButtonSecondary.Small" />
+		<TextView
+			android:id="@+id/courses_header"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignLeft="@id/icon_holder" 
+			android:layout_marginTop="20dp"
+			android:layout_below="@id/icon_holder" 
+			android:text="@string/my_courses"
+			style="@style/TextAppearance.TertiaryHeader" />
+	</RelativeLayout>
+	<ListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_below="@id/middle_view" />
 	<TextView
-		android:id="@+id/name_text"
-	    android:layout_width="wrap_content" 
-	    android:layout_height="wrap_content" 
-	    android:layout_marginTop="10dp"
-	    android:layout_marginLeft="4dp"
-		android:layout_toRightOf="@id/icon_holder"
-		style="@style/TextAppearance.Header"
-		/>
-	<TextView
-		android:id="@+id/username_text"
-	    android:layout_width="wrap_content" 
-	    android:layout_height="wrap_content" 
-	    android:layout_marginTop="4dp"
-	    android:layout_marginLeft="4dp"
-		android:layout_toRightOf="@id/icon_holder"
-		android:layout_below="@id/name_text" 
-		style="@style/TextAppearance.SubBold" />
-	<Button
-		android:id="@+id/sign_out_button"
-	    android:layout_width="wrap_content" 
-	    android:layout_height="40dp" 
-	    android:layout_marginTop="4dp"
-		android:layout_toRightOf="@id/icon_holder"
-		android:layout_below="@id/username_text" 
-		android:text="@string/sign_out"
-		style="@style/Widget.ButtonSecondary.Small" />
-	 />
+		android:id="@android:id/empty"
+		android:text="@string/no_items"	
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" 
+		android:layout_below="@id/middle_view" />
 </RelativeLayout>

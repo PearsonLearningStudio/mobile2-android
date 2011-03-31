@@ -17,16 +17,35 @@
         <item name="android:textStyle">bold</item>
     </style>
     
-    <style name="TextAppearance.HeaderInverse">
-        <item name="android:textSize">18sp</item>
-    	<item name="android:textColor">@color/color_foreground</item>
+    <style name="TextAppearance.TertiaryHeader">
+        <item name="android:textSize">16dp</item>
+    	<item name="android:textColor">@color/tertiary_header_color</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:shadowColor">#CCC</item>
+        <item name="android:shadowColor">@color/twenty_percent_white</item>
         <item name="android:shadowDx">0</item>
         <item name="android:shadowDy">-1</item>
         <item name="android:shadowRadius">1</item>
     </style>
     
+    <style name="TextAppearance.HeaderInverse">
+        <item name="android:textSize">18sp</item>
+    	<item name="android:textColor">@color/color_foreground</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">@color/color_shadow</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+    
+    <style name="TextAppearance.LastUpdated">
+        <item name="android:textSize">12sp</item>
+    	<item name="android:textColor">@color/last_updated_text</item>
+        <item name="android:shadowColor">@color/last_updated_shadow</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+ 
     <style name="TextAppearance.ListItemHeader">
     	<item name="android:textColor">@color/color_secondary</item>
         <item name="android:textStyle">bold</item>
@@ -139,6 +158,11 @@
      </style>
      
     <style name="Widget.ButtonSecondary.Small">
+        <item name="android:textAppearance">@style/TextAppearance.Button.Small</item>
+     </style>
+     
+    <style name="Widget.ButtonSecondary.Transparent">
+        <item name="android:background">@drawable/transparent_button_background</item>
         <item name="android:textAppearance">@style/TextAppearance.Button.Small</item>
      </style>
      

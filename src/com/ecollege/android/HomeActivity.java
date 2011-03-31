@@ -48,8 +48,8 @@ public class HomeActivity extends ECollegeListActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectResource(R.array.home_navigation_items) String[] homeNavigationItems;
+	@InjectResource(R.string.last_updated_s) String lastUpdatedFormat;
 	@InjectView(R.id.navigation_dropdown) Spinner navigationSpinner;
-	@InjectView(R.id.last_updated_text) TextView lastUpdatedText;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	
 	protected static final int ACTIVITY_POSITION = 0;
@@ -57,6 +57,8 @@ public class HomeActivity extends ECollegeListActivity {
 	
 	protected ECollegeClient client;
 	private LayoutInflater mInflater;
+	private View lastUpdatedHeader;
+	private TextView lastUpdatedText;
 	
 	private static PrettyTime prettyTimeFormatter = new PrettyTime();
 	
@@ -90,9 +92,16 @@ public class HomeActivity extends ECollegeListActivity {
 			}
 		});
         
+        buildLastUpdatedHeader();
         loadAndDisplayListForSelectedType();
     }
     
+	protected void buildLastUpdatedHeader() {
+		lastUpdatedHeader = getLayoutInflater().inflate(R.layout.last_updated_view, null);
+		lastUpdatedText = (TextView) lastUpdatedHeader.findViewById(R.id.last_updated_text);
+    	getListView().addHeaderView(lastUpdatedHeader, null, false);
+	}
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -136,7 +145,7 @@ public class HomeActivity extends ECollegeListActivity {
     			formattedLastUpdated = new Date(whatsHappeningLastUpdated).toString();
     		}
     	}
-    	lastUpdatedText.setText(formattedLastUpdated);
+    	lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
     	setListAdapter(chosenAdapter);
     }
 

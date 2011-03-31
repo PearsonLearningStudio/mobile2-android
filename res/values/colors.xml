@@ -22,6 +22,9 @@
 	<color name="color_foreground_inverse">#FF000000</color>
 	<color name="color_disabled">#FFCCCCCC</color>
 	<color name="color_shadow">#E000</color>
+	<color name="sixty_percent_black">#99000000</color>
+	<color name="twenty_percent_white">#33FFFFFF</color>
+	<color name="tertiary_header_color">#65645F</color>
 
 	<color name="title_color_light">#FFC01414</color>
 	<color name="title_color_dark">#FF860000</color>
@@ -52,6 +55,10 @@
 	<color name="button_pressed_border">@color/color_primary_dark</color>
 	<color name="button_disabled_focused_border">@color/color_primary</color>
 
+	<color name="last_updated_row_background">#EEEEEE</color>
+	<color name="last_updated_text">#999999</color>
+	<color name="last_updated_shadow">#FFFFFF</color>
+	
 	<color name="list_header_background_top_stripe">#FF969696</color>
 	<color name="list_header_background_bottom_stripe">#FF797979</color>
 	<color name="list_header_background_top">#FF666666</color>

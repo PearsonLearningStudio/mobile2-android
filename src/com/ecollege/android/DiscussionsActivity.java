@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 
 import android.content.Context;
@@ -46,7 +47,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
-	@InjectView(R.id.last_updated_text) TextView lastUpdatedText;
+	@InjectResource(R.string.last_updated_s) String lastUpdatedFormat;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	@InjectView(R.id.course_dropdown) Spinner courseDropdown;
 	@InjectView(android.R.id.empty) View noResultsView;
@@ -59,6 +60,9 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	private ArrayList<String> courseDropdownTitles;
 	private HashMap<String, Course> courseTitleToCourseMap;
 	private long selectedCourseId;
+	protected TextView lastUpdatedText;
+	private View lastUpdatedHeader;
+
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +72,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
         
         loadCourseTitles();
         configureControls();
+        buildLastUpdatedHeader();
         loadAndDisplayTopicsForSelectedCourses();
     }
     
@@ -76,6 +81,13 @@ public class DiscussionsActivity extends ECollegeListActivity {
     		reloadAndDisplayTopicsForSelectedCourses();
     	}
     }
+    
+	protected void buildLastUpdatedHeader() {
+		lastUpdatedHeader = getLayoutInflater().inflate(R.layout.last_updated_view, null);
+		lastUpdatedText = (TextView) lastUpdatedHeader.findViewById(R.id.last_updated_text);
+    	getListView().addHeaderView(lastUpdatedHeader, null, false);
+	}
+
     
 	private void loadCourseTitles() {
         courseDropdownTitles = new ArrayList<String>();
@@ -125,7 +137,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 		if (topicsLastUpdated != 0) {
 			formattedLastUpdated = new Date(topicsLastUpdated).toString();
 		}
-		lastUpdatedText.setText(formattedLastUpdated);
+		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
 		noResultsView.setVisibility(View.INVISIBLE);
 		setListAdapter(createOrReturnTopicAdapter(false));
 	}

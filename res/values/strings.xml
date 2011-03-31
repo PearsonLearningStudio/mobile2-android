@@ -26,9 +26,9 @@
     <string name="d_response_by_you">%d response by you</string>
     <string name="no_responses">No responses</string>
     <string name="never">Never</string>
-    <string name="last_updated_label">Last updated: </string>
+    <string name="last_updated_s">Last updated: %s</string>
     <string name="choose_a_course">Choose a Course</string>
-    <string name="all_courses">All Courses</string>
+    <string name="all_courses">All Discussions</string>
     <string name="no_items">No items</string>
     <string name="post_a_response">Post a response</string>
     <string name="post_a_response_to_s">Post a response to %s</string>
@@ -43,4 +43,7 @@
     <string name="keep_me_logged_in">Keep me logged in</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_out">Sign Out</string>
+    <string name="my_profile">My Profile</string>
+    <string name="courses">Courses</string>
+    <string name="my_courses">My Courses</string>
 </resources>

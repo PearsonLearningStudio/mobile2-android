@@ -3,6 +3,7 @@ package com.ecollege.android;
 import java.util.Date;
 import java.util.List;
 
+import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 
 import android.content.Context;
@@ -32,12 +33,14 @@ public class CoursesActivity extends ECollegeListActivity {
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
-	@InjectView(R.id.last_updated_text) TextView lastUpdatedText;
+	@InjectResource(R.string.last_updated_s) String lastUpdatedFormat;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	protected ECollegeClient client;
 	protected LayoutInflater viewInflater;
 	protected List<Course> courses;
 	protected CourseArrayAdapter courseAdapter;
+	protected TextView lastUpdatedText;
+	private View lastUpdatedHeader;
 	
 	protected View.OnClickListener reloadClickListener = new View.OnClickListener() {
 		public void onClick(View v) {
@@ -52,15 +55,22 @@ public class CoursesActivity extends ECollegeListActivity {
         viewInflater = getLayoutInflater();
         courses = app.getCurrentCourseList();
         reloadButton.setOnClickListener(reloadClickListener);
+        buildLastUpdatedHeader();
         loadAndDisplayCourses();
     }
+
+	protected void buildLastUpdatedHeader() {
+		lastUpdatedHeader = getLayoutInflater().inflate(R.layout.last_updated_view, null);
+		lastUpdatedText = (TextView) lastUpdatedHeader.findViewById(R.id.last_updated_text);
+    	getListView().addHeaderView(lastUpdatedHeader, null, false);
+	}
 
 	protected void loadAndDisplayCourses() {
 		String formattedLastUpdated = getString(R.string.never);
 		if (app.getCurrentCourseListLastLoaded() != 0) {
 			formattedLastUpdated = new Date(app.getCurrentCourseListLastLoaded()).toString();
 		}
-		lastUpdatedText.setText(formattedLastUpdated);
+		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
 		setListAdapter(createOrReturnCourseAdapter(false));
 	}
 	

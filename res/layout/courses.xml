@@ -7,33 +7,36 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:background="@drawable/secondary_gradient_background">
-		<Button
-			android:id="@+id/reload_button"
+	    <TextView
+			android:id="@+id/title_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true" 
+			android:layout_centerVertical="true"
+			android:layout_alignParentLeft="true"
+			android:layout_toLeftOf="@+id/vertical_divider"
+			android:layout_marginLeft="10dp"
+			android:text="@string/courses"
+			style="@style/TextAppearance.HeaderInverse" />
+		<ImageView
+			android:id="@id/vertical_divider"
+			android:layout_width="2px"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:layout_alignBottom="@+id/reload_button"
+			android:layout_toLeftOf="@id/reload_button"
+			android:layout_marginRight="2dp" 
+			android:background="@drawable/vertical_divider" />
+		<Button
+			android:id="@id/reload_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
 			android:layout_alignParentRight="true" 
-			android:layout_marginTop="15dp"
-			android:layout_marginBottom="15dp"
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="10dp"
+			android:layout_marginLeft="5dp"
 			android:layout_marginRight="5dp"
 			style="@style/Widget.ButtonPrimary.Reload" />
-		<TextView
-			android:id="@+id/last_updated_label"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignBottom="@id/reload_button"
-			style="@style/TextAppearance.SubInverse"
-			android:layout_marginLeft="5dp"
-			android:text="@string/last_updated_label" />
-		<TextView
-			android:id="@+id/last_updated_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			style="@style/TextAppearance.SubInverse"
-			android:layout_marginRight="5dp"
-			android:layout_alignBottom="@id/reload_button"
-			android:layout_toRightOf="@id/last_updated_label"
-			android:layout_toLeftOf="@id/reload_button" />
 	</RelativeLayout>
 	<ListView
 		android:id="@android:id/list"

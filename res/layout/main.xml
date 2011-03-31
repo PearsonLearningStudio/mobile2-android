@@ -17,8 +17,8 @@
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
-            android:layout_height="45dp"
-            android:background="@color/color_tertiary" />
+            android:layout_height="54dp"
+            android:background="@drawable/textured_tertiary_background" />
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"

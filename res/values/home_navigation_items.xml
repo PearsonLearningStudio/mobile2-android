@@ -3,6 +3,6 @@
 	<!--  Note that order matters here. Keep the order the same in other locales. -->
 	<string-array name="home_navigation_items">
 		<item>Activity</item>
-		<item>What\'s Due</item>
+		<item>Upcoming</item>
 	</string-array>
 </resources>

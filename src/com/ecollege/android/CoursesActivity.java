@@ -100,6 +100,7 @@ public class CoursesActivity extends ECollegeListActivity {
 	}
 
 	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
+		position = position - getListView().getHeaderViewsCount();
 		super.onListItemClick(l, v, position, id);
 		Course selectedCourse = courseAdapter.getItem(position);
 		Intent intent = new Intent(this, CourseActivity.class);
@@ -118,7 +119,7 @@ public class CoursesActivity extends ECollegeListActivity {
 		public CourseArrayAdapter(Context context, List<Course> courses) {
 			super(context, 0, courses);
 		}
-
+		
 		@Override public View getView(int position, View convertView, ViewGroup parent) {
 			CourseViewHolder holder;
 			if (convertView == null) {

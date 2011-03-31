@@ -25,6 +25,7 @@ public class HeaderAdapter extends BaseAdapter {
 	private Context context;
 	private ParentAdapterObserver baseObserver;
 	private List<HeaderDataItem> dataItems;
+	private int listHeaderCount;
 	
 	public HeaderAdapter(Context context, ListAdapter baseAdapter) {
 		this.baseAdapter = baseAdapter;
@@ -41,6 +42,21 @@ public class HeaderAdapter extends BaseAdapter {
 		this.notifyDataSetChanged();
 	}
 	
+	public int getListHeaderCount() {
+		return listHeaderCount;
+	}
+
+	/**
+	 * @param listHeaderCount
+	 * 
+	 * If the list view has headers added to it outside of the knowledge of
+	 * this adapter, make sure the count of those header items are set
+	 * so that positions are calculated correctly
+	 */
+	public void setListHeaderCount(int listHeaderCount) {
+		this.listHeaderCount = listHeaderCount;
+	}
+
 	@Override
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
@@ -72,6 +88,7 @@ public class HeaderAdapter extends BaseAdapter {
 	}
 
 	public Object getItem(int position) {
+		position = position - listHeaderCount;
 		HeaderDataItem item = dataItems.get(position);
 		if (item.getHeaderLabel() != null) {
 			return item;
@@ -82,6 +99,7 @@ public class HeaderAdapter extends BaseAdapter {
 	}
 
 	public long getItemId(int position) {
+		position = position - listHeaderCount;
 		HeaderDataItem item = dataItems.get(position);
 		if (item.getHeaderLabel() != null) {
 			return item.getItemId();

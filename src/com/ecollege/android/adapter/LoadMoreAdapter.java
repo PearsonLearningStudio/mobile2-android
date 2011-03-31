@@ -20,6 +20,7 @@ public class LoadMoreAdapter extends BaseAdapter {
 	private ListAdapter baseAdapter;
 	private Context context;
 	private SimpleObserver baseObserver;
+	private int listHeaderCount;
 	
 	public LoadMoreAdapter(Context context, ListAdapter baseAdapter, boolean canLoadMore) {
 		this.baseAdapter = baseAdapter;
@@ -43,12 +44,28 @@ public class LoadMoreAdapter extends BaseAdapter {
 		this.notifyDataSetChanged();
 	}
 	
+	/**
+	 * @param listHeaderCount
+	 * 
+	 * If the list view has headers added to it outside of the knowledge of
+	 * this adapter, make sure the count of those header items are set
+	 * so that positions are calculated correctly
+	 */
+	public void setListHeaderCount(int listHeaderCount) {
+		this.listHeaderCount = listHeaderCount;
+	}
+
+	public int getListHeaderCount() {
+		return listHeaderCount;
+	}
+
 	public int getCount() {
 		if (canLoadMore || isLoadingMore) return baseAdapter.getCount() + 1;
 		return baseAdapter.getCount();
 	}
 
 	public Object getItem(int position) {
+		position = position - listHeaderCount;
 		if (position < baseAdapter.getCount()) {
 			return baseAdapter.getItem(position);
 		} else {
@@ -57,6 +74,7 @@ public class LoadMoreAdapter extends BaseAdapter {
 	}
 
 	public long getItemId(int position) {
+		position = position - listHeaderCount;
 		if (position < baseAdapter.getCount()) {
 			return baseAdapter.getItemId(position);
 		} else {

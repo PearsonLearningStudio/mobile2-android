@@ -161,6 +161,7 @@ public class HomeActivity extends ECollegeListActivity {
 	private boolean canLoadMoreActivites = true;
 	private long whatsHappeningLastUpdated;
 	private long whatsDueLastUpdated;
+	private ActivityFeedHeaderAdapter activityHeaderAdapter;
 	
     private ListAdapter createOrReturnActivitiesAdapter() {
     	if (activityAdapter == null) {
@@ -216,8 +217,9 @@ public class HomeActivity extends ECollegeListActivity {
     
     public void onServiceCallSuccess(FetchMyWhatsHappeningFeed service) {
 		ActivityFeedAdapter baseAdapter = new ActivityFeedAdapter(this,service.getResult());
-		ActivityFeedHeaderAdapter headerAdapter = new ActivityFeedHeaderAdapter(this, baseAdapter);
-    	activityAdapter.update(headerAdapter,canLoadMoreActivites);
+		activityHeaderAdapter = new ActivityFeedHeaderAdapter(this, baseAdapter);
+		activityHeaderAdapter.setListHeaderCount(getListView().getHeaderViewsCount());
+    	activityAdapter.update(activityHeaderAdapter,canLoadMoreActivites);
     	whatsHappeningLastUpdated = service.getCompletedAt();
     	loadAndDisplayListForSelectedType();
     }
@@ -231,7 +233,7 @@ public class HomeActivity extends ECollegeListActivity {
     		return;
     	}
     	
-    	ActivityStreamItem si = (ActivityStreamItem)getListAdapter().getItem(position);
+    	ActivityStreamItem si = (ActivityStreamItem)activityHeaderAdapter.getItem(position);
         String objectType = si.getObject().getObjectType();
         
         if ("thread-topic".equals(objectType)) {
@@ -355,9 +357,9 @@ public class HomeActivity extends ECollegeListActivity {
     
     private class ActivityFeedHeaderAdapter extends HeaderAdapter {
     	
-		public ActivityFeedHeaderAdapter(Context context,
-				ListAdapter baseAdapter) {
+		public ActivityFeedHeaderAdapter(Context context, ListAdapter baseAdapter) {
 			super(context, baseAdapter);
+			setListHeaderCount(getListView().getHeaderViewsCount());
 		}
 
 		@Override

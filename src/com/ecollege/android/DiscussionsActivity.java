@@ -214,6 +214,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 
 		public TopicsHeaderAdapter(Context context, ListAdapter baseAdapter) {
 			super(context, baseAdapter);
+			setListHeaderCount(getListView().getHeaderViewsCount());
 		}
 		
 		@Override public String headerLabelFunction(Object item, int position) {

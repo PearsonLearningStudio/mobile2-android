@@ -3,6 +3,6 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/color_tertiary">
+    android:background="@drawable/textured_tertiary_background">
     <include layout="@layout/user_topic_item"/>
 </LinearLayout>

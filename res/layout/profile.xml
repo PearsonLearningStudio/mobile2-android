@@ -27,7 +27,6 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@id/top_view"
-		android:paddingBottom="8dp"
 	    android:background="@drawable/textured_tertiary_background">
 		<FrameLayout
 			android:id="@+id/icon_holder"
@@ -63,15 +62,6 @@
 			android:layout_below="@id/top_view"
 			style="@style/TextAppearance.Header"
 			/>
-		<TextView
-			android:id="@+id/username_text"
-		    android:layout_width="wrap_content" 
-		    android:layout_height="wrap_content" 
-		    android:layout_marginTop="4dp"
-		    android:layout_marginLeft="4dp"
-			android:layout_alignLeft="@id/name_text"
-			android:layout_below="@id/name_text" 
-			style="@style/TextAppearance.SubBold" />
 		<Button
 			android:id="@+id/sign_out_button"
 			android:layout_width="wrap_content"
@@ -91,6 +81,13 @@
 			android:layout_below="@id/icon_holder" 
 			android:text="@string/my_courses"
 			style="@style/TextAppearance.TertiaryHeader" />
+		<ImageView
+			android:id="@+id/section_divider"
+			android:layout_width="fill_parent"
+			android:layout_height="1px"
+			android:layout_marginTop="10dp"
+			android:layout_below="@id/courses_header"
+			android:background="@drawable/list_item_divider" />
 	</RelativeLayout>
 	<ListView
 		android:id="@android:id/list"

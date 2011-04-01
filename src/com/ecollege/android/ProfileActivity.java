@@ -21,7 +21,6 @@ import com.ecollege.api.model.Course;
 import com.google.inject.Inject;
 
 public class ProfileActivity extends ECollegeListActivity {
-    @InjectView(R.id.username_text) TextView usernameText;
     @InjectView(R.id.name_text) TextView nameText;
     @InjectView(R.id.sign_out_button) Button signOutButton;
 	@Inject ECollegeApplication app;
@@ -38,7 +37,6 @@ public class ProfileActivity extends ECollegeListActivity {
         courses = app.getCurrentCourseList();
         viewInflater = getLayoutInflater();
 
-        usernameText.setText(app.getCurrentUser().getUserName());
         nameText.setText(app.getCurrentUser().getFirstName() + " " + app.getCurrentUser().getLastName());
         
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -76,14 +74,23 @@ public class ProfileActivity extends ECollegeListActivity {
 		public CourseArrayAdapter(Context context, List<Course> courses) {
 			super(context, 0, courses);
 		}
-
+		
+		@Override
+		public boolean areAllItemsEnabled() {
+			return false;
+		}
+		@Override
+		public boolean isEnabled(int position) {
+			return false;
+		}
+		
 		@Override public View getView(int position, View convertView, ViewGroup parent) {
 			CourseViewHolder holder;
 			if (convertView == null) {
-				convertView = viewInflater.inflate(R.layout.course_item, null);
+				convertView = viewInflater.inflate(R.layout.simple_course_list_item, null);
 				holder = new CourseViewHolder();
-				holder.courseTitleText = (TextView) convertView.findViewById(R.id.title_text);
-				holder.courseDescriptionText = (TextView) convertView.findViewById(R.id.description_text);
+				holder.courseTitleText = (TextView) convertView.findViewById(R.id.course_title);
+				holder.courseDescriptionText = (TextView) convertView.findViewById(R.id.course_code_text);
 				convertView.setTag(holder);
 			} else {
 				holder = (CourseViewHolder) convertView.getTag();

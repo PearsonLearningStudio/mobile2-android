@@ -6,20 +6,22 @@
 	
 	<TextView
 		android:id="@+id/course_title"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		android:layout_marginLeft="5dp"
 		android:lines="1"
 		android:scrollHorizontally="true"
 		android:ellipsize="end"
-		style="@style/TextAppearance.ListItemHeader"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" />
+		style="@style/TextAppearance.ListItemHeader" />
 		
 	<TextView
 		android:id="@+id/course_code_text"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_below="@id/course_title"
+		android:layout_marginLeft="5dp"
 		android:lines="1"
 		android:scrollHorizontally="true"
 		android:ellipsize="end"
-		android:layout_below="@id/course_title"
 		/>
 </RelativeLayout>

@@ -63,8 +63,7 @@ public class CourseActivity extends ECollegeListActivity {
 		loadAndDisplayAnnouncementsForCourse();
 	}
 	
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
+	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Class<? extends ECollegeActivity> destinationClass;
 		String detailExtraKey = null;
@@ -74,6 +73,9 @@ public class CourseActivity extends ECollegeListActivity {
 			destinationClass = AnnouncementsActivity.class;
 			detailExtraKey = ANNOUNCEMENT_LIST_EXTRA;
 			detailExtraValue = (Serializable) announcements;
+			break;
+		case 3:
+			destinationClass = CourseGradebookActivity.class;
 			break;
 
 		default:

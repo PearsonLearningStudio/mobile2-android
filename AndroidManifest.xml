@@ -33,6 +33,7 @@
 		<activity android:name="UserResponseActivity"></activity>
 		<activity android:name="CourseActivity"></activity>
 		<activity android:name="AnnouncementsActivity"></activity>
+		<activity android:name="CourseGradebookActivity"></activity>
 		
     </application>
 </manifest>

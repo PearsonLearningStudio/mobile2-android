@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+	
+	<TextView
+		android:id="@+id/item_title"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		android:lines="1"
+		android:scrollHorizontally="true"
+		android:layout_marginLeft="5dp"
+		android:ellipsize="end"
+		style="@style/TextAppearance.ListItemHeader" />
+		
+	<TextView
+		android:id="@+id/date_text"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="5dp"
+		android:layout_below="@id/item_title" />
+		
+	<TextView
+		android:id="@+id/grade_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:layout_marginRight="10dp"
+		style="@style/TextAppearance.TertiaryHeader" />
+</RelativeLayout>

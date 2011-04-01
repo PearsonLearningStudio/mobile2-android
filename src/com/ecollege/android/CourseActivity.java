@@ -155,7 +155,7 @@ public class CourseActivity extends ECollegeListActivity {
 	private void showInstructorLoadingProgress(boolean loading) {
 		if (loading) {
 			instructorLoadingIndicator.setVisibility(View.VISIBLE);
-			instructorText.setVisibility(View.GONE);
+			instructorText.setVisibility(View.INVISIBLE);
 		} else {
 			instructorLoadingIndicator.setVisibility(View.GONE);
 			instructorText.setVisibility(View.VISIBLE);

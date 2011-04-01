@@ -31,6 +31,7 @@ import com.ecollege.api.model.ResponseCount;
 import com.ecollege.api.model.UserDiscussionResponse;
 import com.ecollege.api.services.discussions.FetchDiscussionResponsesForResponse;
 import com.ecollege.api.services.discussions.PostResponseToResponse;
+import com.ecollege.api.services.discussions.UpdateResponseReadStatus;
 
 public class UserResponseActivity extends ECollegeListActivity {
 
@@ -68,6 +69,7 @@ public class UserResponseActivity extends ECollegeListActivity {
 		styledDescriptionHtml = Html.fromHtml(response.getDescription());
 		
 		loadAndDisplayResponsesForResponse();
+		updateResponseReadCount();
 		
 		if (savedInstanceState != null) {
 			boolean wasEditingPost = savedInstanceState.getBoolean("editingPost");
@@ -116,6 +118,10 @@ public class UserResponseActivity extends ECollegeListActivity {
 		setListAdapter(createOrReturnResponseAdapter());
 	}
 	
+	private void updateResponseReadCount() {
+		buildService(new UpdateResponseReadStatus(response.getId(), false)).execute();
+	}
+
 	private void reloadAndDisplayResponsesForResponse() {
 		responseAdapter = new ResponseAdapter(this, new ArrayList<UserDiscussionResponse>());
 		responseAdapter.setLoading(true);

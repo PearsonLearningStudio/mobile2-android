@@ -1,5 +1,6 @@
 package com.ecollege.android;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectResource(R.string.last_updated_s) String lastUpdatedFormat;
+	@InjectResource(R.string.last_updated_date_format) String lastUpdatedDateFormatString;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	@InjectView(R.id.course_dropdown) Spinner courseDropdown;
 	@InjectView(android.R.id.empty) View noResultsView;
@@ -62,6 +64,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	private long selectedCourseId;
 	protected TextView lastUpdatedText;
 	private View lastUpdatedHeader;
+	private SimpleDateFormat lastUpdatedDateFormat;
 
 	
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
         setContentView(R.layout.discussions);
         client = app.getClient();
         viewInflater = getLayoutInflater();
+        lastUpdatedDateFormat = new SimpleDateFormat(lastUpdatedDateFormatString);
         
         loadCourseTitles();
         configureControls();
@@ -135,7 +139,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	private void loadAndDisplayTopicsForSelectedCourses() {
 		String formattedLastUpdated = getString(R.string.never);
 		if (topicsLastUpdated != 0) {
-			formattedLastUpdated = new Date(topicsLastUpdated).toString();
+			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(topicsLastUpdated));
 		}
 		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
 		noResultsView.setVisibility(View.INVISIBLE);

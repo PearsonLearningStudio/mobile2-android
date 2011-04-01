@@ -1,5 +1,6 @@
 package com.ecollege.android;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class CoursesActivity extends ECollegeListActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectResource(R.string.last_updated_s) String lastUpdatedFormat;
+	@InjectResource(R.string.last_updated_date_format) String lastUpdatedDateFormatString;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	protected ECollegeClient client;
 	protected LayoutInflater viewInflater;
@@ -41,6 +43,7 @@ public class CoursesActivity extends ECollegeListActivity {
 	protected CourseArrayAdapter courseAdapter;
 	protected TextView lastUpdatedText;
 	private View lastUpdatedHeader;
+	private SimpleDateFormat lastUpdatedDateFormat;
 	
 	protected View.OnClickListener reloadClickListener = new View.OnClickListener() {
 		public void onClick(View v) {
@@ -54,6 +57,8 @@ public class CoursesActivity extends ECollegeListActivity {
         client = app.getClient();
         viewInflater = getLayoutInflater();
         courses = app.getCurrentCourseList();
+        lastUpdatedDateFormat = new SimpleDateFormat(lastUpdatedDateFormatString);
+        
         reloadButton.setOnClickListener(reloadClickListener);
         buildLastUpdatedHeader();
         loadAndDisplayCourses();
@@ -68,7 +73,7 @@ public class CoursesActivity extends ECollegeListActivity {
 	protected void loadAndDisplayCourses() {
 		String formattedLastUpdated = getString(R.string.never);
 		if (app.getCurrentCourseListLastLoaded() != 0) {
-			formattedLastUpdated = new Date(app.getCurrentCourseListLastLoaded()).toString();
+			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(app.getCurrentCourseListLastLoaded()));
 		}
 		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
 		setListAdapter(createOrReturnCourseAdapter(false));

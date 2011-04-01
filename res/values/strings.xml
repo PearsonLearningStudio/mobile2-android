@@ -9,6 +9,8 @@
     <string name="none">None</string>
     <string name="loading_">loading...</string>
     
+    <string name="last_updated_date_format">E MMM d, yyyy h:mm:ss a</string>
+    
     <!-- errors -->
     <string name="e_unhandled_exception">An unknown error has occurred</string>
     <string name="e_invalid_login">Incorrect username and/or password</string>

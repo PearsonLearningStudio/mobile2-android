@@ -1,5 +1,6 @@
 package com.ecollege.android;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -49,6 +50,7 @@ public class HomeActivity extends ECollegeListActivity {
 	@Inject SharedPreferences prefs;
 	@InjectResource(R.array.home_navigation_items) String[] homeNavigationItems;
 	@InjectResource(R.string.last_updated_s) String lastUpdatedFormat;
+	@InjectResource(R.string.last_updated_date_format) String lastUpdatedDateFormatString;
 	@InjectView(R.id.navigation_dropdown) Spinner navigationSpinner;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	
@@ -59,14 +61,16 @@ public class HomeActivity extends ECollegeListActivity {
 	private LayoutInflater mInflater;
 	private View lastUpdatedHeader;
 	private TextView lastUpdatedText;
+	private SimpleDateFormat lastUpdatedDateFormat;
 	
-	private static PrettyTime prettyTimeFormatter = new PrettyTime();
+	private static final PrettyTime prettyTimeFormatter = new PrettyTime();
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
         mInflater = getLayoutInflater();
         client = app.getClient();
+        lastUpdatedDateFormat = new SimpleDateFormat(lastUpdatedDateFormatString);
         setUpNavigation();
         
         if (savedInstanceState != null) {
@@ -137,12 +141,12 @@ public class HomeActivity extends ECollegeListActivity {
     	if (whatsDueIsSelected()) {
     		chosenAdapter = createOrReturnWhatsHappeningAdapter();
     		if (whatsDueLastUpdated != 0) {
-    			formattedLastUpdated = new Date(whatsDueLastUpdated).toString();
+    			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(whatsDueLastUpdated));
     		}
     	} else {
     		chosenAdapter = createOrReturnActivitiesAdapter();
     		if (whatsHappeningLastUpdated != 0) {
-    			formattedLastUpdated = new Date(whatsHappeningLastUpdated).toString();
+    			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(whatsHappeningLastUpdated));
     		}
     	}
     	lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));

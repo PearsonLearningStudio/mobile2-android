@@ -36,13 +36,10 @@ public class GradeActivity extends ECollegeDefaultActivity {
 	@InjectView(R.id.course_title_text) TextView courseTitleText;
 	@InjectView(R.id.grade_title_text) TextView gradeTitleText;
 	@InjectView(R.id.comments_text) TextView commentsText;
-	@InjectView(R.id.points_text) TextView pointsText;
-	@InjectView(R.id.points_label) TextView pointsLabel;
-	@InjectView(R.id.letter_grade_text) TextView letterGradeText;
-	@InjectView(R.id.letter_grade_label) TextView letterGradeLabel;
+	@InjectView(R.id.grade_text) TextView gradeText;
 	@InjectView(R.id.date_text) TextView dateText;
 	@InjectView(R.id.view_all_button) Button viewAllButton;
-	@InjectResource(R.string.none) String none;
+	@InjectResource(R.string.no_comments) String no_comments;
 	
 	protected ECollegeClient client;
 	protected Course course;
@@ -96,36 +93,31 @@ public class GradeActivity extends ECollegeDefaultActivity {
     	}
     	
     	if (gradebookItem != null){
-    		gradeTitleText.setText(gradebookItem.getTitle());
+    		gradeTitleText.setText(Html.fromHtml(gradebookItem.getTitle()));
     	}
     	
     	if (grade != null) {
     		if (Strings.notEmpty(grade.getComments())) {
-    			commentsText.setText(grade.getComments());
+    			commentsText.setText(Html.fromHtml(grade.getComments()));
     		} else {
-    			commentsText.setText(none);
+    			commentsText.setText(Html.fromHtml("<i>" + no_comments + "</i>"));
     		}
     		
-    		// Assuming letter grades and points are exclusive or something
+    		String gradeValue = "-";
     		if (Strings.notEmpty(grade.getLetterGrade())) {
-    			letterGradeText.setText(grade.getLetterGrade());
-    		} else {
-    			letterGradeText.setVisibility(View.GONE);
-    			letterGradeLabel.setVisibility(View.GONE);
+    			gradeValue = grade.getLetterGrade();
     		}
     		
-    		if (gradebookItem == null || gradebookItem.getPointsPossible() == null || gradebookItem.getPointsPossible().floatValue() == 0) {
-    			pointsLabel.setVisibility(View.GONE);
-    			pointsText.setVisibility(View.GONE);
-    		} else {
+    		if (gradebookItem != null && gradebookItem.getPointsPossible() != null && gradebookItem.getPointsPossible().floatValue() != 0) {
     			if (grade.getPoints() != null) {
-		    		StringBuilder pointsContent = new StringBuilder();
-		    		pointsContent.append(decimalFormatter.format(grade.getPoints()));
-		    		if (gradebookItem != null) pointsContent.append(" / " + decimalFormatter.format(gradebookItem.getPointsPossible()));
-		    		pointsText.setText(pointsContent.toString());
+    				gradeValue = String.format("%s (%s/%s)",
+    						gradeValue,
+    						decimalFormatter.format(grade.getPoints()),
+    						decimalFormatter.format(gradebookItem.getPointsPossible()));
     			}
     		}
     		
+    		gradeText.setText(gradeValue);
     		dateText.setText(prettyTimeFormatter.format(grade.getUpdatedDate().getTime()));
     	}
     	

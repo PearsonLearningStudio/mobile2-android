@@ -52,4 +52,6 @@
     <string name="gradebook">Gradebook</string>
     <string name="no_grade">Not Graded</string>
     <string name="no_gradebook_items">No Gradebook Items</string>
+    <string name="grade">Grade</string>
+    <string name="no_comments">No comments</string>
 </resources>

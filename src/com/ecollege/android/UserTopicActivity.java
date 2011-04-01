@@ -36,9 +36,7 @@ import com.ecollege.api.services.discussions.PostResponseToTopic;
 public class UserTopicActivity extends ECollegeListActivity {
 	
 	public static final String USER_RESPONSE_EXTRA = "USER_RESPONSE_EXTRA";
-
 	private static final int VIEW_RESPONSE_REQUEST = 0;
-	
 	@InjectExtra(DiscussionsActivity.USER_TOPIC_EXTRA) protected UserDiscussionTopic userTopic;
 	
 	protected DiscussionTopic topic;

@@ -94,7 +94,7 @@ public class GradeActivity extends ECollegeDefaultActivity {
     			letterGradeLabel.setVisibility(View.GONE);
     		}
     		
-    		if (gradebookItem == null || gradebookItem.getPointsPossible().floatValue() == 0) {
+    		if (gradebookItem == null || gradebookItem.getPointsPossible() == null || gradebookItem.getPointsPossible().floatValue() == 0) {
     			pointsLabel.setVisibility(View.GONE);
     			pointsText.setVisibility(View.GONE);
     		} else {

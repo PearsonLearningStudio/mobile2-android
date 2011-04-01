@@ -20,7 +20,6 @@ import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.api.model.Announcement;
 import com.ecollege.api.model.Course;
 import com.google.inject.Inject;
-import com.ocpsoft.pretty.time.PrettyTime;
 
 public class AnnouncementsActivity extends ECollegeListActivity {
 	
@@ -33,8 +32,6 @@ public class AnnouncementsActivity extends ECollegeListActivity {
 	@InjectExtra(CoursesActivity.COURSE_EXTRA) Course course;
 	@InjectExtra(CourseActivity.ANNOUNCEMENT_LIST_EXTRA) ArrayList<Announcement> announcements;
 	private LayoutInflater viewInflater;
-	
-	private static PrettyTime prettyTimeFormatter = new PrettyTime();
 	
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

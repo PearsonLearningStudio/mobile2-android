@@ -54,4 +54,6 @@
     <string name="no_gradebook_items">No Gradebook Items</string>
     <string name="grade">Grade</string>
     <string name="no_comments">No comments</string>
+    <string name="dropbox_submission">Dropbox Submission</string>
+    <string name="view_all_course_submissions">View All Course Submissions</string>
 </resources>

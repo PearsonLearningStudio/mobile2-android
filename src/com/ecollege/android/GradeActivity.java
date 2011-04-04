@@ -54,11 +54,14 @@ public class GradeActivity extends ECollegeDefaultActivity {
         setContentView(R.layout.grade);
         client = app.getClient();
     	course = app.getCourseById(courseId);
+    	updateText();
+    	
     	viewAllButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				viewAllCourseGrades();
 			}
 		});
+    	
         fetchData();
     }
     

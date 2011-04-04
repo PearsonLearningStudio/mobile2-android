@@ -8,7 +8,6 @@ import java.util.List;
 
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
-import com.ecollege.android.adapter.HeaderAdapter;
+import com.ecollege.android.adapter.GroupedAdapter;
 import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.ECollegeClient;
@@ -175,7 +174,9 @@ public class DiscussionsActivity extends ECollegeListActivity {
 		noResultsView.setVisibility(View.VISIBLE);
 		topicAdapter.setNotifyOnChange(false);
 		for (UserDiscussionTopic topic : service.getResult()) {
-			topicAdapter.add(topic);
+			if (topic.isActive()) {
+				topicAdapter.add(topic);
+			}
 		}
 		topicAdapter.setNotifyOnChange(true);
 		topicAdapter.notifyDataSetChanged();
@@ -213,14 +214,13 @@ public class DiscussionsActivity extends ECollegeListActivity {
         TextView userResponseCountText;
     }
     
-    protected class TopicsHeaderAdapter extends HeaderAdapter {
+    protected class TopicsHeaderAdapter extends GroupedAdapter {
 
 		public TopicsHeaderAdapter(Context context, ListAdapter baseAdapter) {
-			super(context, baseAdapter);
-			setListHeaderCount(getListView().getHeaderViewsCount());
+			super(context, baseAdapter,true,false);
 		}
 		
-		@Override public String headerLabelFunction(Object item, int position) {
+		@Override public String groupIdFunction(Object item, int position) {
 			UserDiscussionTopic userTopic = (UserDiscussionTopic)item;
 			DiscussionTopic topic = userTopic.getTopic();
 			ContainerInfo info = topic.getContainerInfo();

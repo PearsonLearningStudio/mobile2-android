@@ -17,20 +17,27 @@ import android.widget.TextView;
 import com.ecollege.android.R;
 
 
-public class HeaderAdapter extends BaseAdapter {
+public class GroupedAdapter extends BaseAdapter {
 
 	public static final long STARTING_ITEM_ID = Long.MAX_VALUE - 1000;
 	
 	protected ListAdapter baseAdapter;
 	private Context context;
 	private ParentAdapterObserver baseObserver;
-	private List<HeaderDataItem> dataItems;
-	private int listHeaderCount;
+	private List<GroupedDataItem> dataItems;
+	private boolean hasFooter;
+	private boolean hasHeader;
 	
-	public HeaderAdapter(Context context, ListAdapter baseAdapter) {
+	public GroupedAdapter(Context context, ListAdapter baseAdapter) {
+		this(context,baseAdapter,true,false);
+	}
+
+	public GroupedAdapter(Context context, ListAdapter baseAdapter, boolean hasHeader, boolean hasFooter) {
+		this.hasHeader = hasHeader;
+		this.hasFooter = hasFooter;
 		this.baseAdapter = baseAdapter;
 		this.context = context;
-		calculateHeaders();
+		calculateHeadersAndFooters();
 		baseObserver = new ParentAdapterObserver(this);
 		baseAdapter.registerDataSetObserver(baseObserver);
 	}
@@ -41,44 +48,46 @@ public class HeaderAdapter extends BaseAdapter {
 		this.baseAdapter.registerDataSetObserver(baseObserver);
 		this.notifyDataSetChanged();
 	}
-	
-	public int getListHeaderCount() {
-		return listHeaderCount;
-	}
-
-	/**
-	 * @param listHeaderCount
-	 * 
-	 * If the list view has headers added to it outside of the knowledge of
-	 * this adapter, make sure the count of those header items are set
-	 * so that positions are calculated correctly
-	 */
-	public void setListHeaderCount(int listHeaderCount) {
-		this.listHeaderCount = listHeaderCount;
-	}
 
 	@Override
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
-		calculateHeaders();
+		calculateHeadersAndFooters();
 	}
 	
-	protected void calculateHeaders() {
+	protected void calculateHeadersAndFooters() {
 		long itemId = STARTING_ITEM_ID;
-		dataItems = new ArrayList<HeaderAdapter.HeaderDataItem>();
-		String lastLabel = null;
+		dataItems = new ArrayList<GroupedAdapter.GroupedDataItem>();
+		Object lastGroupId = null;
+		Object currentGroupId = null;
+		
 		for (int i=0;i<baseAdapter.getCount();i++) {
-			String currentLabel = headerLabelFunction(baseAdapter.getItem(i),i);
-			if (lastLabel == null || (currentLabel != null && !currentLabel.equals(lastLabel))) {
-				dataItems.add(new HeaderDataItem(currentLabel, itemId));
+			currentGroupId = groupIdFunction(baseAdapter.getItem(i),i);
+			
+			if (lastGroupId == null && hasHeader) {
+				dataItems.add(new GroupedDataItem(GroupedDataItemType.HEADER,currentGroupId, itemId));
 				itemId++;
+			} else if (currentGroupId != null && !currentGroupId.equals(lastGroupId)) {
+				if (hasFooter) {
+					dataItems.add(new GroupedDataItem(GroupedDataItemType.FOOTER,currentGroupId, itemId));
+					itemId++;
+				}
+				if (hasHeader) {
+					dataItems.add(new GroupedDataItem(GroupedDataItemType.HEADER,currentGroupId, itemId));
+					itemId++;
+				}
 			}
-			dataItems.add(new HeaderDataItem(i));
-			lastLabel = currentLabel;
+			dataItems.add(new GroupedDataItem(i));
+			lastGroupId = currentGroupId;
+		}
+
+		if (hasFooter && currentGroupId != null) {
+			dataItems.add(new GroupedDataItem(GroupedDataItemType.FOOTER,currentGroupId, itemId));
+			itemId++;
 		}
 	}
 	
-	protected String headerLabelFunction(Object item, int position) {
+	protected Object groupIdFunction(Object item, int position) {
 		//override in subclass
 		throw new NotImplementedException();
 	}
@@ -88,9 +97,8 @@ public class HeaderAdapter extends BaseAdapter {
 	}
 
 	public Object getItem(int position) {
-		position = position - listHeaderCount;
-		HeaderDataItem item = dataItems.get(position);
-		if (item.getHeaderLabel() != null) {
+		GroupedDataItem item = dataItems.get(position);
+		if (item.getItemType() != GroupedDataItemType.REGULAR_ITEM) {
 			return item;
 		} else {
 			return baseAdapter.getItem(item.getOriginalPosition());
@@ -99,9 +107,8 @@ public class HeaderAdapter extends BaseAdapter {
 	}
 
 	public long getItemId(int position) {
-		position = position - listHeaderCount;
-		HeaderDataItem item = dataItems.get(position);
-		if (item.getHeaderLabel() != null) {
+		GroupedDataItem item = dataItems.get(position);
+		if (item.getItemType() != GroupedDataItemType.REGULAR_ITEM) {
 			return item.getItemId();
 		} else {
 			return baseAdapter.getItemId(item.getOriginalPosition());
@@ -117,8 +124,8 @@ public class HeaderAdapter extends BaseAdapter {
 	}	
 	
 	public int getItemViewType(int position) {
-		HeaderDataItem item = dataItems.get(position);
-		if (item.getHeaderLabel() != null) {
+		GroupedDataItem item = dataItems.get(position);
+		if (item.getItemType() != GroupedDataItemType.REGULAR_ITEM) {
 			return baseAdapter.getViewTypeCount();
 		} else {
 			return baseAdapter.getItemViewType(item.getOriginalPosition());
@@ -139,7 +146,8 @@ public class HeaderAdapter extends BaseAdapter {
         return convertView;
 	}	
 	
-	public View getHeaderView(int position, View convertView, ViewGroup parent, String label) {
+	//optionally override in subclass
+	public View getHeaderView(int position, View convertView, ViewGroup parent, Object groupId) {
         ViewHolder holder;
 
         if (convertView == null) {
@@ -152,16 +160,22 @@ public class HeaderAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         
-        holder.headerLabelText.setText(label);
+        holder.headerLabelText.setText(groupId.toString());
         return convertView;
 	}	
 
+	//must override in subclass
+	public View getFooterView(int position, View convertView, ViewGroup parent, Object groupId) {
+		throw new NotImplementedException();
+	}
+
 	public View getView(int position, View convertView, ViewGroup parent) {
-		HeaderDataItem item = dataItems.get(position);
-		String headerLabel = item.getHeaderLabel();
+		GroupedDataItem item = dataItems.get(position);
 		
-		if (headerLabel != null) {
-			return getHeaderView(position, convertView, parent, headerLabel);
+		if (item.getItemType() == GroupedDataItemType.HEADER) {
+			return getHeaderView(position, convertView, parent, item.getGroupId());
+		} else if (item.getItemType() == GroupedDataItemType.FOOTER) {
+			return getFooterView(position, convertView, parent, item.getGroupId());
 		} else {
 			return baseAdapter.getView(item.getOriginalPosition(),convertView,parent);
 		}
@@ -192,34 +206,49 @@ public class HeaderAdapter extends BaseAdapter {
 	}
 
 	public boolean isEnabled(int position) {
-		HeaderDataItem item = dataItems.get(position);
-		if (item.getHeaderLabel() != null) {
+		GroupedDataItem item = dataItems.get(position);
+		if (item.getItemType() != GroupedDataItemType.REGULAR_ITEM) {
 			return false;
 		} else {
 			return baseAdapter.isEnabled(item.getOriginalPosition());
 		}
 	}
 	
-    static class ViewHolder {
+    private static class ViewHolder {
         TextView headerLabelText;
     }
     
-	private class HeaderDataItem {
-		private String headerLabel;
-		private int originalPosition = -1;
+    private enum GroupedDataItemType {
+    	HEADER,
+    	REGULAR_ITEM,
+    	FOOTER
+    }
+    
+	private class GroupedDataItem {
+		private GroupedDataItemType itemType;
+		private Object groupId;
 		private long itemId = -1;
 		
-		public HeaderDataItem(String headerLabel, long itemId) {
-			this.headerLabel = headerLabel;
+		private int originalPosition = -1;
+		
+		
+		public GroupedDataItem(GroupedDataItemType itemType, Object groupId, long itemId) {
+			this.itemType = itemType; //HEADER or FOOTER
+			this.groupId = groupId;
 			this.itemId = itemId;
 		}
 
-		public HeaderDataItem(int originalIndex) {
+		public GroupedDataItem(int originalIndex) {
 			this.originalPosition = originalIndex;
+			this.itemType = GroupedDataItemType.REGULAR_ITEM;
 		}
 		
-		public String getHeaderLabel() {
-			return headerLabel;
+		public GroupedDataItemType getItemType() {
+			return itemType;
+		}
+		
+		public Object getGroupId() {
+			return groupId;
 		}
 		
 		public int getOriginalPosition() {

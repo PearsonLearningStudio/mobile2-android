@@ -12,14 +12,11 @@ import org.joda.time.Months;
 
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -29,20 +26,17 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TextView.BufferType;
 
 import com.ecollege.android.activities.ECollegeListActivity;
-import com.ecollege.android.adapter.HeaderAdapter;
+import com.ecollege.android.adapter.ActivityFeedAdapter;
 import com.ecollege.android.adapter.LoadMoreAdapter;
+import com.ecollege.android.adapter.WaitingForApiAdapter;
 import com.ecollege.android.tasks.TaskPostProcessor;
 import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ActivityStreamItem;
-import com.ecollege.api.model.ActivityStreamObject;
-import com.ecollege.api.model.Course;
 import com.ecollege.api.services.activities.FetchMyWhatsHappeningFeed;
 import com.google.inject.Inject;
-import com.ocpsoft.pretty.time.PrettyTime;
 
 public class HomeActivity extends ECollegeListActivity {
 	
@@ -55,15 +49,13 @@ public class HomeActivity extends ECollegeListActivity {
 	@InjectView(R.id.reload_button) Button reloadButton;
 	
 	protected static final int ACTIVITY_POSITION = 0;
-	protected static final int WHATS_DUE_POSITION = 1;
+	protected static final int UPCOMING_POSITION = 1;
 	
 	protected ECollegeClient client;
-	private LayoutInflater mInflater;
+	LayoutInflater mInflater;
 	private View lastUpdatedHeader;
 	private TextView lastUpdatedText;
 	private SimpleDateFormat lastUpdatedDateFormat;
-	
-	private static final PrettyTime prettyTimeFormatter = new PrettyTime();
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,23 +67,23 @@ public class HomeActivity extends ECollegeListActivity {
         
         if (savedInstanceState != null) {
         	canLoadMoreActivites = savedInstanceState.getBoolean("canLoadMoreActivites", true);
-        	whatsDueLastUpdated = savedInstanceState.getLong("whatsDueLastUpdated");
-        	whatsHappeningLastUpdated = savedInstanceState.getLong("whatsHappeningLastUpdated");
+        	upcomingFeedLastUpdated = savedInstanceState.getLong("upcomingFeedLastUpdated");
+        	activityFeedLastUpdated = savedInstanceState.getLong("activityFeedLastUpdated");
         }
         
         boolean showWhatsDue = prefs.getBoolean("showWhatsDue", true);
         if (showWhatsDue) {
-        	navigationSpinner.setSelection(WHATS_DUE_POSITION);
+        	navigationSpinner.setSelection(UPCOMING_POSITION);
         } else {
         	navigationSpinner.setSelection(ACTIVITY_POSITION);
         }
         
         reloadButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-		    	if (navigationSpinner.getSelectedItemPosition() == WHATS_DUE_POSITION) {
+		    	if (navigationSpinner.getSelectedItemPosition() == UPCOMING_POSITION) {
 		    		//TODO: reload what's due
 		    	} else {
-		    		reloadWhatsHappening();
+		    		reloadActivityFeed();
 		    	}
 			}
 		});
@@ -111,10 +103,10 @@ public class HomeActivity extends ECollegeListActivity {
 		super.onSaveInstanceState(outState);
 		
 		outState.putBoolean("canLoadMoreActivites", canLoadMoreActivites);
-		outState.putLong("whatsDueLastUpdated", whatsDueLastUpdated);
-		outState.putLong("whatsHappeneingLastUpdated", whatsHappeningLastUpdated);
+		outState.putLong("upcomingFeedLastUpdated", upcomingFeedLastUpdated);
+		outState.putLong("whatsHappeneingLastUpdated", activityFeedLastUpdated);
     	if (navigationSpinner != null) {
-    		prefs.edit().putBoolean("showWhatsDue", whatsDueIsSelected()).commit();
+    		prefs.edit().putBoolean("showWhatsDue", upcomingIsSelected()).commit();
     	}
 	}
 
@@ -138,49 +130,47 @@ public class HomeActivity extends ECollegeListActivity {
     protected void loadAndDisplayListForSelectedType() {
     	ListAdapter chosenAdapter;
     	String formattedLastUpdated = getString(R.string.never);
-    	if (whatsDueIsSelected()) {
+    	if (upcomingIsSelected()) {
     		chosenAdapter = createOrReturnWhatsHappeningAdapter();
-    		if (whatsDueLastUpdated != 0) {
-    			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(whatsDueLastUpdated));
+    		if (upcomingFeedLastUpdated != 0) {
+    			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(upcomingFeedLastUpdated));
     		}
     	} else {
     		chosenAdapter = createOrReturnActivitiesAdapter();
-    		if (whatsHappeningLastUpdated != 0) {
-    			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(whatsHappeningLastUpdated));
+    		if (activityFeedLastUpdated != 0) {
+    			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(activityFeedLastUpdated));
     		}
     	}
     	lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
     	setListAdapter(chosenAdapter);
     }
 
-	private WhatsHappeningAdapter whatsHappeningAdapter;
+	private WaitingForApiAdapter upcomingAdapter;
     protected ListAdapter createOrReturnWhatsHappeningAdapter() {
-    	if (whatsHappeningAdapter == null) {
-    		whatsHappeningAdapter = new WhatsHappeningAdapter(this);
+    	if (upcomingAdapter == null) {
+    		upcomingAdapter = new WaitingForApiAdapter(this);
     	}
-    	return whatsHappeningAdapter;
+    	return upcomingAdapter;
     }
 
-	private LoadMoreAdapter activityAdapter;
+	private ActivityFeedAdapter activityFeedAdapter;
 	private boolean canLoadMoreActivites = true;
-	private long whatsHappeningLastUpdated;
-	private long whatsDueLastUpdated;
-	private ActivityFeedHeaderAdapter activityHeaderAdapter;
+	private long activityFeedLastUpdated;
+	private long upcomingFeedLastUpdated;
 	
     private ListAdapter createOrReturnActivitiesAdapter() {
-    	if (activityAdapter == null) {
-			ActivityFeedAdapter baseAdapter = new ActivityFeedAdapter(this,new ArrayList<ActivityStreamItem>());
-    		activityAdapter = new LoadMoreAdapter(this, baseAdapter, canLoadMoreActivites);
-    		fetchWhatsHappening();
+    	if (activityFeedAdapter == null) {
+    		activityFeedAdapter = new ActivityFeedAdapter(this, new ArrayList<ActivityStreamItem>(), canLoadMoreActivites);
+    		fetchActivityFeed();
     	}
-    	return activityAdapter;
+    	return activityFeedAdapter;
     }
     
-    protected void fetchWhatsHappening() {
+    protected void fetchActivityFeed() {
     	fetchWhatsHappening(null);
     }
     
-    protected void reloadWhatsHappening() {
+    protected void reloadActivityFeed() {
     	CacheConfiguration cacheConfiguration = new CacheConfiguration(true, true, true, true);
     	if (canLoadMoreActivites) {
     		GregorianCalendar fetchSince = new GregorianCalendar();
@@ -201,7 +191,7 @@ public class HomeActivity extends ECollegeListActivity {
     	if (null == cacheConfiguration) {
     		cacheConfiguration = new CacheConfiguration(); // default hits the most caches
     	}
-		activityAdapter.setIsLoadingMore(true);
+		activityFeedAdapter.setIsLoadingMore(true);
     	if (canLoadMoreActivites) {
     		GregorianCalendar fetchSince = new GregorianCalendar();
     		fetchSince.add(Calendar.DAY_OF_YEAR, -14);
@@ -219,12 +209,13 @@ public class HomeActivity extends ECollegeListActivity {
     	}
     }
     
+    protected List<ActivityStreamItem> activityItems;
+    
     public void onServiceCallSuccess(FetchMyWhatsHappeningFeed service) {
-		ActivityFeedAdapter baseAdapter = new ActivityFeedAdapter(this,service.getResult());
-		activityHeaderAdapter = new ActivityFeedHeaderAdapter(this, baseAdapter);
-		activityHeaderAdapter.setListHeaderCount(getListView().getHeaderViewsCount());
-    	activityAdapter.update(activityHeaderAdapter,canLoadMoreActivites);
-    	whatsHappeningLastUpdated = service.getCompletedAt();
+    	activityItems = service.getResult();
+    	activityFeedAdapter.updateItems(activityItems);
+    	activityFeedAdapter.setCanLoadMore(canLoadMoreActivites);
+    	activityFeedLastUpdated = service.getCompletedAt();
     	loadAndDisplayListForSelectedType();
     }
     
@@ -233,47 +224,51 @@ public class HomeActivity extends ECollegeListActivity {
     	
     	if (id == LoadMoreAdapter.LOAD_MORE_ITEM_ID) {
     		canLoadMoreActivites = false;
-    		fetchWhatsHappening();
+    		fetchActivityFeed();
     		return;
     	}
     	
-    	ActivityStreamItem si = (ActivityStreamItem)activityHeaderAdapter.getItem(position);
-        String objectType = si.getObject().getObjectType();
-        
-        if ("thread-topic".equals(objectType)) {
-        	long topicId = Long.parseLong(si.getObject().getReferenceId());
-        	Intent i = new Intent(this,UserTopicActivity.class);
-        	i.putExtra(UserTopicActivity.TOPIC_ID_EXTRA, topicId);
-        	startActivity(i);
-        } else if ("thread-post".equals(objectType)) {
-        	long responseId = Long.parseLong(si.getObject().getReferenceId());
-        	Intent i = new Intent(this,UserResponseActivity.class);
-        	i.putExtra(UserResponseActivity.RESPONSE_ID_EXTRA, responseId);
-        	startActivity(i);        	
-        } else if ("grade".equals(objectType)) {
-        	long courseId = si.getObject().getCourseId();
-        	String gradebookItemGuid = (String)si.getTarget().getReferenceId();
-        	Intent i = new Intent(this,GradeActivity.class);
-        	i.putExtra("courseId", courseId);
-        	i.putExtra("gradebookItemGuid", gradebookItemGuid);
-        	startActivity(i);
-        } else if ("dropbox-submission".equals(objectType)) {
-        	long courseId = si.getObject().getCourseId();
-        	long basketId = Long.parseLong(si.getTarget().getReferenceId().toString());
-        	long messageId = Long.parseLong(si.getObject().getReferenceId());
-        	Intent i = new Intent(this,DropboxMessageActivity.class);
-        	i.putExtra("courseId", courseId);
-        	i.putExtra("basketId", basketId);
-        	i.putExtra("messageId", messageId);
-        	startActivity(i);
-        } else if ("exam-submission".equals(objectType)) {
-        } else if ("remark".equals(objectType)) {
-        } 
+    	Object item = l.getItemAtPosition(position);
+    	if (item instanceof ActivityStreamItem) {
+    		ActivityStreamItem si = (ActivityStreamItem)item;
+    		
+            String objectType = si.getObject().getObjectType();
+            
+            if ("thread-topic".equals(objectType)) {
+            	long topicId = Long.parseLong(si.getObject().getReferenceId());
+            	Intent i = new Intent(this,UserTopicActivity.class);
+            	i.putExtra(UserTopicActivity.TOPIC_ID_EXTRA, topicId);
+            	startActivity(i);
+            } else if ("thread-post".equals(objectType)) {
+            	long responseId = Long.parseLong(si.getObject().getReferenceId());
+            	Intent i = new Intent(this,UserResponseActivity.class);
+            	i.putExtra(UserResponseActivity.RESPONSE_ID_EXTRA, responseId);
+            	startActivity(i);        	
+            } else if ("grade".equals(objectType)) {
+            	long courseId = si.getObject().getCourseId();
+            	String gradebookItemGuid = (String)si.getTarget().getReferenceId();
+            	Intent i = new Intent(this,GradeActivity.class);
+            	i.putExtra("courseId", courseId);
+            	i.putExtra("gradebookItemGuid", gradebookItemGuid);
+            	startActivity(i);
+            } else if ("dropbox-submission".equals(objectType)) {
+            	long courseId = si.getObject().getCourseId();
+            	long basketId = Long.parseLong(si.getTarget().getReferenceId().toString());
+            	long messageId = Long.parseLong(si.getObject().getReferenceId());
+            	Intent i = new Intent(this,DropboxMessageActivity.class);
+            	i.putExtra("courseId", courseId);
+            	i.putExtra("basketId", basketId);
+            	i.putExtra("messageId", messageId);
+            	startActivity(i);
+            } else if ("exam-submission".equals(objectType)) {
+            } else if ("remark".equals(objectType)) {
+            } 
+    	}
     	
     }
     
-    private boolean whatsDueIsSelected() {
-    	return (navigationSpinner.getSelectedItemPosition() == WHATS_DUE_POSITION);
+    private boolean upcomingIsSelected() {
+    	return (navigationSpinner.getSelectedItemPosition() == UPCOMING_POSITION);
 	}
 
     static class ViewHolder {
@@ -282,55 +277,6 @@ public class HomeActivity extends ECollegeListActivity {
         TextView timeText;
         TextView courseTitleText;
         ImageView icon;
-    }
-    
-    private class WhatsHappeningAdapter extends ArrayAdapter<String> {    
-
-    	public WhatsHappeningAdapter(Context c) {
-    		super(c,R.layout.activity_item,new String[]{"placeholder"});
-    	}
-    	
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // A ViewHolder keeps references to children views to avoid unneccessary calls
-            // to findViewById() on each row.
-            ViewHolder holder;
-
-            // When convertView is not null, we can reuse it directly, there is no need
-            // to reinflate it. We only inflate a new View when the convertView supplied
-            // by ListView is null.
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.activity_item, null);
-
-                // Creates a ViewHolder and store references to the two children views
-                // we want to bind data to.
-                holder = new ViewHolder();
-                holder.titleText = (TextView) convertView.findViewById(R.id.title_text);
-                holder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
-                //holder.iconPlaceholder = (TextView) convertView.findViewById(R.id.icon_stub);
-                convertView.setTag(holder);
-            } else {
-                // Get the ViewHolder back to get fast access to the TextView
-                // and the ImageView.
-                holder = (ViewHolder) convertView.getTag();
-            }
-            // Bind the data efficiently with the holder.
-            
-            holder.titleText.setText("Pending");
-            holder.descriptionText.setText("Waiting for API");
-            //holder.iconPlaceholder.setText("!!");
-            return convertView;
-        }
-
-		@Override
-		public boolean areAllItemsEnabled() {
-			return false;
-		}
-
-		@Override
-		public boolean isEnabled(int position) {
-			return false;
-		}    	
-
     }
     
     private class ActivityFeedPostProcessor<ServiceT extends FetchMyWhatsHappeningFeed> extends TaskPostProcessor<ServiceT> {
@@ -357,96 +303,5 @@ public class HomeActivity extends ECollegeListActivity {
 			}
 			return result;
 		}
-    }
-    
-    private class ActivityFeedHeaderAdapter extends HeaderAdapter {
-    	
-		public ActivityFeedHeaderAdapter(Context context, ListAdapter baseAdapter) {
-			super(context, baseAdapter);
-			setListHeaderCount(getListView().getHeaderViewsCount());
-		}
-
-		@Override
-		protected String headerLabelFunction(Object item, int position) {
-			ActivityStreamItem asi = (ActivityStreamItem)item;
-			if (asi.getTag() != null) return asi.getTag().toString();
-			return "Unknown";
-		}
-    	
-    }
-    
-    private class ActivityFeedAdapter extends ArrayAdapter<ActivityStreamItem> {
-    	
-    	public ActivityFeedAdapter(Context c, List<ActivityStreamItem> streamItems) {
-    		super(c,R.layout.activity_item,streamItems);
-    	}
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // A ViewHolder keeps references to children views to avoid unneccessary calls
-            // to findViewById() on each row.
-            ViewHolder holder;
-
-            // When convertView is not null, we can reuse it directly, there is no need
-            // to reinflate it. We only inflate a new View when the convertView supplied
-            // by ListView is null.
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.activity_item, null);
-
-                // Creates a ViewHolder and store references to the two children views
-                // we want to bind data to.
-                holder = new ViewHolder();
-                holder.titleText = (TextView) convertView.findViewById(R.id.title_text);
-                holder.descriptionText = (TextView) convertView.findViewById(R.id.description_text);
-                holder.timeText = (TextView) convertView.findViewById(R.id.time_text);
-                holder.courseTitleText = (TextView) convertView.findViewById(R.id.course_title_text);
-                holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-                convertView.setTag(holder);
-            } else {
-                // Get the ViewHolder back to get fast access to the TextView
-                // and the ImageView.
-                holder = (ViewHolder) convertView.getTag();
-            }
-            // Bind the data efficiently with the holder.
-            ActivityStreamItem si = getItem(position);
-            ActivityStreamObject ob = si.getObject();
-
-            String title = ob.getObjectType();
-            String desc = ob.getSummary();
-            String objectType = ob.getObjectType();
-            
-            long courseId = ob.getCourseId();
-            Course course = app.getCourseById(courseId);
-            
-            if ("thread-topic".equals(objectType)) {
-            	title = "Topic: " + si.getTarget().getTitle();
-            	holder.icon.setImageResource(R.drawable.ic_discussions_responses);
-            } else if ("thread-post".equals(objectType)) {
-            	title = "Re: " + si.getTarget().getTitle();
-            	holder.icon.setImageResource(R.drawable.ic_discussions_responses);
-            } else if ("grade".equals(objectType)) {
-            	title = "Grade: " + si.getTarget().getTitle();
-            	holder.icon.setImageResource(R.drawable.ic_grade);
-            } else if ("dropbox-submission".equals(objectType)) {
-            	title = "Dropbox: " + si.getTarget().getTitle();
-            	holder.icon.setImageResource(R.drawable.ic_dropbox);
-            } else if ("exam-submission".equals(objectType)) {
-            	title = "Exam: " + si.getTarget().getTitle();
-            	holder.icon.setImageResource(R.drawable.ic_exam_submission);
-            } else if ("remark".equals(objectType)) {
-            	title = "Remark: " + si.getTarget().getTitle();
-            	holder.icon.setImageResource(R.drawable.ic_remark);
-            } 
-            if (title == null) title = "";
-            if (desc == null) desc = "";
-            holder.titleText.setText(Html.fromHtml(title));
-            holder.descriptionText.setText(Html.fromHtml(desc),BufferType.SPANNABLE);
-            holder.timeText.setText(prettyTimeFormatter.format(si.getPostedTime().getTime()));
-            if (course != null) {
-            	holder.courseTitleText.setText(Html.fromHtml(course.getTitle()));
-            }
-            
-            return convertView;
-        }
-    	
     }
 }

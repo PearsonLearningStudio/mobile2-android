@@ -20,14 +20,15 @@ public class LoadMoreAdapter extends BaseAdapter {
 	private ListAdapter baseAdapter;
 	private Context context;
 	private SimpleObserver baseObserver;
-	private int listHeaderCount;
 	
 	public LoadMoreAdapter(Context context, ListAdapter baseAdapter, boolean canLoadMore) {
 		this.baseAdapter = baseAdapter;
 		this.canLoadMore = canLoadMore;
 		this.context = context;
 		baseObserver = new SimpleObserver(this);
-		baseAdapter.registerDataSetObserver(baseObserver);
+		if (baseAdapter != null) {
+			baseAdapter.registerDataSetObserver(baseObserver);
+		}
 	}
 		
 	public void setIsLoadingMore(boolean isLoadingMore) {
@@ -36,27 +37,15 @@ public class LoadMoreAdapter extends BaseAdapter {
 	}
 	
 	public void update(ListAdapter baseAdapter, boolean canLoadMore) {
+		assert baseAdapter != null;
 		this.isLoadingMore = false;
-		this.baseAdapter.unregisterDataSetObserver(baseObserver);
+		if (this.baseAdapter != null) {
+			this.baseAdapter.unregisterDataSetObserver(baseObserver);
+		}
 		this.baseAdapter = baseAdapter;
 		this.baseAdapter.registerDataSetObserver(baseObserver);
 		this.canLoadMore = canLoadMore;
 		this.notifyDataSetChanged();
-	}
-	
-	/**
-	 * @param listHeaderCount
-	 * 
-	 * If the list view has headers added to it outside of the knowledge of
-	 * this adapter, make sure the count of those header items are set
-	 * so that positions are calculated correctly
-	 */
-	public void setListHeaderCount(int listHeaderCount) {
-		this.listHeaderCount = listHeaderCount;
-	}
-
-	public int getListHeaderCount() {
-		return listHeaderCount;
 	}
 
 	public int getCount() {
@@ -65,7 +54,6 @@ public class LoadMoreAdapter extends BaseAdapter {
 	}
 
 	public Object getItem(int position) {
-		position = position - listHeaderCount;
 		if (position < baseAdapter.getCount()) {
 			return baseAdapter.getItem(position);
 		} else {
@@ -74,7 +62,6 @@ public class LoadMoreAdapter extends BaseAdapter {
 	}
 
 	public long getItemId(int position) {
-		position = position - listHeaderCount;
 		if (position < baseAdapter.getCount()) {
 			return baseAdapter.getItemId(position);
 		} else {

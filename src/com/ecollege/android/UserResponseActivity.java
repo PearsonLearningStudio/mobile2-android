@@ -29,15 +29,19 @@ import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.model.DiscussionResponse;
 import com.ecollege.api.model.ResponseCount;
 import com.ecollege.api.model.UserDiscussionResponse;
+import com.ecollege.api.services.discussions.FetchDiscussionResponseById;
 import com.ecollege.api.services.discussions.FetchDiscussionResponsesForResponse;
 import com.ecollege.api.services.discussions.PostResponseToResponse;
 import com.ecollege.api.services.discussions.UpdateResponseReadStatus;
 
 public class UserResponseActivity extends ECollegeListActivity {
 
-	private static final String USER_RESPONSE_EXTRA = "USER_RESPONSE_EXTRA";
+	public static final String RESPONSE_ID_EXTRA = "RESPONSE_ID_EXTRA";
+	public static final String USER_RESPONSE_EXTRA = "USER_RESPONSE_EXTRA";
+	
 	private static final int VIEW_RESPONSE_REQUEST = 0;
-	@InjectExtra(UserTopicActivity.USER_RESPONSE_EXTRA) protected UserDiscussionResponse userResponse;
+	@InjectExtra(value=USER_RESPONSE_EXTRA,optional=true) protected UserDiscussionResponse userResponse;
+	@InjectExtra(value=RESPONSE_ID_EXTRA,optional=true) protected Long responseId;
 	
 	protected DiscussionResponse response;
 	protected ResponseAdapter responseAdapter;
@@ -52,6 +56,8 @@ public class UserResponseActivity extends ECollegeListActivity {
 	private ExpandableDescriptionHolder expandableDescriptionHolder;
 	private Spanned styledDescriptionHtml;
 	private boolean descriptionExpanded;
+	private Bundle lastSavedInstanceState;
+	
 	
 	protected View.OnClickListener onDescriptionExpandToggle = new View.OnClickListener() {
 		public void onClick(View v) {
@@ -62,9 +68,25 @@ public class UserResponseActivity extends ECollegeListActivity {
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_topic);
+		viewInflater = getLayoutInflater();
+		
+		if (userResponse == null) {
+			buildService(new FetchDiscussionResponseById(getApp().getCurrentUser().getId(),responseId)).execute();
+			lastSavedInstanceState = savedInstanceState;
+		} else {
+			setupView(savedInstanceState);
+		}
+	}
+
+	public void onServiceCallSuccess(FetchDiscussionResponseById service) {
+		userResponse = service.getResult();
+		setupView(lastSavedInstanceState);
+		lastSavedInstanceState = null;
+	}
+	
+	protected void setupView(Bundle savedInstanceState) {
 		response = userResponse.getResponse();
 		responseCount = userResponse.getChildResponseCounts();
-		viewInflater = getLayoutInflater();
 		
 		styledDescriptionHtml = Html.fromHtml(response.getDescription());
 		
@@ -393,3 +415,4 @@ public class UserResponseActivity extends ECollegeListActivity {
 
 	}
 }
+;

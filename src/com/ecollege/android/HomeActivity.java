@@ -242,13 +242,13 @@ public class HomeActivity extends ECollegeListActivity {
         
         if ("thread-topic".equals(objectType)) {
         	long topicId = Long.parseLong(si.getObject().getReferenceId());
-        	Intent i = new Intent(this,DiscussionTopicActivity.class);
-        	i.putExtra("topicId", topicId);
+        	Intent i = new Intent(this,UserTopicActivity.class);
+        	i.putExtra(UserTopicActivity.TOPIC_ID_EXTRA, topicId);
         	startActivity(i);
         } else if ("thread-post".equals(objectType)) {
         	long responseId = Long.parseLong(si.getObject().getReferenceId());
-        	Intent i = new Intent(this,DiscussionResponseActivity.class);
-        	i.putExtra("responseId", responseId);
+        	Intent i = new Intent(this,UserResponseActivity.class);
+        	i.putExtra(UserResponseActivity.RESPONSE_ID_EXTRA, responseId);
         	startActivity(i);        	
         } else if ("grade".equals(objectType)) {
         	long courseId = si.getObject().getCourseId();

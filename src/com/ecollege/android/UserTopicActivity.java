@@ -31,13 +31,16 @@ import com.ecollege.api.model.ResponseCount;
 import com.ecollege.api.model.UserDiscussionResponse;
 import com.ecollege.api.model.UserDiscussionTopic;
 import com.ecollege.api.services.discussions.FetchDiscussionResponsesForTopic;
+import com.ecollege.api.services.discussions.FetchDiscussionTopicById;
 import com.ecollege.api.services.discussions.PostResponseToTopic;
 
 public class UserTopicActivity extends ECollegeListActivity {
-	
-	public static final String USER_RESPONSE_EXTRA = "USER_RESPONSE_EXTRA";
+
+	public static final String TOPIC_ID_EXTRA = "TOPIC_ID_EXTRA";
+	public static final String USER_TOPIC_EXTRA = "USER_TOPIC_EXTRA";
 	private static final int VIEW_RESPONSE_REQUEST = 0;
-	@InjectExtra(DiscussionsActivity.USER_TOPIC_EXTRA) protected UserDiscussionTopic userTopic;
+	@InjectExtra(value=USER_TOPIC_EXTRA,optional=true) protected UserDiscussionTopic userTopic;
+	@InjectExtra(value=TOPIC_ID_EXTRA,optional=true) protected Long topicId;
 	
 	protected DiscussionTopic topic;
 	protected ResponseAdapter responseAdapter;
@@ -52,6 +55,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 	private ExpandableDescriptionHolder expandableDescriptionHolder;
 	private boolean descriptionExpanded;
 	private Spanned styledDescriptionHtml;
+	private Bundle lastSavedInstanceState;
 	
 	protected View.OnClickListener onDescriptionExpandToggle = new View.OnClickListener() {
 		public void onClick(View v) {
@@ -62,9 +66,24 @@ public class UserTopicActivity extends ECollegeListActivity {
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_topic);
+		viewInflater = getLayoutInflater();
+		
+		if (userTopic == null) {
+			lastSavedInstanceState = savedInstanceState;
+			buildService(new FetchDiscussionTopicById(getApp().getCurrentUser().getId(), topicId)).execute();
+		} else {
+			setupView(savedInstanceState);
+		}
+	}
+
+	public void onServiceCallSuccess(FetchDiscussionTopicById service) {
+		userTopic = service.getResult();
+		setupView(lastSavedInstanceState);
+	}
+	
+	protected void setupView(Bundle savedInstanceState) {
 		topic = userTopic.getTopic();
 		responseCount = userTopic.getChildResponseCounts();
-		viewInflater = getLayoutInflater();
 		
 		styledDescriptionHtml = Html.fromHtml(topic.getDescription());
 		
@@ -103,7 +122,7 @@ public class UserTopicActivity extends ECollegeListActivity {
 		super.onListItemClick(l, v, position, id);
 		UserDiscussionResponse selectedResponse = (UserDiscussionResponse)getListAdapter().getItem(position);
 		Intent intent = new Intent(this, UserResponseActivity.class);
-		intent.putExtra(USER_RESPONSE_EXTRA, selectedResponse);
+		intent.putExtra(UserResponseActivity.USER_RESPONSE_EXTRA, selectedResponse);
 		startActivityForResult(intent, VIEW_RESPONSE_REQUEST);
 	}
 

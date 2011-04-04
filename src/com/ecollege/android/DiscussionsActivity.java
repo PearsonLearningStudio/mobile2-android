@@ -42,7 +42,6 @@ import com.google.inject.Inject;
 
 public class DiscussionsActivity extends ECollegeListActivity {
 	
-	public static final String USER_TOPIC_EXTRA = "USER_TOPIC_EXTRA";
 
 	private static final int VIEW_TOPIC_REQUEST = 0;
 	
@@ -202,7 +201,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 		super.onListItemClick(l, v, position, id);
 		UserDiscussionTopic selectedTopic = (UserDiscussionTopic)getListAdapter().getItem(position);
 		Intent intent = new Intent(this, UserTopicActivity.class);
-		intent.putExtra(USER_TOPIC_EXTRA, selectedTopic);
+		intent.putExtra(UserTopicActivity.USER_TOPIC_EXTRA, selectedTopic);
 		startActivityForResult(intent, VIEW_TOPIC_REQUEST);
 	}
     

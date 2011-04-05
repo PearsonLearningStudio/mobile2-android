@@ -63,7 +63,8 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	protected TextView lastUpdatedText;
 	private View lastUpdatedHeader;
 	private SimpleDateFormat lastUpdatedDateFormat;
-
+	private boolean firstLoadFinished = false;
+	
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,15 +124,17 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	}
 
 	protected void courseSelected(int position) {
-		if (position == 0) {
-			selectedCourseId = 0;
-		} else {
-			String title = courseDropdownTitles.get(position);
-			selectedCourseId = courseTitleToCourseMap.get(title).getId();
+		if (firstLoadFinished) {
+			if (position == 0) {
+				selectedCourseId = 0;
+			} else {
+				String title = courseDropdownTitles.get(position);
+				selectedCourseId = courseTitleToCourseMap.get(title).getId();
+			}
+			topicAdapter = null;
+			topicHeaderAdapter = null;
+			loadAndDisplayTopicsForSelectedCourses();
 		}
-		topicAdapter = null;
-		topicHeaderAdapter = null;
-		loadAndDisplayTopicsForSelectedCourses();
 	}
 
 	private void loadAndDisplayTopicsForSelectedCourses() {
@@ -170,7 +173,12 @@ public class DiscussionsActivity extends ECollegeListActivity {
 			.execute();
 	}
 	
+	public void onServiceCallException(FetchDiscussionTopicsForCourseIds service, Exception ex) {
+		firstLoadFinished = true;
+	}
+	
 	public void onServiceCallSuccess(FetchDiscussionTopicsForCourseIds service) {
+		firstLoadFinished = true;
 		noResultsView.setVisibility(View.VISIBLE);
 		topicAdapter.setNotifyOnChange(false);
 		for (UserDiscussionTopic topic : service.getResult()) {

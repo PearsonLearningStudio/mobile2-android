@@ -30,6 +30,7 @@
     <string name="never">Never</string>
     <string name="last_updated_s">Last updated: %s</string>
     <string name="choose_a_course">Choose a Course</string>
+    <string name="choose_a_unit">Choose a Unit</string>
     <string name="all_courses">All Discussions</string>
     <string name="no_items">No items</string>
     <string name="post_a_response">Post a response</string>

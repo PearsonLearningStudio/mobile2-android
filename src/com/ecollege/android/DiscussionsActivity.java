@@ -214,7 +214,12 @@ public class DiscussionsActivity extends ECollegeListActivity {
 		Object item = l.getItemAtPosition(position);
 		
 		if (item instanceof GroupedDataItem) {
-			//footer item
+			CourseGroupId groupId = (CourseGroupId) ((GroupedDataItem) item).getGroupId();
+			long courseId = groupId.getCourseId();
+
+			Intent intent = new Intent(this, CourseDiscussionsActivity.class);
+			intent.putExtra(CourseDiscussionsActivity.COURSE_ID_EXTRA, courseId);
+			startActivity(intent);
 		} else {
 			UserDiscussionTopic selectedTopic = (UserDiscussionTopic)item;
 			Intent intent = new Intent(this, UserTopicActivity.class);
@@ -236,17 +241,44 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	}
 	
 	
+	private class CourseGroupId {
+		
+		private long courseId;
+		private String courseTitle;
+		
+		public CourseGroupId(long courseId, String courseTitle) {
+			this.courseId = courseId;
+			this.courseTitle = courseTitle;
+		}
+		
+		public long getCourseId() {
+			return courseId;
+		}
+		
+		@Override
+		public String toString() {
+			return courseTitle;
+		}
+		@Override
+		public boolean equals(Object o) {
+			if (o == null) return false;
+			if (!(o instanceof CourseGroupId)) return false;
+			return ((CourseGroupId)o).getCourseId() == getCourseId();
+		}
+	}
+	
     protected class TopicsHeaderAdapter extends GroupedAdapter {
 
 		public TopicsHeaderAdapter(Context context, ListAdapter baseAdapter) {
 			super(context, baseAdapter,true,true);
 		}
 		
-		@Override public String groupIdFunction(Object item, int position) {
+		@Override public Object groupIdFunction(Object item, int position) {
 			UserDiscussionTopic userTopic = (UserDiscussionTopic)item;
 			DiscussionTopic topic = userTopic.getTopic();
 			ContainerInfo info = topic.getContainerInfo();
-			return Html.fromHtml(info.getCourseTitle()).toString();
+			
+			return new CourseGroupId(info.getCourseId(), Html.fromHtml(info.getCourseTitle()).toString());
 		}
 
 		@Override

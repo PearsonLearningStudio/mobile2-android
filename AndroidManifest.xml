@@ -34,6 +34,7 @@
 		<activity android:name="CourseActivity"></activity>
 		<activity android:name="AnnouncementsActivity"></activity>
 		<activity android:name="CourseGradebookActivity"></activity>
+		<activity android:name="CourseDiscussionsActivity"></activity>
 		
     </application>
 </manifest>

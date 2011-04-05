@@ -74,7 +74,7 @@ public class CourseGradebookActivity extends ECollegeListActivity {
     
 	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		UserGradebookItem item = (UserGradebookItem) getListAdapter().getItem(position);
+		UserGradebookItem item = (UserGradebookItem) l.getItemAtPosition(position);
 		if (item.getGrade() != null) {
 			GradebookItem gradebookItem = item.getGradebookItem();
 	    	Intent i = new Intent(this,GradeActivity.class);

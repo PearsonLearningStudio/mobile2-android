@@ -105,9 +105,8 @@ public class CoursesActivity extends ECollegeListActivity {
 	}
 
 	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
-		position = position - getListView().getHeaderViewsCount();
 		super.onListItemClick(l, v, position, id);
-		Course selectedCourse = courseAdapter.getItem(position);
+		Course selectedCourse = (Course)l.getItemAtPosition(position);
 		Intent intent = new Intent(this, CourseActivity.class);
 		intent.putExtra(COURSE_EXTRA, selectedCourse);
 		startActivity(intent);

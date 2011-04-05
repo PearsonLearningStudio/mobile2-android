@@ -22,7 +22,7 @@ public class GroupedAdapter extends BaseAdapter {
 	public static final long STARTING_ITEM_ID = Long.MAX_VALUE - 1000;
 	
 	protected ListAdapter baseAdapter;
-	private Context context;
+	protected Context context;
 	private ParentAdapterObserver baseObserver;
 	private List<GroupedDataItem> dataItems;
 	private boolean hasFooter;
@@ -35,6 +35,7 @@ public class GroupedAdapter extends BaseAdapter {
 	public GroupedAdapter(Context context, ListAdapter baseAdapter, boolean hasHeader, boolean hasFooter) {
 		this.hasHeader = hasHeader;
 		this.hasFooter = hasFooter;
+		
 		this.baseAdapter = baseAdapter;
 		this.context = context;
 		calculateHeadersAndFooters();
@@ -125,8 +126,11 @@ public class GroupedAdapter extends BaseAdapter {
 	
 	public int getItemViewType(int position) {
 		GroupedDataItem item = dataItems.get(position);
-		if (item.getItemType() != GroupedDataItemType.REGULAR_ITEM) {
+		
+		if (item.getItemType() == GroupedDataItemType.HEADER) {
 			return baseAdapter.getViewTypeCount();
+		} else if (item.getItemType() == GroupedDataItemType.FOOTER) {
+			return hasHeader ? baseAdapter.getViewTypeCount() + 1 : baseAdapter.getViewTypeCount();
 		} else {
 			return baseAdapter.getItemViewType(item.getOriginalPosition());
 		}
@@ -182,7 +186,10 @@ public class GroupedAdapter extends BaseAdapter {
 	}
 
 	public int getViewTypeCount() {
-		return baseAdapter.getViewTypeCount() + 1;
+		int result = baseAdapter.getViewTypeCount();
+		if (hasHeader) result++;
+		if (hasFooter) result++;
+		return result;
 	}	
 	
 	public void registerDataSetObserver(DataSetObserver observer) {
@@ -218,13 +225,13 @@ public class GroupedAdapter extends BaseAdapter {
         TextView headerLabelText;
     }
     
-    private enum GroupedDataItemType {
+    public enum GroupedDataItemType {
     	HEADER,
     	REGULAR_ITEM,
     	FOOTER
     }
     
-	private class GroupedDataItem {
+	public class GroupedDataItem {
 		private GroupedDataItemType itemType;
 		private Object groupId;
 		private long itemId = -1;

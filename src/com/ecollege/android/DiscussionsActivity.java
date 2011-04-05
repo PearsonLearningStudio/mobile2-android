@@ -8,6 +8,7 @@ import java.util.List;
 
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.android.adapter.GroupedAdapter;
+import com.ecollege.android.adapter.GroupedAdapter.GroupedDataItem;
 import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.ECollegeClient;
@@ -208,10 +210,17 @@ public class DiscussionsActivity extends ECollegeListActivity {
     @Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		UserDiscussionTopic selectedTopic = (UserDiscussionTopic)getListAdapter().getItem(position);
-		Intent intent = new Intent(this, UserTopicActivity.class);
-		intent.putExtra(UserTopicActivity.USER_TOPIC_EXTRA, selectedTopic);
-		startActivityForResult(intent, VIEW_TOPIC_REQUEST);
+		
+		Object item = l.getItemAtPosition(position);
+		
+		if (item instanceof GroupedDataItem) {
+			//footer item
+		} else {
+			UserDiscussionTopic selectedTopic = (UserDiscussionTopic)item;
+			Intent intent = new Intent(this, UserTopicActivity.class);
+			intent.putExtra(UserTopicActivity.USER_TOPIC_EXTRA, selectedTopic);
+			startActivityForResult(intent, VIEW_TOPIC_REQUEST);
+		}
 	}
     
 	static class ViewHolder {
@@ -222,10 +231,15 @@ public class DiscussionsActivity extends ECollegeListActivity {
         TextView userResponseCountText;
     }
     
+	static class FooterViewHolder {
+		TextView linkText;
+	}
+	
+	
     protected class TopicsHeaderAdapter extends GroupedAdapter {
 
 		public TopicsHeaderAdapter(Context context, ListAdapter baseAdapter) {
-			super(context, baseAdapter,true,false);
+			super(context, baseAdapter,true,true);
 		}
 		
 		@Override public String groupIdFunction(Object item, int position) {
@@ -233,6 +247,36 @@ public class DiscussionsActivity extends ECollegeListActivity {
 			DiscussionTopic topic = userTopic.getTopic();
 			ContainerInfo info = topic.getContainerInfo();
 			return Html.fromHtml(info.getCourseTitle()).toString();
+		}
+
+		@Override
+		public View getFooterView(int position, View convertView,
+				ViewGroup parent, Object groupId) {
+			FooterViewHolder holder;
+
+	        if (convertView == null) {
+	            convertView = ((Activity)context).getLayoutInflater().inflate(R.layout.see_all_discussions, null);
+
+	            holder = new FooterViewHolder();
+	            holder.linkText = (TextView) convertView.findViewById(R.id.see_all_text);
+	            convertView.setTag(holder);
+	        } else {
+	            holder = (FooterViewHolder) convertView.getTag();
+	        }
+	        
+	        holder.linkText.setText("See all topics for " + groupId.toString());
+	        return convertView;
+		}
+		
+		@Override
+		public boolean isEnabled(int position) {
+			Object item = getItem(position);
+			
+			if (item instanceof GroupedDataItem && (((GroupedDataItem)item).getItemType() == GroupedDataItemType.FOOTER)) {
+				return true;
+			} else {
+				return super.isEnabled(position);
+			}
 		}
     }
     

@@ -124,7 +124,7 @@ public class UserResponseActivity extends ECollegeListActivity {
 
 	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		UserDiscussionResponse selectedResponse = (UserDiscussionResponse)getListAdapter().getItem(position);
+		UserDiscussionResponse selectedResponse = (UserDiscussionResponse)l.getItemAtPosition(position);
 		Intent intent = new Intent(this, UserResponseActivity.class);
 		intent.putExtra(USER_RESPONSE_EXTRA, selectedResponse);
 		startActivityForResult(intent, VIEW_RESPONSE_REQUEST);

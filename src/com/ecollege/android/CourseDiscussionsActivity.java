@@ -213,8 +213,7 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(topicsLastUpdated));
 		}
 		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
-		
-		if (currentUnitFilter == null || currentUnitFilter.getUnitNumber() == -1) {
+				if (currentUnitFilter == null || currentUnitFilter.getUnitNumber() == -1) {
 			topicAdapter = new TopicsAdapter(this, allTopics);
 			topicGroupedAdapter.update(topicAdapter);
 		} else {

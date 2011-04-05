@@ -1,5 +1,6 @@
 package com.ecollege.android;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class CourseGradebookActivity extends ECollegeListActivity {
 	private LoadMoreAdapter gradebookLoadMoreAdapter;
 	
 	private static final PrettyTime prettyTimeFormatter = new PrettyTime();
+	private static final DecimalFormat decimalFormatter = new DecimalFormat();
 	
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -118,7 +120,7 @@ public class CourseGradebookActivity extends ECollegeListActivity {
 				holder.gradeText.setText(null);
 			} else {
 				holder.dateText.setText(prettyTimeFormatter.format(grade.getUpdatedDate().getTime()));
-				holder.gradeText.setText(grade.getLetterGrade());
+				holder.gradeText.setText(decimalFormatter.format(grade.getPoints()) + "/" + decimalFormatter.format(gradebookItem.getPointsPossible()));
 			}
 			return convertView;
 		}

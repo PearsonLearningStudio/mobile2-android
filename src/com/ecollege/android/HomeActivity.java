@@ -1,7 +1,6 @@
 package com.ecollege.android;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -29,7 +28,8 @@ import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.android.adapter.ActivityFeedAdapter;
-import com.ecollege.android.adapter.LoadMoreAdapter;
+import com.ecollege.android.adapter.UberItem;
+import com.ecollege.android.adapter.UberItem.UberItemType;
 import com.ecollege.android.adapter.WaitingForApiAdapter;
 import com.ecollege.android.tasks.TaskPostProcessor;
 import com.ecollege.android.util.CacheConfiguration;
@@ -160,14 +160,14 @@ public class HomeActivity extends ECollegeListActivity {
 	
     private ListAdapter createOrReturnActivitiesAdapter() {
     	if (activityFeedAdapter == null) {
-    		activityFeedAdapter = new ActivityFeedAdapter(this, new ArrayList<ActivityStreamItem>(), canLoadMoreActivites);
+    		activityFeedAdapter = new ActivityFeedAdapter(this,canLoadMoreActivites);
     		fetchActivityFeed();
     	}
     	return activityFeedAdapter;
     }
     
     protected void fetchActivityFeed() {
-    	fetchWhatsHappening(null);
+    	fetchActivityFeed(null);
     }
     
     protected void reloadActivityFeed() {
@@ -187,11 +187,12 @@ public class HomeActivity extends ECollegeListActivity {
     	}
     }
     
-    protected void fetchWhatsHappening(CacheConfiguration cacheConfiguration) {
+    protected void fetchActivityFeed(CacheConfiguration cacheConfiguration) {
+    	activityFeedAdapter.beginLoading();
+    	
     	if (null == cacheConfiguration) {
     		cacheConfiguration = new CacheConfiguration(); // default hits the most caches
     	}
-		activityFeedAdapter.setIsLoadingMore(true);
     	if (canLoadMoreActivites) {
     		GregorianCalendar fetchSince = new GregorianCalendar();
     		fetchSince.add(Calendar.DAY_OF_YEAR, -14);
@@ -212,9 +213,15 @@ public class HomeActivity extends ECollegeListActivity {
     protected List<ActivityStreamItem> activityItems;
     
     public void onServiceCallSuccess(FetchMyWhatsHappeningFeed service) {
+    	
+    	if (service.getResult().size() == 0 && canLoadMoreActivites) {
+    		canLoadMoreActivites = false; //load the extra activities if no data in last 14 days
+    		fetchActivityFeed();
+    		return;
+    	}
+    	
     	activityItems = service.getResult();
-    	activityFeedAdapter.updateItems(activityItems);
-    	activityFeedAdapter.setCanLoadMore(canLoadMoreActivites);
+    	activityFeedAdapter.updateItems(activityItems,canLoadMoreActivites);
     	activityFeedLastUpdated = service.getCompletedAt();
     	loadAndDisplayListForSelectedType();
     }
@@ -222,15 +229,15 @@ public class HomeActivity extends ECollegeListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
     	
-    	if (id == LoadMoreAdapter.LOAD_MORE_ITEM_ID) {
+    	@SuppressWarnings("unchecked")
+		UberItem<ActivityStreamItem> item = (UberItem<ActivityStreamItem>)l.getItemAtPosition(position);
+    	
+    	if (item.getItemType() == UberItemType.LOAD_MORE_ITEM) {
     		canLoadMoreActivites = false;
     		fetchActivityFeed();
     		return;
-    	}
-    	
-    	Object item = l.getItemAtPosition(position);
-    	if (item instanceof ActivityStreamItem) {
-    		ActivityStreamItem si = (ActivityStreamItem)item;
+    	} else if (item.getItemType() == UberItemType.DATA_ITEM) {
+    		ActivityStreamItem si = item.getDataItem();
     		
             String objectType = si.getObject().getObjectType();
             

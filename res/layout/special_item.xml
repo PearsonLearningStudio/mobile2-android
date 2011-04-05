@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    >
+    
+<ImageView      
+	android:id="@+id/icon_image"
+	android:layout_alignParentLeft="true"
+	android:layout_alignParentTop="true"
+	android:layout_width="40dp"
+	android:layout_height="40dp"
+	android:layout_toLeftOf="@+id/no_data_label"
+	android:layout_marginRight="5dp"
+	android:src="@drawable/ic_no_responses" />
+		    
+<ProgressBar
+	android:id="@+id/loading_indicator"
+	android:indeterminateOnly="true"
+	android:layout_toRightOf="@id/loading_indicator"
+	android:layout_alignParentTop="true"
+	android:layout_width="40dp"
+	android:layout_height="40dp"
+	android:layout_marginRight="5dp"
+	android:visibility="invisible" />    
+    
+<TextView
+	android:id="@+id/title_text"
+	android:text="Loading..."
+	android:singleLine="true"
+	android:layout_toRightOf="@id/loading_indicator"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_centerVertical="true"
+	android:textSize="3mm"
+	/>
+		
+</RelativeLayout>

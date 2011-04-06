@@ -3,8 +3,6 @@
 	<!--  Note that order matters here. Keep the order the same in other locales. -->
 	<string-array name="course_menu_items">
 		<item>Announcements</item>
-		<item>What\'s Due</item>
-		<item>Dropbox</item>
 		<item>Gradebook</item>
 		<item>People</item>
 	</string-array>

@@ -83,10 +83,10 @@ public class CoursesActivity extends ECollegeListActivity {
 	}
 
 	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Course selectedCourse = (Course)l.getItemAtPosition(position);
+		@SuppressWarnings("unchecked")
+		UberItem<Course> item = (UberItem<Course>)l.getItemAtPosition(position);
 		Intent intent = new Intent(this, CourseActivity.class);
-		intent.putExtra(COURSE_EXTRA, selectedCourse);
+		intent.putExtra(COURSE_EXTRA, item.getDataItem());
 		startActivity(intent);
 	}
 

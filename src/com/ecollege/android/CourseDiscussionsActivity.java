@@ -25,7 +25,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
-import com.ecollege.android.adapter.GroupedAdapter.GroupedDataItem;
 import com.ecollege.android.adapter.UberAdapter;
 import com.ecollege.android.adapter.UberItem;
 import com.ecollege.android.util.CacheConfiguration;
@@ -205,16 +204,13 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
-		Object item = l.getItemAtPosition(position);
+		@SuppressWarnings("unchecked")
+		UberItem<UserDiscussionTopic> item = (UberItem<UserDiscussionTopic>)l.getItemAtPosition(position);
 		
-		if (item instanceof GroupedDataItem) {
-			//footer item
-		} else {
-			UserDiscussionTopic selectedTopic = (UserDiscussionTopic)item;
-			Intent intent = new Intent(this, UserTopicActivity.class);
-			intent.putExtra(UserTopicActivity.USER_TOPIC_EXTRA, selectedTopic);
-			startActivityForResult(intent, VIEW_TOPIC_REQUEST);
-		}
+		UserDiscussionTopic selectedTopic = item.getDataItem();
+		Intent intent = new Intent(this, UserTopicActivity.class);
+		intent.putExtra(UserTopicActivity.USER_TOPIC_EXTRA, selectedTopic);
+		startActivityForResult(intent, VIEW_TOPIC_REQUEST);
 	}
     
 	static class ViewHolder {

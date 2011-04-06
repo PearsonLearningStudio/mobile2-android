@@ -75,10 +75,12 @@ public class CourseActivity extends ECollegeListActivity {
 			detailExtraKey = ANNOUNCEMENT_LIST_EXTRA;
 			detailExtraValue = (Serializable) announcements;
 			break;
-		case 3:
+		case 1:
 			destinationClass = CourseGradebookActivity.class;
 			break;
-
+		case 2:
+			destinationClass = PeopleActivity.class;
+			break;
 		default:
 			return;
 		}

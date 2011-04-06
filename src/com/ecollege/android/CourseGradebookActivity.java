@@ -75,10 +75,11 @@ public class CourseGradebookActivity extends ECollegeListActivity {
     }
     
 	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		UserGradebookItem item = (UserGradebookItem) l.getItemAtPosition(position);
-		if (item.getGrade() != null) {
-			GradebookItem gradebookItem = item.getGradebookItem();
+		@SuppressWarnings("unchecked")
+		UberItem<UserGradebookItem> item = (UberItem<UserGradebookItem>)l.getItemAtPosition(position);
+		
+		if (item.getDataItem().getGrade() != null) {
+			GradebookItem gradebookItem = item.getDataItem().getGradebookItem();
 	    	Intent i = new Intent(this,GradeActivity.class);
 	    	i.putExtra("courseId", course.getId());
 	    	i.putExtra("gradebookItemGuid", gradebookItem.getId());

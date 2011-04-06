@@ -34,20 +34,12 @@
 		android:layout_marginTop="10dp"
 		android:layout_below="@id/course_title_text"
 		android:background="@drawable/list_item_divider" />
-	<FrameLayout
-		android:id="@+id/list_holder"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+		
+	<ListView android:id="@android:id/list"
 		android:layout_below="@id/section_divider"
-		android:background="@color/color_foreground">
-		<ListView android:id="@android:id/list"
-			android:layout_marginTop="10dp"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent" />
-		<include layout="@layout/no_data_view"
-			android:id="@android:id/empty"
-			android:layout_width="fill_parent"
-			android:layout_height="80dp" />
-	</FrameLayout>
+		android:background="@color/color_foreground"
+		android:layout_marginTop="10dp"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
 		
 </RelativeLayout>

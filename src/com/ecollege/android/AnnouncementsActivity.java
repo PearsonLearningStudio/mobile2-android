@@ -27,7 +27,6 @@ public class AnnouncementsActivity extends ECollegeListActivity {
 	@Inject SharedPreferences prefs;
 	@InjectView(R.id.title_text) TextView titleText;
 	@InjectView(R.id.course_title_text) TextView courseTitleText;
-	@InjectView(R.id.no_data_label) TextView noDataLabel;
 	@InjectResource(R.string.announcements) String announcementsTitle;
 	@InjectExtra(CoursesActivity.COURSE_EXTRA) Course course;
 	@InjectExtra(CourseActivity.ANNOUNCEMENT_LIST_EXTRA) ArrayList<Announcement> announcements;
@@ -40,7 +39,6 @@ public class AnnouncementsActivity extends ECollegeListActivity {
 		
 		viewInflater = getLayoutInflater();
 		titleText.setText(announcementsTitle);
-		noDataLabel.setText("No Announcements");
 		displayCourse();
 		loadAndDisplayAnnouncementsForCourse();
 	}

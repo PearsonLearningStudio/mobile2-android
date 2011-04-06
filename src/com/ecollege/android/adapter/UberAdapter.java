@@ -1,6 +1,7 @@
 package com.ecollege.android.adapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -65,6 +66,18 @@ public class UberAdapter<T> extends BaseAdapter {
 		this.uberItems = null;
 		this.notifyDataSetChanged();
 	}
+
+	public void updateItems(List<T> dataItems) {
+		updateItems(dataItems,canLoadMore);
+	}
+
+	public void updateItems(T[] dataItems) {
+		updateItems(Arrays.asList(dataItems));
+	}
+	
+	public void updateItems(T[] dataItems, boolean canLoadMore) {
+		updateItems(Arrays.asList(dataItems),canLoadMore);
+	}
 	
 	public void updateItems(List<T> dataItems, boolean canLoadMore) {
 		assert dataItems != null;
@@ -75,9 +88,11 @@ public class UberAdapter<T> extends BaseAdapter {
 		this.notifyDataSetChanged();
 	}
 	
+	
+	
 	protected Object groupIdFunction(T item) {
 		//override in subclass
-		throw new NotImplementedException();
+		throw new RuntimeException("groupIdFunction required for " + this.getClass().getSimpleName());
 	}
 	
 	protected void calculateGrouping() {
@@ -88,20 +103,24 @@ public class UberAdapter<T> extends BaseAdapter {
 		Object currentGroupId = null;
 		
 		for (int i=0;i<dataItems.size();i++) {
-			currentGroupId = groupIdFunction(dataItems.get(i));
-			
-			if (lastGroupId == null && hasHeader) {
-				uberItems.add(new UberItem<T>(UberItemType.HEADER,currentGroupId));
-			} else if (currentGroupId != null && !currentGroupId.equals(lastGroupId)) {
-				if (hasFooter) {
-					uberItems.add(new UberItem<T>(UberItemType.FOOTER,currentGroupId));
-				}
-				if (hasHeader) {
+			if (hasHeader || hasFooter) {
+				currentGroupId = groupIdFunction(dataItems.get(i));
+				
+				if (lastGroupId == null && hasHeader) {
 					uberItems.add(new UberItem<T>(UberItemType.HEADER,currentGroupId));
+				} else if (currentGroupId != null && !currentGroupId.equals(lastGroupId)) {
+					if (hasFooter) {
+						uberItems.add(new UberItem<T>(UberItemType.FOOTER,currentGroupId));
+					}
+					if (hasHeader) {
+						uberItems.add(new UberItem<T>(UberItemType.HEADER,currentGroupId));
+					}
 				}
+				uberItems.add(new  UberItem<T>(dataItems.get(i),i));
+				lastGroupId = currentGroupId;				
+			} else {
+				uberItems.add(new  UberItem<T>(dataItems.get(i),i));
 			}
-			uberItems.add(new  UberItem<T>(dataItems.get(i),i));
-			lastGroupId = currentGroupId;
 		}
 
 		if (hasFooter && currentGroupId != null) {
@@ -209,15 +228,15 @@ public class UberAdapter<T> extends BaseAdapter {
         	holder.iconImage.setVisibility(View.VISIBLE);
         	holder.loadingIndicator.setVisibility(View.INVISIBLE);
         	holder.iconImage.setImageResource(R.drawable.ic_no_responses);
-        	holder.titleText.setText("No items");
+        	holder.titleText.setText(R.string.li_no_items);
         } else if (item.getItemType() == UberItemType.LOAD_MORE_ITEM) {
         	holder.iconImage.setVisibility(View.INVISIBLE);
         	holder.loadingIndicator.setVisibility(View.INVISIBLE);
-        	holder.titleText.setText("Load more...");
+        	holder.titleText.setText(R.string.li_load_more);
         } else if (item.getItemType() == UberItemType.LOADING_ITEM) {
         	holder.iconImage.setVisibility(View.INVISIBLE);
         	holder.loadingIndicator.setVisibility(View.VISIBLE);
-        	holder.titleText.setText("Loading...");
+        	holder.titleText.setText(R.string.li_loading);
         } else {
         	throw new RuntimeException("getSpecialView doesn't support item type " + item.getItemType().toString());
         }

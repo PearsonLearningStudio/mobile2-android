@@ -10,12 +10,12 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
+import com.ecollege.android.adapter.UberAdapter;
+import com.ecollege.android.adapter.UberItem;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.Course;
 import com.google.inject.Inject;
@@ -26,7 +26,7 @@ public class ProfileActivity extends ECollegeListActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	protected ECollegeClient client;
-	private ListAdapter courseAdapter;
+	private CourseArrayAdapter courseAdapter;
 	private List<Course> courses;
 	public LayoutInflater viewInflater;
 	
@@ -45,34 +45,24 @@ public class ProfileActivity extends ECollegeListActivity {
 			}
 		});
         
-        loadAndDisplayCourses();
+        courseAdapter = new CourseArrayAdapter(this);
+        courseAdapter.updateItems(courses);
+        setListAdapter(courseAdapter);
     }
 
 	protected void signOut() {
 		app.logout();
 	}
-	
-	protected void loadAndDisplayCourses() {
-		setListAdapter(createOrReturnCourseAdapter(false));
-	}
-	
-	protected ListAdapter createOrReturnCourseAdapter(boolean b) {
-		if (courseAdapter == null) {
-			courseAdapter = new CourseArrayAdapter(this, courses);
-		}
-		return courseAdapter;
-	}
-	
+
 	protected class CourseViewHolder {
 		public TextView courseTitleText;
 		public TextView courseDescriptionText;
 	}
 	
-	protected class CourseArrayAdapter extends ArrayAdapter<Course> {
+	protected class CourseArrayAdapter extends UberAdapter<Course> {
 
-
-		public CourseArrayAdapter(Context context, List<Course> courses) {
-			super(context, 0, courses);
+		public CourseArrayAdapter(Context context) {
+			super(context, false, false, false);
 		}
 		
 		@Override
@@ -84,7 +74,9 @@ public class ProfileActivity extends ECollegeListActivity {
 			return false;
 		}
 		
-		@Override public View getView(int position, View convertView, ViewGroup parent) {
+		@Override
+		protected View getDataItemView(View convertView, ViewGroup parent,
+				UberItem<Course> item) {
 			CourseViewHolder holder;
 			if (convertView == null) {
 				convertView = viewInflater.inflate(R.layout.simple_course_list_item, null);
@@ -96,7 +88,7 @@ public class ProfileActivity extends ECollegeListActivity {
 				holder = (CourseViewHolder) convertView.getTag();
 			}
 			
-			Course course = getItem(position);
+			Course course = item.getDataItem();
 			holder.courseTitleText.setText(Html.fromHtml(course.getTitle()));
 			holder.courseDescriptionText.setText(course.getDisplayCourseCode());
 			

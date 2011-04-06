@@ -6,7 +6,6 @@ import java.util.List;
 
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,13 +14,13 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
+import com.ecollege.android.adapter.UberAdapter;
+import com.ecollege.android.adapter.UberItem;
 import com.ecollege.android.tasks.TaskPostProcessor;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.Course;
@@ -76,10 +75,13 @@ public class CoursesActivity extends ECollegeListActivity {
 			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(app.getCurrentCourseListLastLoaded()));
 		}
 		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
-		setListAdapter(createOrReturnCourseAdapter(false));
+		if (courseAdapter == null) courseAdapter = new CourseArrayAdapter(this);
+		courseAdapter.updateItems(courses);
+		setListAdapter(courseAdapter);
 	}
 	
 	protected void reloadAndDisplayCourses() {
+		courseAdapter.beginLoading();
 		buildService(new FetchMyCoursesService())
 			.bypassFileCache()
 			.bypassResultCache()
@@ -91,17 +93,12 @@ public class CoursesActivity extends ECollegeListActivity {
 			})
 			.execute();
 	}
-	
+
 	public void onServiceCallSuccess(FetchMyCoursesService service) {
-		courseAdapter = null;
 		loadAndDisplayCourses();
 	}
-	
-	protected ListAdapter createOrReturnCourseAdapter(boolean b) {
-		if (courseAdapter == null) {
-			courseAdapter = new CourseArrayAdapter(this, courses);
-		}
-		return courseAdapter;
+	public void onServiceCallException(FetchMyCoursesService service, Exception ex) {
+		courseAdapter.hasError();
 	}
 
 	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -117,14 +114,16 @@ public class CoursesActivity extends ECollegeListActivity {
 		public TextView courseDescriptionText;
 	}
 	
-	protected class CourseArrayAdapter extends ArrayAdapter<Course> {
+	protected class CourseArrayAdapter extends UberAdapter<Course> {
 
 
-		public CourseArrayAdapter(Context context, List<Course> courses) {
-			super(context, 0, courses);
+		public CourseArrayAdapter(Context context) {
+			super(context,false,false,false);
 		}
 		
-		@Override public View getView(int position, View convertView, ViewGroup parent) {
+		@Override
+		protected View getDataItemView(View convertView, ViewGroup parent,
+				UberItem<Course> item) {
 			CourseViewHolder holder;
 			if (convertView == null) {
 				convertView = viewInflater.inflate(R.layout.course_item, null);
@@ -136,7 +135,7 @@ public class CoursesActivity extends ECollegeListActivity {
 				holder = (CourseViewHolder) convertView.getTag();
 			}
 			
-			Course course = getItem(position);
+			Course course = item.getDataItem();
 			holder.courseTitleText.setText(Html.fromHtml(course.getTitle()));
 			holder.courseDescriptionText.setText(course.getDisplayCourseCode());
 			

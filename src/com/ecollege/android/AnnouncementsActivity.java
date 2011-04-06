@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,10 +12,11 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
+import com.ecollege.android.adapter.UberAdapter;
+import com.ecollege.android.adapter.UberItem;
 import com.ecollege.api.model.Announcement;
 import com.ecollege.api.model.Course;
 import com.google.inject.Inject;
@@ -32,6 +32,7 @@ public class AnnouncementsActivity extends ECollegeListActivity {
 	@InjectExtra(CoursesActivity.COURSE_EXTRA) Course course;
 	@InjectExtra(CourseActivity.ANNOUNCEMENT_LIST_EXTRA) ArrayList<Announcement> announcements;
 	private LayoutInflater viewInflater;
+	private UberAdapter<Announcement> announcementsAdapter;
 	
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,7 +50,9 @@ public class AnnouncementsActivity extends ECollegeListActivity {
 	}
 	
 	private void loadAndDisplayAnnouncementsForCourse() {
-		setListAdapter(new AnnouncementAdapter(this, announcements));
+		announcementsAdapter = new AnnouncementAdapter(this);
+		announcementsAdapter.updateItems(announcements);
+		setListAdapter(announcementsAdapter);
 	}
 
 	protected class AnnouncementViewHolder {
@@ -57,13 +60,16 @@ public class AnnouncementsActivity extends ECollegeListActivity {
 		public TextView descriptionText;
 	}
 	
-	protected class AnnouncementAdapter extends ArrayAdapter<Announcement> {
-		
-		public AnnouncementAdapter (Context context, ArrayList<Announcement> objects) {
-			super(context, 0, objects);
+	protected class AnnouncementAdapter extends UberAdapter<Announcement> {
+
+		public AnnouncementAdapter(Context context) {
+			super(context, false, false, false);
 		}
 		
-		@Override public View getView(int position, View convertView, ViewGroup parent) {
+
+		@Override
+		protected View getDataItemView(View convertView, ViewGroup parent,
+				UberItem<Announcement> item) {
 			AnnouncementViewHolder holder;
 			if (convertView == null) {
 				holder = new AnnouncementViewHolder();
@@ -74,7 +80,7 @@ public class AnnouncementsActivity extends ECollegeListActivity {
 			} else {
 				holder = (AnnouncementViewHolder) convertView.getTag();
 			}
-			Announcement announcement = getItem(position);
+			Announcement announcement = item.getDataItem();
 			holder.titleText.setText(announcement.getSubject());
 			holder.descriptionText.setText(announcement.getRawText());
 			return convertView;

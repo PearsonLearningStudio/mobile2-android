@@ -23,14 +23,14 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
-import com.ecollege.android.adapter.GroupedAdapter;
 import com.ecollege.android.adapter.GroupedAdapter.GroupedDataItem;
+import com.ecollege.android.adapter.UberAdapter;
+import com.ecollege.android.adapter.UberItem;
 import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.ECollegeClient;
@@ -52,18 +52,15 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 	@InjectResource(R.string.last_updated_date_format) String lastUpdatedDateFormatString;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	@InjectView(R.id.unit_dropdown) Spinner unitDropdown;
-	@InjectView(android.R.id.empty) View noResultsView;
 	@InjectExtra(COURSE_ID_EXTRA) long courseId;
 	
 	protected ECollegeClient client;
 	private long topicsLastUpdated;
-	private GroupedTopicsAdapter topicGroupedAdapter;
 	private TopicsAdapter topicAdapter;
 	private LayoutInflater viewInflater;
 	protected TextView lastUpdatedText;
 	private View lastUpdatedHeader;
 	private SimpleDateFormat lastUpdatedDateFormat;
-	private boolean firstLoadFinished = false;
 	private List<UserDiscussionTopic> allTopics = new ArrayList<UserDiscussionTopic>();
 	private List<CourseUnit> allUnits = new ArrayList<CourseDiscussionsActivity.CourseUnit>();
 	
@@ -120,10 +117,8 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
         configureControls();
         buildLastUpdatedHeader();
 
-		topicAdapter = new TopicsAdapter(this, new ArrayList<UserDiscussionTopic>());
-		topicGroupedAdapter = new GroupedTopicsAdapter(this, topicAdapter);
-        setListAdapter(topicGroupedAdapter);
-        
+		topicAdapter = new TopicsAdapter(this);
+        setListAdapter(topicAdapter);
         fetchTopicsForSelectedCourses(false);
     }
     
@@ -169,6 +164,7 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 	}
 	
 	private void fetchTopicsForSelectedCourses(boolean reload) {
+		topicAdapter.beginLoading();
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
 		cacheConfiguration.bypassFileCache = reload;
 		cacheConfiguration.bypassResultCache = reload;
@@ -178,11 +174,10 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 	}
 	
 	public void onServiceCallException(FetchDiscussionTopicsForCourseIds service, Exception ex) {
-		firstLoadFinished = true;
+		topicAdapter.hasError();
 	}
 	
 	public void onServiceCallSuccess(FetchDiscussionTopicsForCourseIds service) {
-		firstLoadFinished = true;
 		allTopics = service.getResult();
 		
 		HashSet<CourseUnit> unitSet = new HashSet<CourseDiscussionsActivity.CourseUnit>();
@@ -199,7 +194,7 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 		
 		allUnits = sortedUnits;
 		
-		ArrayAdapter<CourseUnit> adapter = new ArrayAdapter<CourseUnit> (this, R.layout.transparent_spinner_text_view, sortedUnits);
+		ArrayAdapter<CourseUnit> adapter = new ArrayAdapter<CourseUnit> (this, R.layout.transparent_spinner_text_view, allUnits);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		unitDropdown.setAdapter(adapter);
 		
@@ -214,8 +209,7 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 		}
 		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
 				if (currentUnitFilter == null || currentUnitFilter.getUnitNumber() == -1) {
-			topicAdapter = new TopicsAdapter(this, allTopics);
-			topicGroupedAdapter.update(topicAdapter);
+			topicAdapter.updateItems(allTopics);
 		} else {
 			List<UserDiscussionTopic> filteredTopics = new ArrayList<UserDiscussionTopic>();
 			
@@ -225,8 +219,7 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 					filteredTopics.add(userTopic);
 				}
 			}
-			topicAdapter = new TopicsAdapter(this, filteredTopics);
-			topicGroupedAdapter.update(topicAdapter);
+			topicAdapter.updateItems(filteredTopics);
 		}
 
 		//noResultsView.setVisibility(View.INVISIBLE); TODO: check if should be shown
@@ -255,36 +248,23 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
         TextView unreadResponseCountText;
         TextView userResponseCountText;
     }
-    
-	static class FooterViewHolder {
-		TextView linkText;
-	}
 	
-    protected class GroupedTopicsAdapter extends GroupedAdapter {
+	protected class TopicsAdapter extends UberAdapter<UserDiscussionTopic> {
+  
+		
+		public TopicsAdapter(Context context) {
+			super(context, true, false, false);
+		}
 
-		public GroupedTopicsAdapter(Context context, ListAdapter baseAdapter) {
-			super(context, baseAdapter,true,false);
-		}
-		
-		@Override public String groupIdFunction(Object item, int position) {
-			UserDiscussionTopic userTopic = (UserDiscussionTopic)item;
-			return getUserTitle(userTopic);
-		}
-		
-        protected String getUserTitle(UserDiscussionTopic udt)
-        {
-            ContainerInfo ci = udt.getTopic().getContainerInfo();
+		@Override
+		protected Object groupIdFunction(UserDiscussionTopic item) {
+            ContainerInfo ci = item.getTopic().getContainerInfo();
             return String.format("%s %s: %s", ci.getUnitHeader(), ci.getUnitNumber(), ci.getUnitTitle());
-        }
-    }
-    
-	protected class TopicsAdapter extends ArrayAdapter<UserDiscussionTopic> {
-
-		public TopicsAdapter(Context context, List<UserDiscussionTopic> topicList) {
-			super(context, R.layout.user_topic_item, topicList);
 		}
-		
-		public View getView(int position, View convertView, ViewGroup parent) {
+        
+		@Override
+		protected View getDataItemView(View convertView, ViewGroup parent,
+				UberItem<UserDiscussionTopic> item) {
 			ViewHolder holder;
 			
 			if (convertView == null) {
@@ -301,7 +281,7 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			
-			UserDiscussionTopic userTopic = getItem(position);
+			UserDiscussionTopic userTopic = item.getDataItem();
 			DiscussionTopic topic = userTopic.getTopic();
 			ResponseCount responseCount = userTopic.getChildResponseCounts();
 			holder.titleText.setText(Html.fromHtml(topic.getTitle()).toString());

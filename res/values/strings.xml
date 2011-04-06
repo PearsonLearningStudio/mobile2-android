@@ -57,4 +57,11 @@
     <string name="no_comments">No comments</string>
     <string name="dropbox_submission">Dropbox Submission</string>
     <string name="view_all_course_submissions">View All Course Submissions</string>
+    
+    <!--  list item -->
+    <string name="li_no_items">No Items</string>
+    <string name="li_loading">Loading...</string>
+    <string name="li_load_more">Load more...</string>
+    <string name="li_error">Error loading items</string>
+    
 </resources>

@@ -15,13 +15,14 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeActivity;
 import com.ecollege.android.activities.ECollegeListActivity;
+import com.ecollege.android.adapter.UberAdapter;
+import com.ecollege.android.adapter.UberItem;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.Announcement;
 import com.ecollege.api.model.Course;
@@ -95,7 +96,8 @@ public class CourseActivity extends ECollegeListActivity {
 	}
 
 	private void createMenu() {
-		courseMenuAdapter = new CourseMenuAdapter(this, courseMenuItems);
+		courseMenuAdapter = new CourseMenuAdapter(this);
+		courseMenuAdapter.updateItems(courseMenuItems);
 		setListAdapter(courseMenuAdapter);
 	}
 
@@ -181,13 +183,15 @@ public class CourseActivity extends ECollegeListActivity {
 		public TextView unreadCountText;
 	}
 	
-	protected class CourseMenuAdapter extends ArrayAdapter<String> {
+	protected class CourseMenuAdapter extends UberAdapter<String> {
 
-		public CourseMenuAdapter(Context context, String[] objects) {
-			super(context, 0, objects);
+		public CourseMenuAdapter(Context context) {
+			super(context,false,false,false);
 		}
-		
-		@Override public View getView(int position, View convertView, ViewGroup parent) {
+
+		@Override
+		protected View getDataItemView(View convertView, ViewGroup parent,
+				UberItem<String> item) {
 			CourseMenuItemViewHolder holder;
 			if (convertView == null) {
 				holder = new CourseMenuItemViewHolder();
@@ -198,7 +202,7 @@ public class CourseActivity extends ECollegeListActivity {
 			} else {
 				holder = (CourseMenuItemViewHolder) convertView.getTag();
 			}
-			holder.title.setText(getItem(position));
+			holder.title.setText(item.getDataItem());
 			// first position should be "Announcements"
 //			if (position == 0 && announcements != null && announcements.size() > 0) {
 //				holder.unreadCountText.setVisibility(View.VISIBLE);

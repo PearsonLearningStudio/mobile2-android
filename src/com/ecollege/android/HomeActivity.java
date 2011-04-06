@@ -225,6 +225,10 @@ public class HomeActivity extends ECollegeListActivity {
     	activityFeedLastUpdated = service.getCompletedAt();
     	loadAndDisplayListForSelectedType();
     }
+
+    public void onServiceCallException(FetchMyWhatsHappeningFeed service, Exception ex) {
+    	activityFeedAdapter.hasError();
+    }
     
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {

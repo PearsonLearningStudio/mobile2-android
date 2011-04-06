@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
@@ -22,14 +21,14 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
-import com.ecollege.android.adapter.GroupedAdapter;
-import com.ecollege.android.adapter.GroupedAdapter.GroupedDataItem;
+import com.ecollege.android.adapter.UberAdapter;
+import com.ecollege.android.adapter.UberItem;
+import com.ecollege.android.adapter.UberItem.UberItemType;
 import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.ECollegeClient;
@@ -52,11 +51,9 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	@InjectResource(R.string.last_updated_date_format) String lastUpdatedDateFormatString;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	@InjectView(R.id.course_dropdown) Spinner courseDropdown;
-	@InjectView(android.R.id.empty) View noResultsView;
 	
 	protected ECollegeClient client;
 	private long topicsLastUpdated;
-	private TopicsHeaderAdapter topicHeaderAdapter;
 	private TopicsAdapter topicAdapter;
 	private LayoutInflater viewInflater;
 	private ArrayList<String> courseDropdownTitles;
@@ -74,16 +71,20 @@ public class DiscussionsActivity extends ECollegeListActivity {
         client = app.getClient();
         viewInflater = getLayoutInflater();
         lastUpdatedDateFormat = new SimpleDateFormat(lastUpdatedDateFormatString);
-        
+     
         loadCourseTitles();
         configureControls();
         buildLastUpdatedHeader();
-        loadAndDisplayTopicsForSelectedCourses();
+
+        topicAdapter = new TopicsAdapter(this);
+        setListAdapter(topicAdapter);
+
+		updateCurrentTopics(false);
     }
     
     @Override protected void onActivityResult (int requestCode, int resultCode, Intent data) {
     	if (requestCode == VIEW_TOPIC_REQUEST) {
-    		reloadAndDisplayTopicsForSelectedCourses();
+    		updateCurrentTopics(true);
     	}
     }
     
@@ -109,7 +110,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	private void configureControls() {
         reloadButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				reloadAndDisplayTopicsForSelectedCourses();
+				updateCurrentTopics(true);
 			}
 		});
         
@@ -133,39 +134,20 @@ public class DiscussionsActivity extends ECollegeListActivity {
 				String title = courseDropdownTitles.get(position);
 				selectedCourseId = courseTitleToCourseMap.get(title).getId();
 			}
-			topicAdapter = null;
-			topicHeaderAdapter = null;
-			loadAndDisplayTopicsForSelectedCourses();
+			updateCurrentTopics(false);
 		}
 	}
-
-	private void loadAndDisplayTopicsForSelectedCourses() {
+	
+	private void updateLastUpdated() {
 		String formattedLastUpdated = getString(R.string.never);
 		if (topicsLastUpdated != 0) {
 			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(topicsLastUpdated));
 		}
 		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
-		noResultsView.setVisibility(View.INVISIBLE);
-		setListAdapter(createOrReturnTopicAdapter(false));
-	}
-	
-	private void reloadAndDisplayTopicsForSelectedCourses() {
-		topicAdapter = new TopicsAdapter(this, new ArrayList<UserDiscussionTopic>());
-		topicHeaderAdapter = new TopicsHeaderAdapter(this, topicAdapter);
-		noResultsView.setVisibility(View.INVISIBLE);
-		fetchTopicsForSelectedCourses(true);
 	}
 
-	private ListAdapter createOrReturnTopicAdapter(boolean reload) {
-		if (topicAdapter == null && topicHeaderAdapter == null) {
-			topicAdapter = new TopicsAdapter(this, new ArrayList<UserDiscussionTopic>());
-			topicHeaderAdapter = new TopicsHeaderAdapter(this, topicAdapter);
-			fetchTopicsForSelectedCourses(reload);
-		}
-		return topicHeaderAdapter;
-	}
-	
-	private void fetchTopicsForSelectedCourses(boolean reload) {
+	private void updateCurrentTopics(boolean reload) {
+		topicAdapter.beginLoading();
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
 		cacheConfiguration.bypassFileCache = reload;
 		cacheConfiguration.bypassResultCache = reload;
@@ -177,21 +159,14 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	
 	public void onServiceCallException(FetchDiscussionTopicsForCourseIds service, Exception ex) {
 		firstLoadFinished = true;
+		topicAdapter.hasError();
 	}
 	
 	public void onServiceCallSuccess(FetchDiscussionTopicsForCourseIds service) {
 		firstLoadFinished = true;
-		noResultsView.setVisibility(View.VISIBLE);
-		topicAdapter.setNotifyOnChange(false);
-		for (UserDiscussionTopic topic : service.getResult()) {
-			if (topic.isActive()) {
-				topicAdapter.add(topic);
-			}
-		}
-		topicAdapter.setNotifyOnChange(true);
-		topicAdapter.notifyDataSetChanged();
+		topicAdapter.updateItems(service.getResult());
 		topicsLastUpdated = service.getCompletedAt();
-		loadAndDisplayTopicsForSelectedCourses();
+		updateLastUpdated();
 	}
 
 	private ArrayList<String> getSelectedCourseId() {
@@ -211,17 +186,18 @@ public class DiscussionsActivity extends ECollegeListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
-		Object item = l.getItemAtPosition(position);
+		@SuppressWarnings("unchecked")
+		UberItem<UserDiscussionTopic> item = (UberItem<UserDiscussionTopic>)l.getItemAtPosition(position);
 		
-		if (item instanceof GroupedDataItem) {
-			CourseGroupId groupId = (CourseGroupId) ((GroupedDataItem) item).getGroupId();
+		if (item.getItemType() == UberItemType.FOOTER) {
+			CourseGroupId groupId = (CourseGroupId) item.getGroupId();
 			long courseId = groupId.getCourseId();
 
 			Intent intent = new Intent(this, CourseDiscussionsActivity.class);
 			intent.putExtra(CourseDiscussionsActivity.COURSE_ID_EXTRA, courseId);
 			startActivity(intent);
 		} else {
-			UserDiscussionTopic selectedTopic = (UserDiscussionTopic)item;
+			UserDiscussionTopic selectedTopic = item.getDataItem();
 			Intent intent = new Intent(this, UserTopicActivity.class);
 			intent.putExtra(UserTopicActivity.USER_TOPIC_EXTRA, selectedTopic);
 			startActivityForResult(intent, VIEW_TOPIC_REQUEST);
@@ -266,28 +242,40 @@ public class DiscussionsActivity extends ECollegeListActivity {
 			return ((CourseGroupId)o).getCourseId() == getCourseId();
 		}
 	}
-	
-    protected class TopicsHeaderAdapter extends GroupedAdapter {
+    
+	protected class TopicsAdapter extends UberAdapter<UserDiscussionTopic> {
 
-		public TopicsHeaderAdapter(Context context, ListAdapter baseAdapter) {
-			super(context, baseAdapter,true,true);
+		public TopicsAdapter(Context context) {
+			super(context,true,true,false);
 		}
 		
-		@Override public Object groupIdFunction(Object item, int position) {
+		@Override
+		public boolean isEnabled(int position) {
+			UberItem<UserDiscussionTopic> item = getItem(position);
+			
+			if (item.getItemType() == UberItemType.FOOTER) {
+				return true;
+			} else {
+				return super.isEnabled(position);
+			}
+		}
+		
+		@Override
+		protected Object groupIdFunction(UserDiscussionTopic item) {
 			UserDiscussionTopic userTopic = (UserDiscussionTopic)item;
 			DiscussionTopic topic = userTopic.getTopic();
 			ContainerInfo info = topic.getContainerInfo();
 			
 			return new CourseGroupId(info.getCourseId(), Html.fromHtml(info.getCourseTitle()).toString());
 		}
-
+		
 		@Override
-		public View getFooterView(int position, View convertView,
+		protected View getFooterView(int position, View convertView,
 				ViewGroup parent, Object groupId) {
 			FooterViewHolder holder;
 
 	        if (convertView == null) {
-	            convertView = ((Activity)context).getLayoutInflater().inflate(R.layout.see_all_discussions, null);
+	            convertView = ((Activity)parent.getContext()).getLayoutInflater().inflate(R.layout.see_all_discussions, null);
 
 	            holder = new FooterViewHolder();
 	            holder.linkText = (TextView) convertView.findViewById(R.id.see_all_text);
@@ -301,24 +289,8 @@ public class DiscussionsActivity extends ECollegeListActivity {
 		}
 		
 		@Override
-		public boolean isEnabled(int position) {
-			Object item = getItem(position);
-			
-			if (item instanceof GroupedDataItem && (((GroupedDataItem)item).getItemType() == GroupedDataItemType.FOOTER)) {
-				return true;
-			} else {
-				return super.isEnabled(position);
-			}
-		}
-    }
-    
-	protected class TopicsAdapter extends ArrayAdapter<UserDiscussionTopic> {
-
-		public TopicsAdapter(Context context, List<UserDiscussionTopic> topicList) {
-			super(context, R.layout.user_topic_item, topicList);
-		}
-		
-		public View getView(int position, View convertView, ViewGroup parent) {
+		protected View getDataItemView(View convertView, ViewGroup parent,
+				UberItem<UserDiscussionTopic> item) {
 			ViewHolder holder;
 			
 			if (convertView == null) {
@@ -335,7 +307,7 @@ public class DiscussionsActivity extends ECollegeListActivity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 			
-			UserDiscussionTopic userTopic = getItem(position);
+			UserDiscussionTopic userTopic = item.getDataItem();
 			DiscussionTopic topic = userTopic.getTopic();
 			ResponseCount responseCount = userTopic.getChildResponseCounts();
 			holder.titleText.setText(Html.fromHtml(topic.getTitle()).toString());

@@ -1,8 +1,6 @@
 package com.ecollege.android;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectResource;
@@ -15,12 +13,12 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeListActivity;
-import com.ecollege.android.adapter.LoadMoreAdapter;
+import com.ecollege.android.adapter.UberAdapter;
+import com.ecollege.android.adapter.UberItem;
 import com.ecollege.api.model.Course;
 import com.ecollege.api.model.Grade;
 import com.ecollege.api.model.GradebookItem;
@@ -40,7 +38,7 @@ public class CourseGradebookActivity extends ECollegeListActivity {
 	@InjectResource(R.string.no_grade) String noGradeResource;
 	@InjectExtra(CoursesActivity.COURSE_EXTRA) Course course;
 	private LayoutInflater viewInflater;
-	private LoadMoreAdapter gradebookLoadMoreAdapter;
+	private UserGradebookItemAdapter gradebookAdapter;
 	
 	private static final PrettyTime prettyTimeFormatter = new PrettyTime();
 	private static final DecimalFormat decimalFormatter = new DecimalFormat();
@@ -61,17 +59,19 @@ public class CourseGradebookActivity extends ECollegeListActivity {
 	}
 	
 	private void loadAndDisplayUserGradebookItems() {
-		if (gradebookLoadMoreAdapter == null) {
-			gradebookLoadMoreAdapter = new LoadMoreAdapter(this, new UserGradebookItemAdapter(this, new ArrayList<UserGradebookItem>()), true);
-			gradebookLoadMoreAdapter.setIsLoadingMore(true);
+		if (gradebookAdapter == null) {
+			gradebookAdapter = new UserGradebookItemAdapter(this);
+			gradebookAdapter.beginLoading();
 			buildService(new FetchUserGradebookItemsForCourseId(course.getId(), true)).execute();
 		}
-		setListAdapter(gradebookLoadMoreAdapter);
+		setListAdapter(gradebookAdapter);
 	}
 
     public void onServiceCallSuccess(FetchUserGradebookItemsForCourseId service) {
-    	UserGradebookItemAdapter newAdapter = new UserGradebookItemAdapter(this, service.getResult());
-    	gradebookLoadMoreAdapter.update(newAdapter, false);
+    	gradebookAdapter.updateItems(service.getResult());
+    }
+    public void onServiceCallException(FetchUserGradebookItemsForCourseId service, Exception ex) {
+    	gradebookAdapter.hasError();
     }
     
 	@Override protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -93,13 +93,15 @@ public class CourseGradebookActivity extends ECollegeListActivity {
 		public TextView dateText;
 	}
 	
-	protected class UserGradebookItemAdapter extends ArrayAdapter<UserGradebookItem> {
+	protected class UserGradebookItemAdapter extends UberAdapter<UserGradebookItem> {
 		
-		public UserGradebookItemAdapter (Context context, List<UserGradebookItem> list) {
-			super(context, 0, list);
+		public UserGradebookItemAdapter (Context context) {
+			super(context,false,false,false);
 		}
 		
-		@Override public View getView(int position, View convertView, ViewGroup parent) {
+		@Override
+		protected View getDataItemView(View convertView, ViewGroup parent,
+				UberItem<UserGradebookItem> item) {
 			UserGradebookItemHolder holder;
 			if (convertView == null) {
 				holder = new UserGradebookItemHolder();
@@ -111,7 +113,7 @@ public class CourseGradebookActivity extends ECollegeListActivity {
 			} else {
 				holder = (UserGradebookItemHolder) convertView.getTag();
 			}
-			UserGradebookItem ugbi = getItem(position);
+			UserGradebookItem ugbi = item.getDataItem();
 			GradebookItem gradebookItem = ugbi.getGradebookItem();
 			Grade grade = ugbi.getGrade();
 			holder.titleText.setText(gradebookItem.getTitle());

@@ -60,6 +60,7 @@
     <string name="view_all_course_submissions">View All Course Submissions</string>
     <string name="view_all_course_announcements">View All Course Announcements</string>
     <string name="view_all_course_people">View All People in Course</string>
+    <string name="people">People</string>
     
     <!--  list item -->
     <string name="li_no_items">No Items</string>

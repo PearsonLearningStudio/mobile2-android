@@ -12,48 +12,48 @@ import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
 import com.ecollege.api.ECollegeClient;
-import com.ecollege.api.model.Announcement;
+import com.ecollege.api.model.RosterUser;
 import com.ecollege.api.model.Course;
 import com.google.inject.Inject;
 
-public class AnnouncementActivity extends ECollegeDefaultActivity {
+public class PersonActivity extends ECollegeDefaultActivity {
 	
 	public static final String COURSE_EXTRA = "COURSE_EXTRA";
-	public static final String ANNOUNCEMENT_EXTRA = "PERSON_EXTRA";
-	public static final String FINISH_ON_CLICK_ALL_ANNOUNCEMENTS_EXTRA = "FINISH_ON_CLICK_ALL_ANNOUNCEMENTS_EXTRA";
+	public static final String PERSON_EXTRA = "PERSON_EXTRA";
+	public static final String FINISH_ON_CLICK_ALL_PEOPLE_EXTRA = "FINISH_ON_CLICK_ALL_PEOPLE_EXTRA";
 	
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectExtra(COURSE_EXTRA) Course course;
-	@InjectExtra(ANNOUNCEMENT_EXTRA) Announcement announcement;
-	@InjectExtra(value = FINISH_ON_CLICK_ALL_ANNOUNCEMENTS_EXTRA, optional = true) boolean finishOnClickAllAnnouncements;
+	@InjectExtra(PERSON_EXTRA) RosterUser person;
+	@InjectExtra(value = FINISH_ON_CLICK_ALL_PEOPLE_EXTRA, optional = true) boolean finishOnClickAllPeople;
 	
 	@InjectView(R.id.course_title_text) TextView courseTitleText;
-	@InjectView(R.id.announcement_subject_text) TextView announcementSubjectText;
-	@InjectView(R.id.announcement_description_text) TextView announcementDescriptionText;
+	@InjectView(R.id.person_name_text) TextView personNameText;
+	@InjectView(R.id.person_role_text) TextView personRoleText;
 	@InjectView(R.id.view_all_button) Button viewAllButton;
 	
 	protected ECollegeClient client;
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.announcement);
+        setContentView(R.layout.person);
         client = app.getClient();
     	updateText();
     	
     	viewAllButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				viewAllCourseAnnouncements();
+				viewAllCourseRosterUsers();
 			}
 		});
     }
     
-    protected void viewAllCourseAnnouncements() {
-    	if (finishOnClickAllAnnouncements) {
+    protected void viewAllCourseRosterUsers() {
+    	if (finishOnClickAllPeople) {
     		finish();
     	} else {
-    		Intent intent = new Intent(this, CourseAnnouncementsActivity.class);
+    		Intent intent = new Intent(this, CoursePeopleActivity.class);
     		intent.putExtra(CoursesActivity.COURSE_EXTRA, course);
     		startActivity(intent);
     	}
@@ -61,7 +61,7 @@ public class AnnouncementActivity extends ECollegeDefaultActivity {
 
     protected void updateText() {
     	courseTitleText.setText(Html.fromHtml(course.getTitle()));
-    	announcementSubjectText.setText(Html.fromHtml(announcement.getSubject()).toString());
-    	announcementDescriptionText.setText(Html.fromHtml(announcement.getText()));
+    	personNameText.setText(person.getDisplayName());
+    	personRoleText.setText(person.getFriendlyRole());
     }
 }

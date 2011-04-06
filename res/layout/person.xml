@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent">
+	<com.ecollege.android.view.HeaderView
+		android:id="@+id/header_view"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+		
+	<ScrollView 
+	    android:layout_width="wrap_content"
+	    android:layout_height="fill_parent"
+		android:background="@drawable/textured_tertiary_background">
+	
+		<RelativeLayout 
+		      android:layout_width="fill_parent"
+		      android:layout_height="fill_parent">
+		      
+			<TextView
+				android:id="@+id/person_title_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:layout_marginTop="10dp"
+				android:layout_below="@id/header_view"
+				android:text="@string/person_profile"
+				style="@style/TextAppearance.Header" />
+			<TextView
+				android:id="@+id/course_title_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:layout_marginTop="5dp"
+				android:layout_marginBottom="10dp"
+				android:layout_below="@id/person_title_text"
+				style="@style/TextAppearance.SubBold" />
+			<ImageView
+				android:id="@+id/section_divider"
+				android:layout_width="fill_parent"
+				android:layout_height="1px"
+				android:layout_marginTop="10dp"
+				android:layout_below="@id/course_title_text"
+				android:background="@drawable/list_item_divider" />
+			<RelativeLayout
+				android:id="@+id/detail_section"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:background="@color/color_foreground"
+				android:layout_below="@id/section_divider"
+				android:padding="10dp">
+				<ImageView
+					android:id="@+id/person_icon"
+					android:layout_width="30dp"
+					android:layout_height="30dp"
+					android:scaleType="fitXY"
+					android:layout_alignParentTop="true"
+					android:layout_alignParentLeft="true"
+					android:src="@drawable/ic_person" />
+				<TextView
+					android:id="@+id/person_name_text"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toRightOf="@id/person_icon"
+					android:layout_marginLeft="5dp"
+					style="@style/TextAppearance.ListItemHeader" />
+				<TextView
+					android:id="@+id/person_role_text"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="10dp"
+					android:layout_below="@id/person_icon"/>
+				<Button 
+					android:id="@+id/view_all_button"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/person_role_text"
+					android:layout_marginTop="10dp"
+					android:layout_marginBottom="10dp"
+					android:text="@string/view_all_course_people" />
+			</RelativeLayout>
+			<ImageView
+				android:id="@+id/section_divider_two"
+				android:layout_width="fill_parent"
+				android:layout_height="1px"
+				android:layout_below="@id/detail_section"
+				android:background="@drawable/list_item_divider" />
+		</RelativeLayout>
+	</ScrollView>
+</LinearLayout>

@@ -23,6 +23,7 @@
 		<activity android:name="DiscussionsActivity"></activity>
 		<activity android:name="CoursesActivity"></activity>
 		<activity android:name="ProfileActivity"></activity>
+		<activity android:name="PersonActivity"></activity>
 		<activity android:name="AnnouncementActivity"></activity>
 		
 		<activity android:name="DiscussionResponseActivity"></activity>

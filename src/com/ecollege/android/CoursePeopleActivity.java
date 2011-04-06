@@ -68,11 +68,11 @@ public class CoursePeopleActivity extends ECollegeListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		@SuppressWarnings("unchecked")
 		UberItem<RosterUser> item = (UberItem<RosterUser>)l.getItemAtPosition(position);
-    	Intent i = new Intent(this,AnnouncementActivity.class);
-    	i.putExtra(AnnouncementActivity.COURSE_EXTRA, course);
-    	i.putExtra(AnnouncementActivity.ANNOUNCEMENT_EXTRA, item.getDataItem());
-    	i.putExtra(AnnouncementActivity.FINISH_ON_CLICK_ALL_ANNOUNCEMENTS_EXTRA, true);
-    	//startActivity(i); TODO
+    	Intent i = new Intent(this,PersonActivity.class);
+    	i.putExtra(PersonActivity.COURSE_EXTRA, course);
+    	i.putExtra(PersonActivity.PERSON_EXTRA, item.getDataItem());
+    	i.putExtra(PersonActivity.FINISH_ON_CLICK_ALL_PEOPLE_EXTRA, true);
+    	startActivity(i);
 	}
 	
 	protected class PersonViewHolder {

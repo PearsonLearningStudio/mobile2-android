@@ -1,7 +1,9 @@
 package com.ecollege.android.adapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -27,20 +29,24 @@ public class UberAdapter<T> extends BaseAdapter {
 	private boolean canLoadMore = true;
 	private boolean hasHeader;
 	private boolean hasFooter;
+	private long lastUpdatedAt = -1;
 	
 	private List<T> dataItems;
 	private List<UberItem<T>> uberItems;
-	
 	private UberItem<T> loadMoreItem = new UberItem<T>(UberItemType.LOAD_MORE_ITEM);
 	private UberItem<T> loadingItem = new UberItem<T>(UberItemType.LOADING_ITEM);
 	private UberItem<T> noDataItem = new UberItem<T>(UberItemType.NO_DATA_ITEM);
+	private UberItem<T> lastUpdatedItem = new UberItem<T>(UberItemType.LAST_UPDATED_ITEM);
 	
 	private int specialItemViewType = 0;
 	private int dataItemViewType = 1;
 	private int headerItemViewType = 2;
 	private int footerItemViewType = 3;
+	private int lastUpdatedViewType = 4;
 	private int itemTypeCount = 2; //+1 if hasHeader, +1 if hasFooter
 	
+	private SimpleDateFormat lastUpdatedDateFormat;
+	private String lastUpdatedWrapperFormat;
 	
 	public UberAdapter(Context context, boolean hasHeader, boolean hasFooter, boolean canLoadMore) {
 		this.canLoadMore = canLoadMore;
@@ -50,9 +56,26 @@ public class UberAdapter<T> extends BaseAdapter {
 		
 		if (hasHeader) itemTypeCount++;
 		if (hasFooter) itemTypeCount++;
-		if (hasFooter && !hasHeader) footerItemViewType = headerItemViewType;
+		if (hasFooter && !hasHeader) {
+			footerItemViewType--;
+		}
+		if (!hasHeader) lastUpdatedViewType--;
+		if (!hasFooter) lastUpdatedViewType--;
 		
 		this.canLoadMore = canLoadMore;
+	}
+	
+	// set to 0 for "Never", anything greater for an actual date
+	//  if not called it won't show
+	public void setLastUpdatedAt(long lastUpdatedAt) {
+		assert lastUpdatedAt >= 0;
+		if (this.lastUpdatedAt == -1) {
+			itemTypeCount++; //increase item type count
+			this.lastUpdatedDateFormat = new SimpleDateFormat(context.getString(R.string.last_updated_date_format));
+			this.lastUpdatedWrapperFormat = context.getString(R.string.last_updated_s);
+		}
+		this.lastUpdatedAt = lastUpdatedAt;
+		this.notifyDataSetChanged();
 	}
 		
 	public void beginLoading() {
@@ -87,8 +110,6 @@ public class UberAdapter<T> extends BaseAdapter {
 		calculateGrouping();
 		this.notifyDataSetChanged();
 	}
-	
-	
 	
 	protected Object groupIdFunction(T item) {
 		//override in subclass
@@ -139,7 +160,8 @@ public class UberAdapter<T> extends BaseAdapter {
 				if (dataItems.size() == 0) {
 					return 1;  // item that says no items
 				} else {
-					int count = uberItems.size();					
+					int count = uberItems.size();
+					if (lastUpdatedAt >= 0) count++;
 					if (canLoadMore) count++;
 					return count;
 				}
@@ -161,10 +183,12 @@ public class UberAdapter<T> extends BaseAdapter {
 				if (dataItems.size() == 0) {
 					return noDataItem; // item that says no items
 				} else {
-					if (canLoadMore && position == uberItems.size()) {
+					if (lastUpdatedAt >= 0 && position == 0) {
+						return lastUpdatedItem;
+					} else if (canLoadMore && position == (getCount() - 1)) {
 						return loadMoreItem;
 					} else {
-						return uberItems.get(position);
+						return lastUpdatedAt >= 0 ? uberItems.get(position-1) : uberItems.get(position);
 					}
 				}
 			}
@@ -182,6 +206,7 @@ public class UberAdapter<T> extends BaseAdapter {
 		if (item.getItemType() == UberItemType.NO_DATA_ITEM) return specialItemViewType;
 		if (item.getItemType() == UberItemType.HEADER) return headerItemViewType;
 		if (item.getItemType() == UberItemType.FOOTER) return footerItemViewType;
+		if (item.getItemType() == UberItemType.LAST_UPDATED_ITEM) return lastUpdatedViewType;
 		return dataItemViewType;
 	}
 	
@@ -261,6 +286,35 @@ public class UberAdapter<T> extends BaseAdapter {
         holder.headerLabelText.setText(groupId.toString());
         return convertView;
 	}	
+    
+
+    private static class LastUpdatedViewHolder {
+        TextView lastUpdatedText;
+    }
+    
+    protected View getLastUpdatedView(View convertView, ViewGroup parent, UberItem<T> item, long lastUpdatedAt) {
+        LastUpdatedViewHolder holder;
+
+        if (convertView == null) {
+            convertView = ((Activity)context).getLayoutInflater().inflate(R.layout.last_updated_view, null);
+
+            holder = new LastUpdatedViewHolder();
+            holder.lastUpdatedText = (TextView) convertView.findViewById(R.id.last_updated_text);
+            convertView.setTag(holder);
+        } else {
+            holder = (LastUpdatedViewHolder) convertView.getTag();
+        }
+        
+        String dateText;
+        if (lastUpdatedAt > 0) {
+        	dateText = lastUpdatedDateFormat.format(new Date(lastUpdatedAt));
+        } else {
+        	dateText = context.getString(R.string.never);
+        }
+        holder.lastUpdatedText.setText(String.format(lastUpdatedWrapperFormat, dateText));
+        
+        return convertView;
+	}
 
 	//must override in subclass if hasFooter
     protected View getFooterView(int position, View convertView, ViewGroup parent, Object groupId) {
@@ -280,12 +334,14 @@ public class UberAdapter<T> extends BaseAdapter {
 			return getHeaderView(position, convertView, parent, item.getGroupId());
 		} else if (item.getItemType() == UberItemType.FOOTER) {
 			return getFooterView(position, convertView, parent, item.getGroupId());
-		} else if (item.getItemType() == UberItemType.LOAD_MORE_ITEM){
+		} else if (item.getItemType() == UberItemType.LOAD_MORE_ITEM) {
 			return getSpecialView(position, convertView, parent, item);
-		} else if (item.getItemType() == UberItemType.LOADING_ITEM){
+		} else if (item.getItemType() == UberItemType.LOADING_ITEM) {
 			return getSpecialView(position, convertView, parent, item);
-		} else if (item.getItemType() == UberItemType.NO_DATA_ITEM){
+		} else if (item.getItemType() == UberItemType.NO_DATA_ITEM) {
 			return getSpecialView(position, convertView, parent, item);
+		} else if (item.getItemType() == UberItemType.LAST_UPDATED_ITEM) {
+			return getLastUpdatedView(convertView, parent, item, lastUpdatedAt);
 		} else {
 			return getDataItemView(convertView, parent, item);
 		}

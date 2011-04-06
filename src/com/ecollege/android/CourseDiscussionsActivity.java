@@ -1,14 +1,11 @@
 package com.ecollege.android;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
@@ -48,19 +45,13 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
-	@InjectResource(R.string.last_updated_s) String lastUpdatedFormat;
-	@InjectResource(R.string.last_updated_date_format) String lastUpdatedDateFormatString;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	@InjectView(R.id.unit_dropdown) Spinner unitDropdown;
 	@InjectExtra(COURSE_ID_EXTRA) long courseId;
 	
 	protected ECollegeClient client;
-	private long topicsLastUpdated;
 	private TopicsAdapter topicAdapter;
 	private LayoutInflater viewInflater;
-	protected TextView lastUpdatedText;
-	private View lastUpdatedHeader;
-	private SimpleDateFormat lastUpdatedDateFormat;
 	private List<UserDiscussionTopic> allTopics = new ArrayList<UserDiscussionTopic>();
 	private List<CourseUnit> allUnits = new ArrayList<CourseDiscussionsActivity.CourseUnit>();
 	
@@ -112,10 +103,8 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
         setContentView(R.layout.course_discussions);
         client = app.getClient();
         viewInflater = getLayoutInflater();
-        lastUpdatedDateFormat = new SimpleDateFormat(lastUpdatedDateFormatString);
         
         configureControls();
-        buildLastUpdatedHeader();
 
 		topicAdapter = new TopicsAdapter(this);
         setListAdapter(topicAdapter);
@@ -127,12 +116,6 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 			fetchTopicsForSelectedCourses(true);
     	}
     }
-    
-	protected void buildLastUpdatedHeader() {
-		lastUpdatedHeader = getLayoutInflater().inflate(R.layout.last_updated_view, null);
-		lastUpdatedText = (TextView) lastUpdatedHeader.findViewById(R.id.last_updated_text);
-    	getListView().addHeaderView(lastUpdatedHeader, null, false);
-	}
 
 	private void configureControls() {
         reloadButton.setOnClickListener(new View.OnClickListener() {
@@ -198,17 +181,12 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		unitDropdown.setAdapter(adapter);
 		
-		topicsLastUpdated = service.getCompletedAt();
+		topicAdapter.setLastUpdatedAt(service.getCompletedAt());
 		updateCurrentTopics();
 	}
 	
 	protected void updateCurrentTopics() {
-		String formattedLastUpdated = getString(R.string.never);
-		if (topicsLastUpdated != 0) {
-			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(topicsLastUpdated));
-		}
-		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
-				if (currentUnitFilter == null || currentUnitFilter.getUnitNumber() == -1) {
+		if (currentUnitFilter == null || currentUnitFilter.getUnitNumber() == -1) {
 			topicAdapter.updateItems(allTopics);
 		} else {
 			List<UserDiscussionTopic> filteredTopics = new ArrayList<UserDiscussionTopic>();
@@ -221,8 +199,6 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 			}
 			topicAdapter.updateItems(filteredTopics);
 		}
-
-		//noResultsView.setVisibility(View.INVISIBLE); TODO: check if should be shown
 	}
 	
     @Override

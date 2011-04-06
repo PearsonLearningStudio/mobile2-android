@@ -8,6 +8,7 @@ public class UberItem<T> {
     	LOAD_MORE_ITEM,
     	LOADING_ITEM,
     	NO_DATA_ITEM,
+    	LAST_UPDATED_ITEM,
     	FOOTER
     }
 	
@@ -22,7 +23,7 @@ public class UberItem<T> {
 		this.dataItem = dataItem;
 		this.dataItemIndex = dataItemIndex;
 	}
-
+	
 	public UberItem(UberItemType itemType) {
 		this.itemType = itemType;
 	}

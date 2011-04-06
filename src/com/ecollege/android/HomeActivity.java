@@ -1,8 +1,6 @@
 package com.ecollege.android;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -43,8 +41,6 @@ public class HomeActivity extends ECollegeListActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectResource(R.array.home_navigation_items) String[] homeNavigationItems;
-	@InjectResource(R.string.last_updated_s) String lastUpdatedFormat;
-	@InjectResource(R.string.last_updated_date_format) String lastUpdatedDateFormatString;
 	@InjectView(R.id.navigation_dropdown) Spinner navigationSpinner;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	
@@ -53,22 +49,16 @@ public class HomeActivity extends ECollegeListActivity {
 	
 	protected ECollegeClient client;
 	LayoutInflater mInflater;
-	private View lastUpdatedHeader;
-	private TextView lastUpdatedText;
-	private SimpleDateFormat lastUpdatedDateFormat;
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
         mInflater = getLayoutInflater();
         client = app.getClient();
-        lastUpdatedDateFormat = new SimpleDateFormat(lastUpdatedDateFormatString);
         setUpNavigation();
         
         if (savedInstanceState != null) {
         	canLoadMoreActivites = savedInstanceState.getBoolean("canLoadMoreActivites", true);
-        	upcomingFeedLastUpdated = savedInstanceState.getLong("upcomingFeedLastUpdated");
-        	activityFeedLastUpdated = savedInstanceState.getLong("activityFeedLastUpdated");
         }
         
         boolean showWhatsDue = prefs.getBoolean("showWhatsDue", true);
@@ -88,23 +78,14 @@ public class HomeActivity extends ECollegeListActivity {
 			}
 		});
         
-        buildLastUpdatedHeader();
         loadAndDisplayListForSelectedType();
     }
-    
-	protected void buildLastUpdatedHeader() {
-		lastUpdatedHeader = getLayoutInflater().inflate(R.layout.last_updated_view, null);
-		lastUpdatedText = (TextView) lastUpdatedHeader.findViewById(R.id.last_updated_text);
-    	getListView().addHeaderView(lastUpdatedHeader, null, false);
-	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		
 		outState.putBoolean("canLoadMoreActivites", canLoadMoreActivites);
-		outState.putLong("upcomingFeedLastUpdated", upcomingFeedLastUpdated);
-		outState.putLong("whatsHappeneingLastUpdated", activityFeedLastUpdated);
     	if (navigationSpinner != null) {
     		prefs.edit().putBoolean("showWhatsDue", upcomingIsSelected()).commit();
     	}
@@ -129,19 +110,11 @@ public class HomeActivity extends ECollegeListActivity {
 
     protected void loadAndDisplayListForSelectedType() {
     	ListAdapter chosenAdapter;
-    	String formattedLastUpdated = getString(R.string.never);
     	if (upcomingIsSelected()) {
     		chosenAdapter = createOrReturnWhatsHappeningAdapter();
-    		if (upcomingFeedLastUpdated != 0) {
-    			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(upcomingFeedLastUpdated));
-    		}
     	} else {
     		chosenAdapter = createOrReturnActivitiesAdapter();
-    		if (activityFeedLastUpdated != 0) {
-    			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(activityFeedLastUpdated));
-    		}
     	}
-    	lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
     	setListAdapter(chosenAdapter);
     }
 
@@ -155,8 +128,6 @@ public class HomeActivity extends ECollegeListActivity {
 
 	private ActivityFeedAdapter activityFeedAdapter;
 	private boolean canLoadMoreActivites = true;
-	private long activityFeedLastUpdated;
-	private long upcomingFeedLastUpdated;
 	
     private ListAdapter createOrReturnActivitiesAdapter() {
     	if (activityFeedAdapter == null) {
@@ -221,8 +192,8 @@ public class HomeActivity extends ECollegeListActivity {
     	}
     	
     	activityItems = service.getResult();
+    	activityFeedAdapter.setLastUpdatedAt(service.getCompletedAt());
     	activityFeedAdapter.updateItems(activityItems,canLoadMoreActivites);
-    	activityFeedLastUpdated = service.getCompletedAt();
     	loadAndDisplayListForSelectedType();
     }
 

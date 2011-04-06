@@ -1,10 +1,7 @@
 package com.ecollege.android;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.content.Context;
 import android.content.Intent;
@@ -33,16 +30,11 @@ public class CoursesActivity extends ECollegeListActivity {
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
-	@InjectResource(R.string.last_updated_s) String lastUpdatedFormat;
-	@InjectResource(R.string.last_updated_date_format) String lastUpdatedDateFormatString;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	protected ECollegeClient client;
 	protected LayoutInflater viewInflater;
 	protected List<Course> courses;
 	protected CourseArrayAdapter courseAdapter;
-	protected TextView lastUpdatedText;
-	private View lastUpdatedHeader;
-	private SimpleDateFormat lastUpdatedDateFormat;
 	
 	protected View.OnClickListener reloadClickListener = new View.OnClickListener() {
 		public void onClick(View v) {
@@ -56,27 +48,15 @@ public class CoursesActivity extends ECollegeListActivity {
         client = app.getClient();
         viewInflater = getLayoutInflater();
         courses = app.getCurrentCourseList();
-        lastUpdatedDateFormat = new SimpleDateFormat(lastUpdatedDateFormatString);
         
         reloadButton.setOnClickListener(reloadClickListener);
-        buildLastUpdatedHeader();
-        loadAndDisplayCourses();
+        loadAndDisplayCourses(app.getCurrentCourseListLastLoaded());
     }
 
-	protected void buildLastUpdatedHeader() {
-		lastUpdatedHeader = getLayoutInflater().inflate(R.layout.last_updated_view, null);
-		lastUpdatedText = (TextView) lastUpdatedHeader.findViewById(R.id.last_updated_text);
-    	getListView().addHeaderView(lastUpdatedHeader, null, false);
-	}
-
-	protected void loadAndDisplayCourses() {
-		String formattedLastUpdated = getString(R.string.never);
-		if (app.getCurrentCourseListLastLoaded() != 0) {
-			formattedLastUpdated = lastUpdatedDateFormat.format(new Date(app.getCurrentCourseListLastLoaded()));
-		}
-		lastUpdatedText.setText(String.format(lastUpdatedFormat, formattedLastUpdated));
+	protected void loadAndDisplayCourses(long lastUpdatedAt) {
 		if (courseAdapter == null) courseAdapter = new CourseArrayAdapter(this);
 		courseAdapter.updateItems(courses);
+		courseAdapter.setLastUpdatedAt(lastUpdatedAt);
 		setListAdapter(courseAdapter);
 	}
 	
@@ -95,8 +75,9 @@ public class CoursesActivity extends ECollegeListActivity {
 	}
 
 	public void onServiceCallSuccess(FetchMyCoursesService service) {
-		loadAndDisplayCourses();
+		loadAndDisplayCourses(service.getCompletedAt());
 	}
+	
 	public void onServiceCallException(FetchMyCoursesService service, Exception ex) {
 		courseAdapter.hasError();
 	}

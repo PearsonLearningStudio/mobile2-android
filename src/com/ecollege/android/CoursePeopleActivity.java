@@ -7,7 +7,7 @@ import com.ecollege.android.activities.ECollegeListActivity;
 import com.ecollege.api.ECollegeClient;
 import com.google.inject.Inject;
 
-public class PeopleActivity extends ECollegeListActivity {
+public class CoursePeopleActivity extends ECollegeListActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	protected ECollegeClient client;

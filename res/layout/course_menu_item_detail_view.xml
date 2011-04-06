@@ -38,7 +38,6 @@
 	<ListView android:id="@android:id/list"
 		android:layout_below="@id/section_divider"
 		android:background="@color/color_foreground"
-		android:layout_marginTop="10dp"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent" />
 		

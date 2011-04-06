@@ -33,7 +33,6 @@ public class CourseGradebookActivity extends ECollegeListActivity {
 	@Inject SharedPreferences prefs;
 	@InjectView(R.id.title_text) TextView titleText;
 	@InjectView(R.id.course_title_text) TextView courseTitleText;
-	@InjectView(R.id.no_data_label) TextView noDataLabel;
 	@InjectResource(R.string.gradebook) String gradebookTitleResource;
 	@InjectResource(R.string.no_grade) String noGradeResource;
 	@InjectExtra(CoursesActivity.COURSE_EXTRA) Course course;
@@ -49,7 +48,6 @@ public class CourseGradebookActivity extends ECollegeListActivity {
 		
 		viewInflater = getLayoutInflater();
 		titleText.setText(gradebookTitleResource);
-		noDataLabel.setText(R.string.no_gradebook_items);
 		displayCourse();
 		loadAndDisplayUserGradebookItems();
 	}

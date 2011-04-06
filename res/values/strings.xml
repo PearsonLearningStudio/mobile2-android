@@ -54,9 +54,12 @@
     <string name="no_grade">Not Graded</string>
     <string name="no_gradebook_items">No Gradebook Items</string>
     <string name="grade">Grade</string>
+    <string name="announcement">Announcement</string>
     <string name="no_comments">No comments</string>
     <string name="dropbox_submission">Dropbox Submission</string>
     <string name="view_all_course_submissions">View All Course Submissions</string>
+    <string name="view_all_course_announcements">View All Course Announcements</string>
+    <string name="view_all_course_people">View All People in Course</string>
     
     <!--  list item -->
     <string name="li_no_items">No Items</string>

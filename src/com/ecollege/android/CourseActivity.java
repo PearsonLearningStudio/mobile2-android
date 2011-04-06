@@ -15,6 +15,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class CourseActivity extends ECollegeListActivity {
 	@InjectView(R.id.announcement_description) TextView announcementDescription;
 	@InjectView(R.id.instructor_loading_indicator) ProgressBar instructorLoadingIndicator;
 	@InjectView(R.id.announcement_loading_indicator) ProgressBar announcementsLoadingIndicator;
+	@InjectView(R.id.announcement_view) LinearLayout announcementView;
 	@InjectResource(R.array.course_menu_items) String[] courseMenuItems;
 	@InjectExtra(CoursesActivity.COURSE_EXTRA) Course course;
 	protected ECollegeClient client;
@@ -60,6 +62,19 @@ public class CourseActivity extends ECollegeListActivity {
 		client = app.getClient();
 		displayCourse();
 		createMenu();
+		
+		announcementView.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (announcements != null && announcements.size() > 0) {
+			    	Intent i = new Intent(CourseActivity.this,AnnouncementActivity.class);
+			    	i.putExtra(AnnouncementActivity.COURSE_EXTRA, course);
+			    	i.putExtra(AnnouncementActivity.ANNOUNCEMENT_EXTRA, announcements.get(0));
+			    	i.putExtra(AnnouncementActivity.FINISH_ON_CLICK_ALL_ANNOUNCEMENTS_EXTRA, false);			
+			    	startActivity(i);
+				}
+			}
+		});
+		
 		loadAndDisplayInstructorsForCourse();
 		loadAndDisplayAnnouncementsForCourse();
 	}
@@ -71,7 +86,7 @@ public class CourseActivity extends ECollegeListActivity {
 		Serializable detailExtraValue = null;
 		switch (position) {
 		case 0:
-			destinationClass = AnnouncementsActivity.class;
+			destinationClass = CourseAnnouncementsActivity.class;
 			detailExtraKey = ANNOUNCEMENT_LIST_EXTRA;
 			detailExtraValue = (Serializable) announcements;
 			break;
@@ -79,7 +94,7 @@ public class CourseActivity extends ECollegeListActivity {
 			destinationClass = CourseGradebookActivity.class;
 			break;
 		case 2:
-			destinationClass = PeopleActivity.class;
+			destinationClass = CoursePeopleActivity.class;
 			break;
 		default:
 			return;
@@ -91,7 +106,7 @@ public class CourseActivity extends ECollegeListActivity {
 		}
 		startActivity(intent);
 	}
-
+	
 	private void displayCourse() {
 		courseTitleText.setText(Html.fromHtml(course.getTitle()));
 		courseCodeText.setText(Html.fromHtml(course.getDisplayCourseCode()));

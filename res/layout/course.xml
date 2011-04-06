@@ -93,6 +93,7 @@
 		android:layout_height="65dp"
 		android:layout_below="@id/tertiary_section"
 		android:padding="10dp"
+		android:clickable="true"
 		android:background="@drawable/secondary_gradient_background">
 		<ProgressBar
 			android:id="@+id/announcement_loading_indicator"

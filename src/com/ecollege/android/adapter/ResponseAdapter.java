@@ -2,12 +2,12 @@ package com.ecollege.android.adapter;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +19,7 @@ import com.ecollege.api.model.User;
 import com.ecollege.api.model.UserDiscussionResponse;
 import com.ocpsoft.pretty.time.PrettyTime;
 
-public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
+public class ResponseAdapter extends UberAdapter<UserDiscussionResponse> {
 	
 	final private class ViewHolder {
         ImageView icon;
@@ -34,41 +34,20 @@ public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
     }
 
 	final private PrettyTime prettyTimeFormatter = new PrettyTime();
-	final private LayoutInflater viewInflater;
 	
 	protected boolean loading;
 	
-	public ResponseAdapter(Context context, List<UserDiscussionResponse> topicList) {
-		super(context, R.layout.user_topic_item, topicList);
-		viewInflater = LayoutInflater.from(context);
+	public ResponseAdapter(Context context) {
+		super(context,false,false,false);
 	}
 	
-	public boolean isLoading() {
-		return loading;
-	}
-
-	public void setLoading(boolean loading) {
-		this.loading = loading;
-	}
-
-	@Override public int getViewTypeCount() { return (loading) ? 1 : super.getViewTypeCount(); }
-	@Override public boolean isEnabled(int position) { return (loading) ? false : super.isEnabled(position); }
-	@Override public boolean areAllItemsEnabled() { return (loading) ? false : super.areAllItemsEnabled(); }
-	@Override public int getItemViewType(int position) {
-		if (loading) {
-			return IGNORE_ITEM_VIEW_TYPE;
-		} else {
-			return super.getItemViewType(position);
-		}
-	}
-	public int getCount() { return (loading) ? 1 : super.getCount(); }
-	public UserDiscussionResponse getItem(int position) { return (loading) ? null : super.getItem(position); }
-	public long getItemId(int position) { return (loading) ? 0 : super.getItemId(position); }
 	
-	public View getView(int position, View convertView, ViewGroup parent) {
+	@Override
+	protected View getDataItemView(View convertView, ViewGroup parent,
+			UberItem<UserDiscussionResponse> item) {
 		ViewHolder holder;
 		
-		if (loading) return viewInflater.inflate(R.layout.loading_item, null); 
+		LayoutInflater viewInflater = ((Activity)context).getLayoutInflater();
 		
 		if (convertView == null) {
 			convertView = viewInflater.inflate(R.layout.user_topic_item, null);
@@ -88,7 +67,7 @@ public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		UserDiscussionResponse userResponse = getItem(position);
+		UserDiscussionResponse userResponse = item.getDataItem();
 		DiscussionResponse response = userResponse.getResponse();
 		ResponseCount responseCount = userResponse.getChildResponseCounts();
 		User author = response.getAuthor();
@@ -102,14 +81,14 @@ public class ResponseAdapter extends ArrayAdapter<UserDiscussionResponse> {
 		holder.authorText.setText(author.getFirstName() + " " + author.getLastName());
 		holder.descriptionText.setText(Html.fromHtml(response.getDescription()));
 		holder.timeText.setText(prettyTimeFormatter.format(response.getPostedDate().getTime()));
-		ResponseCountViewHelper responseCountViewHelper = new ResponseCountViewHelper(getContext(),
+		ResponseCountViewHelper responseCountViewHelper = new ResponseCountViewHelper(context,
 				holder.icon,
 				holder.unreadResponseCountText,
 				holder.totalResponseCountText,
 				holder.userResponseCountText
 		);
 		responseCountViewHelper.setResponseCount(responseCount);
-		return convertView;
+		return convertView;		
 	}
 
 	

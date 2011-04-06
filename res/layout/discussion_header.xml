@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent" android:orientation="vertical"
+  android:layout_height="wrap_content">
+  
+<!--  title -->
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="45dp"
+    android:padding="10dp"
+    android:background="@drawable/secondary_gradient_background">
+	<TextView
+		android:id="@+id/parent_title_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:singleLine="true"
+		android:ellipsize="end"
+		style="@style/TextAppearance.HeaderInverse"/>
+</LinearLayout>
+
+<!--  topic/response main details -->
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/textured_tertiary_background">
+    <include layout="@layout/user_topic_item"/>
+</LinearLayout>
+  
+<!--  expandable description -->
+<RelativeLayout
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/textured_tertiary_background">
+	<TextView
+		android:id="@+id/header_description_text"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_toLeftOf="@+id/expand_toggle_button"
+		android:layout_marginTop="10dp"
+		android:layout_marginLeft="10dp"
+		android:maxLines="4" />
+	<ImageView
+		android:id="@id/expand_toggle_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_expand_text"
+		android:layout_alignParentRight="true"
+		android:layout_marginTop="10dp"
+		android:layout_marginRight="12dp"/>
+	<ImageView
+		android:id="@+id/text_fade_view"
+		android:layout_width="fill_parent"
+		android:layout_height="22dip"
+		android:layout_alignParentBottom="true" 
+		android:layout_marginBottom="1px"
+		android:src="@drawable/expandable_text_fade_cover" />
+	<View
+		android:id="@+id/list_divider_texture"
+		android:layout_width="fill_parent"
+		android:layout_height="1px"
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/dark_list_divider_texture" />
+</RelativeLayout>
+
+<!-- post response button -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:background="@drawable/background_tertiary_gradient_dark">
+	<Button
+		android:id="@+id/post_response_button"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/post_a_response" 
+		android:layout_margin="10dp"
+		style="@style/Widget.EditText" />
+</LinearLayout>
+ 
+</LinearLayout>

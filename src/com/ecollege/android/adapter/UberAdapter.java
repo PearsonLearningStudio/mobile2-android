@@ -24,7 +24,7 @@ import com.ecollege.android.adapter.UberItem.UberItemType;
 
 public class UberAdapter<T> extends BaseAdapter {
 
-	private Context context;
+	protected Context context;
 	private boolean isLoading = false;
 	private boolean canLoadMore = true;
 	private boolean hasHeader;
@@ -43,7 +43,7 @@ public class UberAdapter<T> extends BaseAdapter {
 	private int headerItemViewType = 2;
 	private int footerItemViewType = 3;
 	private int lastUpdatedViewType = 4;
-	private int itemTypeCount = 2; //+1 if hasHeader, +1 if hasFooter
+	private int viewTypeCount = 5; //+1 if hasHeader, +1 if hasFooter
 	
 	private SimpleDateFormat lastUpdatedDateFormat;
 	private String lastUpdatedWrapperFormat;
@@ -53,16 +53,6 @@ public class UberAdapter<T> extends BaseAdapter {
 		this.context = context;
 		this.hasHeader = hasHeader;
 		this.hasFooter = hasFooter;
-		
-		if (hasHeader) itemTypeCount++;
-		if (hasFooter) itemTypeCount++;
-		if (hasFooter && !hasHeader) {
-			footerItemViewType--;
-		}
-		if (!hasHeader) lastUpdatedViewType--;
-		if (!hasFooter) lastUpdatedViewType--;
-		
-		this.canLoadMore = canLoadMore;
 	}
 	
 	// set to 0 for "Never", anything greater for an actual date
@@ -70,7 +60,6 @@ public class UberAdapter<T> extends BaseAdapter {
 	public void setLastUpdatedAt(long lastUpdatedAt) {
 		assert lastUpdatedAt >= 0;
 		if (this.lastUpdatedAt == -1) {
-			itemTypeCount++; //increase item type count
 			this.lastUpdatedDateFormat = new SimpleDateFormat(context.getString(R.string.last_updated_date_format));
 			this.lastUpdatedWrapperFormat = context.getString(R.string.last_updated_s);
 		}
@@ -188,7 +177,9 @@ public class UberAdapter<T> extends BaseAdapter {
 					} else if (canLoadMore && position == (getCount() - 1)) {
 						return loadMoreItem;
 					} else {
-						return lastUpdatedAt >= 0 ? uberItems.get(position-1) : uberItems.get(position);
+						int dataItemPosition = lastUpdatedAt >= 0 ? position - 1 : position;
+
+						return uberItems.get(dataItemPosition);
 					}
 				}
 			}
@@ -348,7 +339,7 @@ public class UberAdapter<T> extends BaseAdapter {
 	}
 
 	public int getViewTypeCount() {
-		return itemTypeCount;
+		return viewTypeCount;
 	}	
 	
 	public void registerDataSetObserver(DataSetObserver observer) {

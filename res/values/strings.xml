@@ -19,6 +19,7 @@
     
     <!-- Labels -->
     <string name="comments_label">Comments:</string>
+    <string name="dropbox_comments_label">Comments (%s): </string>
     <string name="letter_grade_label">Letter Grade: </string>
     <string name="points_label">Points: </string>
     <string name="view_all_course_grades">View All Course Grades</string>
@@ -57,7 +58,7 @@
     <string name="announcement">Announcement</string>
     <string name="no_comments">No comments</string>
     <string name="dropbox_submission">Dropbox Submission</string>
-    <string name="view_all_course_submissions">View All Course Submissions</string>
+    <string name="view_all_course_submissions">View All Course Dropbox Submissions</string>
     <string name="view_all_course_announcements">View All Course Announcements</string>
     <string name="view_all_course_people">View All People in Course</string>
     <string name="people">People</string>

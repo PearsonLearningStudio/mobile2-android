@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
+import com.ecollege.android.util.DateTimeUtil;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.Course;
 import com.ecollege.api.model.DropboxMessage;
@@ -20,9 +21,12 @@ import com.ocpsoft.pretty.time.PrettyTime;
 public class DropboxMessageActivity extends ECollegeDefaultActivity {
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
+	
 	@InjectExtra("courseId") long courseId;
 	@InjectExtra("basketId") long basketId;
 	@InjectExtra("messageId") long messageId;
+	@InjectExtra("title") String title;
+	
 	@InjectView(R.id.course_title_text) TextView courseTitleText;
 	@InjectView(R.id.message_title_text) TextView messageTitleText;
 	@InjectView(R.id.comments_text) TextView commentsText;
@@ -31,12 +35,11 @@ public class DropboxMessageActivity extends ECollegeDefaultActivity {
 	@InjectView(R.id.date_text) TextView dateText;
 	@InjectView(R.id.view_all_button) Button viewAllButton;
 	@InjectResource(R.string.no_comments) String no_comments;
+	@InjectResource(R.string.dropbox_comments_label) String dropboxCommentsLabel;
 	
 	protected ECollegeClient client;
 	protected Course course;
 	protected DropboxMessage message;
-	
-	private static PrettyTime prettyTimeFormatter = new PrettyTime();
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +65,10 @@ public class DropboxMessageActivity extends ECollegeDefaultActivity {
 		}
 		
 		if (null != message) {
-			authorText.setText(message.getAuthor().getFirstName() + " " + message.getAuthor().getLastName());
+			messageText.setText(title);
+			authorText.setText(String.format(dropboxCommentsLabel, message.getAuthor().getDisplayName()));
 			commentsText.setText(Html.fromHtml(message.getComments()));
-			dateText.setText(prettyTimeFormatter.format(message.getDate().getTime()));
+			dateText.setText(DateTimeUtil.getLongFriendlyDate(message.getDate()));
 		}
 	}
 }

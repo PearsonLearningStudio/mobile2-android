@@ -241,6 +241,7 @@ public class HomeActivity extends ECollegeListActivity {
             	i.putExtra("courseId", courseId);
             	i.putExtra("basketId", basketId);
             	i.putExtra("messageId", messageId);
+            	i.putExtra("title", si.getTarget().getTitle());
             	startActivity(i);
             } else if ("exam-submission".equals(objectType)) {
             } else if ("remark".equals(objectType)) {

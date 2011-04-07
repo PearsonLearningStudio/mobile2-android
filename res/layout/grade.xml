@@ -49,27 +49,36 @@
 				android:background="@color/color_foreground"
 				android:layout_below="@id/section_divider"
 				android:padding="10dp">
-				<ImageView
-					android:id="@+id/grade_icon"
-					android:layout_width="30dp"
-					android:layout_height="30dp"
-					android:scaleType="fitXY"
+				
+				<LinearLayout
+					android:id="@+id/icon_and_text"
 					android:layout_alignParentTop="true"
 					android:layout_alignParentLeft="true"
-					android:src="@drawable/ic_grade" />
-				<TextView
-					android:id="@+id/grade_text"
-					android:layout_width="wrap_content"
+					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
-					android:layout_toRightOf="@id/grade_icon"
-					android:layout_marginLeft="5dp"
-					style="@style/TextAppearance.ListItemHeader" />
+					android:orientation="horizontal"
+					>
+					<ImageView
+						android:id="@+id/grade_icon"
+						android:layout_width="30dp"
+						android:layout_height="30dp"
+						android:scaleType="fitXY"
+						android:src="@drawable/ic_dropbox" />
+					<TextView
+						android:id="@+id/grade_text"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:gravity="center_vertical"
+						android:layout_gravity="center_vertical"
+						android:layout_marginLeft="5dp"
+						style="@style/TextAppearance.ListItemHeader" />
+				</LinearLayout>				
 				<TextView
 					android:id="@+id/comments_text"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="10dp"
-					android:layout_below="@id/grade_icon"/>
+					android:layout_below="@id/icon_and_text"/>
 				<TextView
 					android:id="@+id/date_text"
 					android:layout_width="fill_parent"
@@ -82,7 +91,7 @@
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
 					android:layout_below="@id/date_text"
-					android:layout_marginTop="10dp"
+					android:layout_marginTop="20dp"
 					android:layout_marginBottom="10dp"
 					android:text="@string/view_all_course_grades" />
 			</RelativeLayout>

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
+import com.ecollege.android.util.DateTimeUtil;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.Course;
 import com.ecollege.api.model.Grade;
@@ -40,13 +41,13 @@ public class GradeActivity extends ECollegeDefaultActivity {
 	@InjectView(R.id.date_text) TextView dateText;
 	@InjectView(R.id.view_all_button) Button viewAllButton;
 	@InjectResource(R.string.no_comments) String no_comments;
+	@InjectResource(R.string.grade_value) String grade_value;
 	
 	protected ECollegeClient client;
 	protected Course course;
 	protected GradebookItem gradebookItem;
 	protected Grade grade;
 	
-	private static PrettyTime prettyTimeFormatter = new PrettyTime();
 	private static DecimalFormat decimalFormatter = new DecimalFormat();
 	
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -120,8 +121,8 @@ public class GradeActivity extends ECollegeDefaultActivity {
     			}
     		}
     		
-    		gradeText.setText(gradeValue);
-    		dateText.setText(prettyTimeFormatter.format(grade.getUpdatedDate().getTime()));
+    		gradeText.setText(String.format(grade_value, gradeValue));
+    		dateText.setText(DateTimeUtil.getLongFriendlyDate(grade.getUpdatedDate()));
     	}
     	
     }

@@ -33,7 +33,11 @@
     <string name="last_updated_s">Last updated: %s</string>
     <string name="choose_a_course">Choose a Course</string>
     <string name="choose_a_unit">Choose a Unit</string>
+    <string name="choose_a_role">Choose a Role</string>
     <string name="all_courses">All Discussions</string>
+    <string name="all_roles">All</string>
+    <string name="student_role">Students</string>
+    <string name="instructor_role">Instructors</string>
     <string name="no_items">No items</string>
     <string name="post_a_response">Post a response</string>
     <string name="post_a_response_to_s">Post a response to %s</string>

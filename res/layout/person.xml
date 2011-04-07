@@ -61,14 +61,16 @@
 					android:id="@+id/person_name_text"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
+					android:layout_alignParentTop="true"
 					android:layout_toRightOf="@id/person_icon"
-					android:layout_marginLeft="5dp"
+					android:layout_marginLeft="11dp"
+					android:layout_marginTop="-5dp"
 					style="@style/TextAppearance.ListItemHeader" />
 				<TextView
 					android:id="@+id/person_role_text"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginLeft="5dp"
+					android:layout_marginLeft="11dp"
 					android:layout_toRightOf="@id/person_icon"
 					android:layout_below="@id/person_name_text"/>
 				<Button 

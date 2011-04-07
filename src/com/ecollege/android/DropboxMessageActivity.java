@@ -16,7 +16,6 @@ import com.ecollege.api.model.Course;
 import com.ecollege.api.model.DropboxMessage;
 import com.ecollege.api.services.dropbox.FetchDropboxMessage;
 import com.google.inject.Inject;
-import com.ocpsoft.pretty.time.PrettyTime;
 
 public class DropboxMessageActivity extends ECollegeDefaultActivity {
 	@Inject ECollegeApplication app;

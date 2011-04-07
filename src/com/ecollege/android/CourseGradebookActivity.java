@@ -1,7 +1,5 @@
 package com.ecollege.android;
 
-import java.text.DecimalFormat;
-
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;

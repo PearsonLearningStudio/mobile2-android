@@ -68,8 +68,9 @@
 					android:id="@+id/person_role_text"
 					android:layout_width="fill_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginTop="10dp"
-					android:layout_below="@id/person_icon"/>
+					android:layout_marginLeft="5dp"
+					android:layout_toRightOf="@id/person_icon"
+					android:layout_below="@id/person_name_text"/>
 				<Button 
 					android:id="@+id/view_all_button"
 					android:layout_width="fill_parent"

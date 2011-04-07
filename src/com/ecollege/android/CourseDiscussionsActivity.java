@@ -31,6 +31,7 @@ import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ContainerInfo;
+import com.ecollege.api.model.Course;
 import com.ecollege.api.model.DiscussionTopic;
 import com.ecollege.api.model.ResponseCount;
 import com.ecollege.api.model.UserDiscussionTopic;
@@ -46,6 +47,7 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
 	@Inject SharedPreferences prefs;
 	@InjectView(R.id.reload_button) Button reloadButton;
 	@InjectView(R.id.unit_dropdown) Spinner unitDropdown;
+	@InjectView(R.id.course_title_text) TextView courseTitleText;
 	@InjectExtra(COURSE_ID_EXTRA) long courseId;
 	
 	protected ECollegeClient client;
@@ -102,6 +104,12 @@ public class CourseDiscussionsActivity extends ECollegeListActivity {
         setContentView(R.layout.course_discussions);
         client = app.getClient();
         viewInflater = getLayoutInflater();
+        
+        
+        Course course = app.getCourseById(courseId);        
+    	if (course != null) {
+    		courseTitleText.setText(Html.fromHtml(course.getTitle()));
+    	}
         
         configureControls();
 

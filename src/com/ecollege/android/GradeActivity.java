@@ -23,7 +23,6 @@ import com.ecollege.api.model.GradebookItem;
 import com.ecollege.api.services.grades.FetchGradebookItemByGuid;
 import com.ecollege.api.services.grades.FetchMyGradebookItemGrade;
 import com.google.inject.Inject;
-import com.ocpsoft.pretty.time.PrettyTime;
 
 public class GradeActivity extends ECollegeDefaultActivity {
 	

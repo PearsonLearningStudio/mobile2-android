@@ -57,6 +57,7 @@
     <string name="no_gradebook_items">No Gradebook Items</string>
     <string name="grade">Grade</string>
     <string name="grade_value">Grade: %s</string>
+    <string name="course_discussions_title">Discussion Topics</string>
     <string name="announcement">Announcement</string>
     <string name="no_comments">No comments</string>
     <string name="dropbox_submission">Dropbox Submission</string>

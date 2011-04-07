@@ -7,13 +7,49 @@
 	android:id="@+id/header_view"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content" />
+
+<RelativeLayout
+	android:id="@+id/title_container"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+	android:layout_below="@id/header_view"
+	android:background="@drawable/textured_tertiary_background">
+	
+<TextView
+	android:id="@+id/course_discussions_title_text"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="10dp"
+	android:layout_marginTop="10dp"
+	android:layout_alignParentTop="true"
+	android:text="@string/course_discussions_title"
+	style="@style/TextAppearance.Header" />
+<TextView
+	android:id="@+id/course_title_text"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="10dp"
+	android:layout_marginTop="5dp"
+	android:layout_marginBottom="10dp"
+	android:layout_below="@id/course_discussions_title_text"
+	style="@style/TextAppearance.SubBold" />
+<ImageView
+	android:id="@+id/section_divider"
+	android:layout_width="fill_parent"
+	android:layout_height="1px"
+	android:layout_marginTop="10dp"
+	android:layout_below="@id/course_title_text"
+	android:background="@drawable/list_item_divider" />    
+    
+</RelativeLayout>
 		
 <RelativeLayout
 	android:id="@+id/top_view"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@id/header_view"
+    android:layout_below="@id/title_container"
     android:background="@drawable/secondary_gradient_background">
+    
 	<Spinner
 		android:id="@+id/unit_dropdown"
 		android:layout_width="fill_parent"

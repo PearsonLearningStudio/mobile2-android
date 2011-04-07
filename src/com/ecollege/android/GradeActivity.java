@@ -41,6 +41,7 @@ public class GradeActivity extends ECollegeDefaultActivity {
 	@InjectView(R.id.date_text) TextView dateText;
 	@InjectView(R.id.view_all_button) Button viewAllButton;
 	@InjectResource(R.string.no_comments) String no_comments;
+	@InjectResource(R.string.grade_comments_label) String grade_comments_label;
 	@InjectResource(R.string.grade_value) String grade_value;
 	
 	protected ECollegeClient client;
@@ -102,7 +103,7 @@ public class GradeActivity extends ECollegeDefaultActivity {
     	
     	if (grade != null) {
     		if (Strings.notEmpty(grade.getComments())) {
-    			commentsText.setText(Html.fromHtml(grade.getComments()));
+    			commentsText.setText(Html.fromHtml(grade_comments_label + grade.getComments()));
     		} else {
     			commentsText.setText(Html.fromHtml("<i>" + no_comments + "</i>"));
     		}

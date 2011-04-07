@@ -16,17 +16,17 @@ public class DateTimeUtil {
 	}
 	
 	public static String getShortFriendlyDate(Date dt) {
-		String dtStr = DateFormat.format("MMM dd, yyyy", dt).toString();
+		String dtStr = DateFormat.format("MMM d, yyyy", dt).toString();
 		
 		Date today = getToday();
-		String todayStr = DateFormat.format("MMM dd, yyyy", today).toString();
+		String todayStr = DateFormat.format("MMM d, yyyy", today).toString();
 		
 		if (dtStr.equals(todayStr)) {
 			return "Today";
 		}
 		
 		Date yesterday = getYesterday();
-		String yesterdayStr = DateFormat.format("MMM dd, yyyy", yesterday).toString();
+		String yesterdayStr = DateFormat.format("MMM d, yyyy", yesterday).toString();
 		
 		if (dtStr.equals(yesterdayStr)) {
 			return "Yesterday";
@@ -35,7 +35,7 @@ public class DateTimeUtil {
 		if (dt.getYear() != today.getYear()) {
 			return dtStr;
 		} else {
-			return DateFormat.format("MMM dd", dt).toString();
+			return DateFormat.format("MMM d", dt).toString();
 		}
 	}
 
@@ -48,26 +48,26 @@ public class DateTimeUtil {
 	}
 	
 	public static String getLongFriendlyDate(Date dt) {
-		String dtStr = DateFormat.format("MMM dd, yyyy", dt).toString();
+		String dtStr = DateFormat.format("MMM d, yyyy", dt).toString();
 		
 		Date today = getToday();
-		String todayStr = DateFormat.format("MMM dd, yyyy", today).toString();
+		String todayStr = DateFormat.format("MMM d, yyyy", today).toString();
 		
 		if (dtStr.equals(todayStr)) {
 			return "Today " + DateFormat.format("h:mm aa", dt);
 		}
 		
 		Date yesterday = getYesterday();
-		String yesterdayStr = DateFormat.format("MMM dd, yyyy", yesterday).toString();
+		String yesterdayStr = DateFormat.format("MMM d, yyyy", yesterday).toString();
 		
 		if (dtStr.equals(yesterdayStr)) {
 			return "Yesterday " + DateFormat.format("h:mm aa", dt);
 		}
 		
 		if (dt.getYear() != today.getYear()) {
-			return DateFormat.format("MMM dd, yyyy h:mm aa", dt).toString();
+			return DateFormat.format("MMM d, yyyy h:mm aa", dt).toString();
 		} else {
-			return DateFormat.format("MMM dd h:mm aa", dt).toString();
+			return DateFormat.format("MMM d h:mm aa", dt).toString();
 		}
 	}
 	

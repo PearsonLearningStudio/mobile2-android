@@ -20,6 +20,7 @@
     <!-- Labels -->
     <string name="comments_label">Comments:</string>
     <string name="dropbox_comments_label">Comments (%s): </string>
+    <string name="grade_comments_label">Comments:&amp;nbsp;</string>
     <string name="letter_grade_label">Letter Grade: </string>
     <string name="points_label">Points: </string>
     <string name="view_all_course_grades">View All Course Grades</string>

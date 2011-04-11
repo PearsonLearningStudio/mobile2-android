@@ -28,6 +28,7 @@ public class LoginActivity extends ECollegeDefaultActivity {
     @Nullable @InjectView(R.id.remember_check) CheckBox rememberCheck;
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
+	
 	protected ECollegeClient client;
 	private boolean coursesLoaded;
 	private boolean meLoaded;

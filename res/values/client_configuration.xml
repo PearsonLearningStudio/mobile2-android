@@ -2,4 +2,6 @@
 <resources>
     <string name="client_string">sandbox</string>
     <string name="client_id">30bb1d4f-2677-45d1-be13-339174404402</string>
+    <string name="use_sso">true</string>
+    <string name="sso_url">http://ecollegessodemo.heroku.com/</string>
 </resources>

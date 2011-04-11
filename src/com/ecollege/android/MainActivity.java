@@ -1,5 +1,6 @@
 package com.ecollege.android;
 
+import roboguice.inject.InjectResource;
 import roboguice.util.Ln;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ public class MainActivity extends ECollegeTabActivity {
 	private boolean meLoaded;
 	private boolean coursesLoaded;
 	
+	@InjectResource(R.string.use_sso) String use_sso;
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +34,13 @@ public class MainActivity extends ECollegeTabActivity {
 	    		client.setupAuthentication(grantToken);
 	        	fetchCurrentUserAndCourses();
 	        } else {
-	        	Intent myIntent = new Intent(this, LoginActivity.class);
-	        	startActivityForResult(myIntent, LOGIN_REQUEST_CODE);
+	        	if (use_sso.equals("true")) {
+		        	Intent myIntent = new Intent(this, SingleSignonActivity.class);
+		        	startActivityForResult(myIntent, SSO_LOGIN_REQUEST_CODE);
+	        	} else {
+		        	Intent myIntent = new Intent(this, LoginActivity.class);
+		        	startActivityForResult(myIntent, LOGIN_REQUEST_CODE);
+	        	}
 	        }        	
         } else {
         	setupActivity();
@@ -46,6 +53,8 @@ public class MainActivity extends ECollegeTabActivity {
     	
     	if (requestCode == LOGIN_REQUEST_CODE && resultCode == RESULT_OK) {
     		setupActivity();
+    	} else if (requestCode == SSO_LOGIN_REQUEST_CODE && resultCode == RESULT_OK){
+    		fetchCurrentUserAndCourses();
     	}
     }
     

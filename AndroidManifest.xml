@@ -9,16 +9,20 @@
     <application android:icon="@drawable/icon" android:label="@string/app_name" 
 		android:theme="@style/ECollegeTheme"
     	android:name="ECollegeApplication">
-        <activity android:name="MainActivity"
-        		  android:windowSoftInputMode="adjustResize"
+		<activity android:name="SplashActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+		</activity>
+        <activity android:name="MainActivity"
+                  android:label="@string/app_name">
         </activity>
-		<activity android:name="LoginActivity" android:noHistory="true"/>
-		<activity android:name="SingleSignonActivity" android:noHistory="true"/>
+		<activity android:name="LoginActivity"
+        		  android:windowSoftInputMode="adjustResize" android:noHistory="true"/>
+		<activity android:name="SingleSignonActivity" android:noHistory="true"
+                  android:label="@string/app_name"/>
 		<activity android:name="HomeActivity"></activity>
 		<activity android:name="DiscussionsActivity"></activity>
 		<activity android:name="CoursesActivity"></activity>

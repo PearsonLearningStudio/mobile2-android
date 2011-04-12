@@ -16,7 +16,6 @@ import com.ecollege.android.errors.ECollegeAlertException;
 import com.ecollege.android.errors.ECollegePromptException;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.exceptions.IncorrectCredentialsException;
-import com.ecollege.api.services.courses.FetchMyCoursesService;
 import com.ecollege.api.services.users.FetchMeService;
 import com.google.inject.Inject;
 import com.google.inject.internal.Nullable;
@@ -30,8 +29,6 @@ public class LoginActivity extends ECollegeDefaultActivity {
 	@Inject SharedPreferences prefs;
 	
 	protected ECollegeClient client;
-	private boolean coursesLoaded;
-	private boolean meLoaded;
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +54,7 @@ public class LoginActivity extends ECollegeDefaultActivity {
 			}
 		}
 
-    	buildService(new FetchMeService()).makeModal().execute();
-    	buildService(new FetchMyCoursesService()).execute();
+    	buildService(new FetchMeService()).makeModal().execute(); //used to check login
     }
     
     public boolean onServiceCallException(FetchMeService service, Exception e) {
@@ -79,21 +75,7 @@ public class LoginActivity extends ECollegeDefaultActivity {
 		
 		app.setCurrentUser(service.getResult());
     	Ln.i("User loaded from the Login activity");
-		meLoaded = true;
-		serviceCallComplete();
+		setResult(RESULT_OK);
+		finish();
     }
-    
-    public void onServiceCallSuccess(FetchMyCoursesService service) {
-    	app.setCurrentCourseList(service.getResult());
-    	Ln.i("Courses loaded from the Login activity");
-    	coursesLoaded = true;
-    	serviceCallComplete();
-    }
-
-	private void serviceCallComplete() {
-		if (meLoaded && coursesLoaded) {
-			setResult(RESULT_OK);
-			finish();
-		}
-	}
 }

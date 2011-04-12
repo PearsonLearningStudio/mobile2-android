@@ -76,7 +76,7 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.remove("grantToken");
 		editor.commit(); //change to apply if android 2.2
-		Intent i = new Intent(this,MainActivity.class);
+		Intent i = new Intent(this,SplashActivity.class);
 		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(i);
 	}

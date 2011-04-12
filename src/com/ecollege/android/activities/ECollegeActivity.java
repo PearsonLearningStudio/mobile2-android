@@ -7,6 +7,7 @@ import com.ecollege.api.services.BaseService;
 public interface ECollegeActivity {
 	public static final int LOGIN_REQUEST_CODE = 1001;
 	public static final int SSO_LOGIN_REQUEST_CODE = 1002;
+	public static final int MAIN_ACTIVITY_REQUEST_CODE = 1003;
 	
 	public ECollegeApplication getApp();
 

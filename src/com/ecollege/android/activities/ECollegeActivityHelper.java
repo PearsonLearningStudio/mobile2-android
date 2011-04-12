@@ -49,8 +49,8 @@ public class ECollegeActivityHelper {
 
     public static void onCreate(Activity activity, Bundle savedInstanceState) {
         // Request progress bar
-        activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
+		activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 		ECollegeApplication app = (ECollegeApplication)activity.getApplication();
 		app.setActiveContext(activity.getClass().getCanonicalName(), activity);
     }

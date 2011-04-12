@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
 import com.ecollege.api.ECollegeClient;
@@ -15,22 +17,27 @@ import com.google.inject.Inject;
 
 public class SingleSignonActivity extends ECollegeDefaultActivity {
     @InjectView(R.id.webview) WebView webView;
+    
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	@InjectResource(R.string.sso_url) String sso_url;
 	
 	protected ECollegeClient client;
+	protected String redirectUrl;
 	
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         client = app.getClient();
         setContentView(R.layout.singlesignon);
+        
+        redirectUrl = "http://localhost/catch_this_url.html";
         
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
         	@Override
         	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        		if (url.contains("catch_this_url.html")) {
+        		if (url.startsWith(redirectUrl)) {
         			UrlQuerySanitizer sanitzer = new UrlQuerySanitizer(url);
         			String grantToken = sanitzer.getValue("grant_token");
 
@@ -50,7 +57,17 @@ public class SingleSignonActivity extends ECollegeDefaultActivity {
         		return super.shouldOverrideUrlLoading(view, url);
         	}
         });
-        webView.loadUrl(sso_url + "?redirect_url=http://localhost/catch_this_url.html");
+        
+//        webView.setWebChromeClient(new WebChromeClient() {
+//        	@Override
+//        	public void onProgressChanged(WebView view, int newProgress) {
+//        		webProgress.setProgress(newProgress * 100);
+//        	}
+//        });
+        webView.loadUrl(sso_url + "?redirect_url=" + redirectUrl);
+        //webView.buildDrawingCache(false);
+        //webView.setBackgroundColor(Color.TRANSPARENT);
+        //webView.invalidate();
     }
     
     @Override

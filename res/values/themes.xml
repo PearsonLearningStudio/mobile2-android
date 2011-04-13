@@ -14,6 +14,7 @@
         <item name="android:editTextStyle">@style/Widget.EditText</item>
         <item name="android:listViewStyle">@style/Widget.ListView</item>
         <item name="android:checkboxStyle">@style/Widget.CompoundButton.CheckBox</item>
+        <item name="android:windowContentOverlay">@null</item>
         
 	</style>
 </resources>

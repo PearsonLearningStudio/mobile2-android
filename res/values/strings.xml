@@ -70,6 +70,8 @@
     <string name="view_all_course_people">View All People in Course</string>
     <string name="people">People</string>
     <string name="person_profile">Profile</string>
+    <string name="letter_grade_s">Letter Grade: %s</string>
+    <string name="numeric_grade_s">Numeric Grade: %s</string>
     
     <!--  list item -->
     <string name="li_no_items">No Items</string>

@@ -36,12 +36,16 @@ public class GradeActivity extends ECollegeDefaultActivity {
 	@InjectView(R.id.course_title_text) TextView courseTitleText;
 	@InjectView(R.id.grade_title_text) TextView gradeTitleText;
 	@InjectView(R.id.comments_text) TextView commentsText;
-	@InjectView(R.id.grade_text) TextView gradeText;
+	@InjectView(R.id.grade_item_text) TextView gradeItemText;
+	@InjectView(R.id.letter_grade_text) TextView letterGradeText;
+	@InjectView(R.id.numeric_grade_text) TextView numericGradeText;
 	@InjectView(R.id.date_text) TextView dateText;
 	@InjectView(R.id.view_all_button) Button viewAllButton;
 	@InjectResource(R.string.no_comments) String no_comments;
 	@InjectResource(R.string.grade_comments_label) String grade_comments_label;
 	@InjectResource(R.string.grade_value) String grade_value;
+	@InjectResource(R.string.letter_grade_s) String letterGradeFormat;
+	@InjectResource(R.string.numeric_grade_s) String numericGradeFormat;
 	
 	protected ECollegeClient client;
 	protected Course course;
@@ -97,7 +101,7 @@ public class GradeActivity extends ECollegeDefaultActivity {
     	}
     	
     	if (gradebookItem != null){
-    		gradeTitleText.setText(Html.fromHtml(gradebookItem.getTitle()));
+    		gradeItemText.setText(Html.fromHtml(gradebookItem.getTitle()));
     	}
     	
     	if (grade != null) {
@@ -107,21 +111,27 @@ public class GradeActivity extends ECollegeDefaultActivity {
     			commentsText.setText(Html.fromHtml("<i>" + no_comments + "</i>"));
     		}
     		
-    		String gradeValue = "-";
     		if (Strings.notEmpty(grade.getLetterGrade())) {
-    			gradeValue = grade.getLetterGrade();
+    			letterGradeText.setText(String.format(letterGradeFormat, grade.getLetterGrade()));
+    			letterGradeText.setVisibility(View.VISIBLE);
+    		} else {
+    			letterGradeText.setVisibility(View.GONE);
     		}
     		
     		if (gradebookItem != null && gradebookItem.getPointsPossible() != null && gradebookItem.getPointsPossible().floatValue() != 0) {
     			if (grade.getPoints() != null) {
-    				gradeValue = String.format("%s (%s/%s)",
-    						gradeValue,
-    						decimalFormatter.format(grade.getPoints()),
-    						decimalFormatter.format(gradebookItem.getPointsPossible()));
+    				String gradeValue = String.format(numericGradeFormat,
+    						String.format("%s/%s",
+    								decimalFormatter.format(grade.getPoints()),
+    								decimalFormatter.format(gradebookItem.getPointsPossible())));
+    				numericGradeText.setText(gradeValue);
+    			} else {
+    				numericGradeText.setVisibility(View.GONE);
     			}
+   			} else {
+   				numericGradeText.setVisibility(View.GONE);
     		}
     		
-    		gradeText.setText(String.format(grade_value, gradeValue));
     		dateText.setText(DateTimeUtil.getLongFriendlyDate(grade.getUpdatedDate()));
     	}
     	

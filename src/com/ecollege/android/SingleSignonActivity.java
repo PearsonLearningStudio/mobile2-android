@@ -3,6 +3,7 @@ package com.ecollege.android;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -37,24 +38,14 @@ public class SingleSignonActivity extends ECollegeDefaultActivity {
         webView.setWebViewClient(new WebViewClient() {
         	@Override
         	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        		if (url.startsWith(redirectUrl)) {
-        			UrlQuerySanitizer sanitzer = new UrlQuerySanitizer(url);
-        			String grantToken = sanitzer.getValue("grant_token");
-
-        			client.setupAuthentication(grantToken);
-        			
-        			SharedPreferences.Editor editor = prefs.edit();
-        			editor.putString("grantToken",grantToken);
-        			editor.commit(); //change to apply if android 2.2
-        			
-        			view.stopLoading();
-        			
-        			setResult(RESULT_OK);
-        			finish();
-        			
-        			return true;
-        		}
+        		if (checkUrl(url)) return true;
         		return super.shouldOverrideUrlLoading(view, url);
+        	}
+        	
+        	@Override
+        	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        		if (checkUrl(url)) return;
+        		super.onPageStarted(view, url, favicon);
         	}
         });
         
@@ -68,6 +59,27 @@ public class SingleSignonActivity extends ECollegeDefaultActivity {
         //webView.buildDrawingCache(false);
         //webView.setBackgroundColor(Color.TRANSPARENT);
         //webView.invalidate();
+    }
+    
+    protected boolean checkUrl(String url) {
+		if (url.startsWith(redirectUrl)) {
+			UrlQuerySanitizer sanitzer = new UrlQuerySanitizer(url);
+			String grantToken = sanitzer.getValue("grant_token");
+
+			client.setupAuthentication(grantToken);
+			
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.putString("grantToken",grantToken);
+			editor.commit(); //change to apply if android 2.2
+			
+			webView.stopLoading();
+			
+			setResult(RESULT_OK);
+			finish();
+			
+			return true;
+		}
+		return false;
     }
     
     @Override

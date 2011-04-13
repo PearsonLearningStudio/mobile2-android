@@ -30,42 +30,7 @@
 </LinearLayout>
   
 <!--  expandable description -->
-<RelativeLayout
-	android:orientation="vertical"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:background="@drawable/textured_tertiary_background">
-	<TextView
-		android:id="@+id/header_description_text"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_toLeftOf="@+id/expand_toggle_button"
-		android:layout_marginTop="10dp"
-		android:layout_marginLeft="10dp"
-		android:maxLines="4" />
-	<ImageView
-		android:id="@id/expand_toggle_button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:src="@drawable/ic_expand_text"
-		android:layout_alignParentRight="true"
-		android:layout_marginTop="10dp"
-		android:layout_marginRight="12dp"/>
-	<ImageView
-		android:id="@+id/text_fade_view"
-		android:layout_width="fill_parent"
-		android:layout_height="22dip"
-		android:layout_alignParentBottom="true" 
-		android:layout_marginBottom="1px"
-		android:src="@drawable/expandable_text_fade_cover" />
-	<View
-		android:id="@+id/list_divider_texture"
-		android:layout_width="fill_parent"
-		android:layout_height="1px"
-		android:layout_alignParentBottom="true"
-		android:background="@drawable/dark_list_divider_texture" />
-</RelativeLayout>
+<include layout="@layout/discussion_description" />
 
 <!-- post response button -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -71,6 +71,7 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 		client = null;
 		currentUser = null;
 		currentCourseList = null;
+		serviceCache = null;
 		courseIdMap.clear();
 		volatileCache.clear();
 		SharedPreferences.Editor editor = prefs.edit();
@@ -93,10 +94,25 @@ public class ECollegeApplication extends RoboApplication implements UncaughtExce
 	public FileCacheManager getServiceCache() {
 		if (serviceCache == null) {
 			serviceCache = new FileCacheManager(this, 1000 * 60 * 60); //1 hour cache
+			sweepCacheInBackground();
 		}
 		return serviceCache;
 	}	
 	
+	protected void sweepCacheInBackground() {
+		Thread t = new Thread(new Runnable() {
+			public void run() {
+				try {
+					Integer count = serviceCache.removeInvalidEntries();
+					Ln.d(String.format("Finished sweeping cache, removed %d files", count));
+				} catch (Exception e) {
+					Ln.e("Error sweeping the cache", e);
+				}
+			}
+		});
+		t.start();
+	}
+
 	private int pendingServiceCalls = 0;
 	private User currentUser;
 	private long currentCourseListLastLoaded;

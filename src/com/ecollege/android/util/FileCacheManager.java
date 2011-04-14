@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -104,6 +106,26 @@ public class FileCacheManager implements ECollegeHttpResponseCache {
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	public Integer removeInvalidEntries() {
+		File entryFile;
+		long lastModified;
+		long now = Calendar.getInstance().getTimeInMillis();
+		int counter = 0;
+		synchronized (cacheDir) {
+			Iterator<File> cacheFileList = Arrays.asList(cacheDir.listFiles()).iterator();
+			while (cacheFileList.hasNext()) {
+				entryFile = cacheFileList.next();
+				lastModified = entryFile.lastModified();
+				
+				if (now - lastModified > expirationInMillis) {
+					invalidateCacheEntry(entryFile);
+					counter++;
+				}
+			}
+			return counter;
 		}
 	}
 

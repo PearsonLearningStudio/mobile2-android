@@ -8,6 +8,7 @@ import com.ecollege.android.view.helpers.ResponseCountViewHelper;
 import com.ecollege.api.model.DiscussionResponse;
 import com.ecollege.api.model.UserDiscussionResponse;
 import com.ecollege.api.services.discussions.FetchDiscussionResponseById;
+import com.ecollege.api.services.discussions.UpdateResponseReadStatus;
 
 public class UserResponseActivity extends UserDiscussionActivity {
 
@@ -38,6 +39,9 @@ public class UserResponseActivity extends UserDiscussionActivity {
 
 	public void onServiceCallSuccess(FetchDiscussionResponseById service) {
 		userResponse = service.getResult();
+		if (!userResponse.isMarkedAsRead()) {
+			buildService(new UpdateResponseReadStatus(userResponse.getResponse().getId(), true)).execute();
+		}
 		populateView(lastSavedInstanceState);
 	}
 	

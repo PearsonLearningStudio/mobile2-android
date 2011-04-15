@@ -16,6 +16,8 @@ import com.ecollege.api.services.BaseService;
 
 public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsyncTask<ServiceT> {
 	
+	private static boolean VOLATILE_CACHE_ENABLED = false;
+	
 	protected ServiceT service;
 	protected boolean useFileCache = true;
 	protected boolean cacheExecutedResult = true;
@@ -64,7 +66,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 	}
 	
 	public ServiceT call() throws Exception {
-		if (useResultCache) {
+		if (useResultCache && VOLATILE_CACHE_ENABLED) {
 			ServiceT executedService = getServiceFromResultCache(service);
 			// We found an identical service that was already executed and cached,
 			// so just return that one
@@ -83,7 +85,7 @@ public class ServiceCallTask<ServiceT extends BaseService> extends ECollegeAsync
 			service = postProcessor.onPostProcess(service);
 		}
 		
-		if (cacheExecutedResult && service.isCacheable()) {
+		if (cacheExecutedResult && service.isCacheable() && VOLATILE_CACHE_ENABLED) {
 			app.putObjectInVolatileCache(
 				service.getCacheKey(app.getSessionIdentifier()),
 				service);

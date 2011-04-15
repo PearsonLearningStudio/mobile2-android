@@ -33,7 +33,15 @@ public class FileCacheManager implements ECollegeHttpResponseCache {
 		this.expirationInMillis = expirationInMillis;
 	}
 
+	public CacheEntry getIfNewerThan(String cacheScope, String cacheKey, long maxMillisOld) {
+		return getIfNewerThan(cacheScope, cacheKey, maxMillisOld, false);
+	}
+	
 	public CacheEntry get(String cacheScope, String cacheKey) {
+		return getIfNewerThan(cacheScope, cacheKey, expirationInMillis, true);
+	}
+	
+	protected CacheEntry getIfNewerThan(String cacheScope, String cacheKey, long maxMillisOld, boolean deleteIfOlderThanMax) {
 		File cacheFile = null;
 		long lastModified = Calendar.getInstance().getTimeInMillis();
 		synchronized (cacheDir) {
@@ -45,9 +53,11 @@ public class FileCacheManager implements ECollegeHttpResponseCache {
 					lastModified = cacheFile.lastModified();
 					long now = Calendar.getInstance().getTimeInMillis();
 					
-					if (now - lastModified > expirationInMillis) {
-						invalidateCacheEntry(cacheFile);
-						deleteCacheSubdirectoryIfEmpty(cacheScopeDirectory);
+					if (now - lastModified > maxMillisOld) {
+						if (deleteIfOlderThanMax) {
+							invalidateCacheEntry(cacheFile);
+							deleteCacheSubdirectoryIfEmpty(cacheScopeDirectory);
+						}
 						cacheFile = null;
 					}
 				}

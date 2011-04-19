@@ -7,8 +7,10 @@ import android.graphics.Bitmap;
 import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
 import com.ecollege.api.ECollegeClient;
@@ -16,6 +18,7 @@ import com.google.inject.Inject;
 
 public class SingleSignonActivity extends ECollegeDefaultActivity {
     @InjectView(R.id.webview) WebView webView;
+    @InjectView(R.id.busy_indicator) ProgressBar busyIndicator;
     
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
@@ -42,8 +45,17 @@ public class SingleSignonActivity extends ECollegeDefaultActivity {
         	
         	@Override
         	public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        		if (checkUrl(url)) return;
+        		if (checkUrl(url)) {
+        			return;
+        		}
+        		busyIndicator.setVisibility(View.VISIBLE);
         		super.onPageStarted(view, url, favicon);
+        	}
+        	
+        	@Override
+        	public void onPageFinished(WebView view, String url) {
+        		busyIndicator.setVisibility(View.INVISIBLE);
+        		super.onPageFinished(view, url);
         	}
         });
         

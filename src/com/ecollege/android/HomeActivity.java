@@ -353,13 +353,13 @@ public class HomeActivity extends ECollegeListActivity {
 						} else if (dt < getTodayPlus(2)) {
 							uei.setTag("Tomorrow");
 						} else if (dt < getTodayPlus(3)) {
-							uei.setTag("2 Days");
+							uei.setTag("In 2 Days");
 						} else if (dt < getTodayPlus(4)) {
-							uei.setTag("3 Days");
+							uei.setTag("In 3 Days");
 						} else if (dt < getTodayPlus(5)) {
-							uei.setTag("4 Days");
+							uei.setTag("In 4 Days");
 						} else if (dt < getTodayPlus(6)) {
-							uei.setTag("5 Days");
+							uei.setTag("In 5 Days");
 						} else {
 							uei.setTag("Later");
 						}					

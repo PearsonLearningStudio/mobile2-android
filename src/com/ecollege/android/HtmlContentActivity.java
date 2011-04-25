@@ -5,8 +5,8 @@ import roboguice.inject.InjectView;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
+import android.webkit.WebView;
 import android.widget.TextView;
-import android.widget.TextView.BufferType;
 
 import com.ecollege.android.activities.ECollegeDefaultActivity;
 import com.ecollege.android.util.CacheConfiguration;
@@ -26,7 +26,7 @@ public class HtmlContentActivity extends ECollegeDefaultActivity {
 	
 	@InjectView(R.id.title_text) TextView titleText;
 	@InjectView(R.id.course_title_text) TextView courseTitleText;
-	@InjectView(R.id.html_content_text) TextView htmlContentText;
+	@InjectView(R.id.webview) WebView webView;
 	@InjectView(R.id.schedule_text) TextView scheduleText;
 	
 	@InjectExtra(COURSE_EXTRA) Course course;
@@ -41,6 +41,7 @@ public class HtmlContentActivity extends ECollegeDefaultActivity {
 		titleText.setText(title);
 		courseTitleText.setText(Html.fromHtml(course.getTitle()));
 		scheduleText.setText(scheduleInfo);
+		webView.getSettings().setBuiltInZoomControls(true);
 		
 		upcomeHtmlContent(false);
 	}
@@ -55,6 +56,7 @@ public class HtmlContentActivity extends ECollegeDefaultActivity {
 	}
 
     public void onServiceCallSuccess(FetchHtmlByIdService service) {
-    	htmlContentText.setText(Html.fromHtml(service.getResult()),BufferType.SPANNABLE);
+    	webView.loadData(service.getResult(), "text/html", "utf-8");
+    	//htmlContentText.setText(Html.fromHtml(service.getResult()),BufferType.SPANNABLE);
     }
 }

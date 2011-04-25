@@ -88,11 +88,11 @@ public class UpcomingEventsAdapter extends UberAdapter<UpcomingEventItem> {
         holder.courseTitleText.setText(Html.fromHtml(course.getTitle()).toString());
         
         if (uei.getEventType() == UpcomingEventType.Html) {
-        	holder.icon.setImageResource(R.drawable.ic_person);
+        	holder.icon.setImageResource(R.drawable.ic_assignment);
         } else if (uei.getEventType() == UpcomingEventType.Thread) {
         	holder.icon.setImageResource(R.drawable.ic_discussions_no_responses);
         } else if (uei.getEventType() == UpcomingEventType.QuizExamTest) {
-        	holder.icon.setImageResource(R.drawable.ic_grade);
+        	holder.icon.setImageResource(R.drawable.ic_exam);
         }
         holder.scheduleText.setText(getScheduleText(uei));
         

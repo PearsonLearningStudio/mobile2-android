@@ -74,11 +74,7 @@ public class HomeActivity extends ECollegeListActivity {
         
         reloadButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-		    	if (navigationSpinner.getSelectedItemPosition() == UPCOMING_POSITION) {
-		    		//TODO: reload what's due
-		    	} else {
-		    		reloadActivityFeed();
-		    	}
+	    		reloadCurrentFeed();
 			}
 		});
         
@@ -152,20 +148,13 @@ public class HomeActivity extends ECollegeListActivity {
     	fetchActivityFeed(null);
     }
     
-    protected void reloadActivityFeed() {
+    protected void reloadCurrentFeed() {
     	CacheConfiguration cacheConfiguration = new CacheConfiguration(true, true, true, true);
-    	if (canLoadMoreActivites) {
-    		GregorianCalendar fetchSince = new GregorianCalendar();
-    		fetchSince.add(Calendar.DAY_OF_YEAR, -14);
-        	buildService(new FetchMyWhatsHappeningFeed(fetchSince))
-        		.setPostProcessor(new ActivityFeedPostProcessor<FetchMyWhatsHappeningFeed>())
-        		.configureCaching(cacheConfiguration)
-        		.execute();
+    	
+    	if (upcomingIsSelected()) {
+    		fetchUpcomingEvents(cacheConfiguration);
     	} else {
-    		buildService(new FetchMyWhatsHappeningFeed())
-    			.setPostProcessor(new ActivityFeedPostProcessor<FetchMyWhatsHappeningFeed>())
-        		.configureCaching(cacheConfiguration)
-    			.execute();	
+    		fetchActivityFeed(cacheConfiguration);
     	}
     }
     

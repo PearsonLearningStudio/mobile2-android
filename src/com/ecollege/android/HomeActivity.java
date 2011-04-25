@@ -33,7 +33,9 @@ import com.ecollege.android.tasks.TaskPostProcessor;
 import com.ecollege.android.util.CacheConfiguration;
 import com.ecollege.api.ECollegeClient;
 import com.ecollege.api.model.ActivityStreamItem;
+import com.ecollege.api.model.Course;
 import com.ecollege.api.model.UpcomingEventItem;
+import com.ecollege.api.model.UpcomingEventItem.UpcomingEventType;
 import com.ecollege.api.services.activities.FetchMyWhatsHappeningFeed;
 import com.ecollege.api.services.upcoming.FetchMyUpcomingEventsService;
 import com.google.inject.Inject;
@@ -267,6 +269,18 @@ public class HomeActivity extends ECollegeListActivity {
         		canLoadMoreUpcomingEvents = false;
         		fetchUpcomingEvents();
         		return;
+        	} else if (item.getItemType() == UberItemType.DATA_ITEM) {
+        		
+        		if (item.getDataItem().getEventType() == UpcomingEventType.Thread) {
+                	long threadId = item.getDataItem().getThreadId();
+                	Course course = app.getCourseById(item.getDataItem().getCourseId());
+                	
+                	Intent i = new Intent(this,CourseThreadActivity.class);
+                	i.putExtra(CourseThreadActivity.THREAD_ID_EXTRA, threadId);
+                	i.putExtra(CourseThreadActivity.COURSE_EXTRA, course);
+                	startActivity(i);
+        		}
+        		
         	}
         	
     	} else {

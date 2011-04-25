@@ -10,7 +10,8 @@ import com.ecollege.api.model.UserDiscussionTopic;
 import com.ecollege.api.services.discussions.FetchDiscussionTopicById;
 
 public class UserTopicActivity extends UserDiscussionActivity {
-
+	
+	public static final int VIEW_TOPIC_REQUEST = 0;
 	public static final String TOPIC_ID_EXTRA = "TOPIC_ID_EXTRA";
 	public static final String USER_TOPIC_EXTRA = "USER_TOPIC_EXTRA";
 	

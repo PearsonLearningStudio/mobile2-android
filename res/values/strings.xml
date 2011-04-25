@@ -57,6 +57,7 @@
     <string name="my_courses">My Courses</string>
     <string name="announcements">Announcements</string>
     <string name="gradebook">Gradebook</string>
+    <string name="thread_topics">Thread Topics</string>
     <string name="no_grade">Not Graded</string>
     <string name="no_gradebook_items">No Gradebook Items</string>
     <string name="grade">Grade</string>

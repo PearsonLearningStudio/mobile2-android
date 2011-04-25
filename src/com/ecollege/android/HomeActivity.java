@@ -279,6 +279,16 @@ public class HomeActivity extends ECollegeListActivity {
                 	i.putExtra(CourseThreadActivity.THREAD_ID_EXTRA, threadId);
                 	i.putExtra(CourseThreadActivity.COURSE_EXTRA, course);
                 	startActivity(i);
+        		} else if (item.getDataItem().getEventType() == UpcomingEventType.Html) {
+                	long htmlId = item.getDataItem().getMultimediaId();
+                	Course course = app.getCourseById(item.getDataItem().getCourseId());
+                	
+                	Intent i = new Intent(this,HtmlContentActivity.class);
+                	i.putExtra(HtmlContentActivity.HTML_ID_EXTRA, htmlId);
+                	i.putExtra(HtmlContentActivity.COURSE_EXTRA, course);
+                	i.putExtra(HtmlContentActivity.TITLE_EXTRA, item.getDataItem().getTitle());
+                	
+                	startActivity(i);
         		}
         		
         	}

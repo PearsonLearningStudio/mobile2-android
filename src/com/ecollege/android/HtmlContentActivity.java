@@ -1,0 +1,57 @@
+package com.ecollege.android;
+
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.text.Html;
+import android.widget.TextView;
+import android.widget.TextView.BufferType;
+
+import com.ecollege.android.activities.ECollegeDefaultActivity;
+import com.ecollege.android.adapter.TopicsAdapter;
+import com.ecollege.android.util.CacheConfiguration;
+import com.ecollege.api.model.Course;
+import com.ecollege.api.services.multimedia.FetchHtmlByIdService;
+import com.google.inject.Inject;
+
+public class HtmlContentActivity extends ECollegeDefaultActivity {
+	
+	public static final String HTML_ID_EXTRA = "HTML_ID_EXTRA";
+	public static final String COURSE_EXTRA = "COURSE_EXTRA";
+	public static final String TITLE_EXTRA = "TITLE_EXTRA";
+	
+	@Inject ECollegeApplication app;
+	@Inject SharedPreferences prefs;
+	
+	@InjectView(R.id.title_text) TextView titleText;
+	@InjectView(R.id.course_title_text) TextView courseTitleText;
+	@InjectView(R.id.html_content_text) TextView htmlContentText;
+	
+	@InjectExtra(COURSE_EXTRA) Course course;
+	@InjectExtra(HTML_ID_EXTRA) long htmlId;
+	@InjectExtra(TITLE_EXTRA) String title;
+	
+	@Override public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.html_content);
+		
+		titleText.setText(title);
+		courseTitleText.setText(Html.fromHtml(course.getTitle()));
+		
+		upcomeHtmlContent(false);
+	}
+    
+	private void upcomeHtmlContent(boolean reload) {
+		CacheConfiguration cacheConfiguration = new CacheConfiguration();
+		cacheConfiguration.bypassFileCache = reload;
+		cacheConfiguration.bypassResultCache = reload;
+		buildService(new FetchHtmlByIdService(course.getId(), htmlId))
+			.configureCaching(cacheConfiguration)
+			.execute();
+	}
+
+    public void onServiceCallSuccess(FetchHtmlByIdService service) {
+    	htmlContentText.setText(Html.fromHtml(service.getResult()),BufferType.SPANNABLE);
+    }
+}

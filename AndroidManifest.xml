@@ -29,6 +29,7 @@
 		<activity android:name="ProfileActivity"></activity>
 		<activity android:name="PersonActivity"></activity>
 		<activity android:name="AnnouncementActivity"></activity>
+		<activity android:name="HtmlContentActivity"></activity>
 		
 		<activity android:name="DiscussionResponseActivity"></activity>
 		<activity android:name="DiscussionTopicActivity"></activity>

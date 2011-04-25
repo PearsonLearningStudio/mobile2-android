@@ -278,6 +278,7 @@ public class HomeActivity extends ECollegeListActivity {
                 	Intent i = new Intent(this,CourseThreadActivity.class);
                 	i.putExtra(CourseThreadActivity.THREAD_ID_EXTRA, threadId);
                 	i.putExtra(CourseThreadActivity.COURSE_EXTRA, course);
+                	i.putExtra(CourseThreadActivity.SCHEDULE_EXTRA, UpcomingEventsAdapter.getScheduleText(item.getDataItem()));
                 	startActivity(i);
         		} else if (item.getDataItem().getEventType() == UpcomingEventType.Html) {
                 	long htmlId = item.getDataItem().getMultimediaId();
@@ -286,6 +287,7 @@ public class HomeActivity extends ECollegeListActivity {
                 	Intent i = new Intent(this,HtmlContentActivity.class);
                 	i.putExtra(HtmlContentActivity.HTML_ID_EXTRA, htmlId);
                 	i.putExtra(HtmlContentActivity.COURSE_EXTRA, course);
+                	i.putExtra(HtmlContentActivity.SCHEDULE_EXTRA, UpcomingEventsAdapter.getScheduleText(item.getDataItem()));
                 	i.putExtra(HtmlContentActivity.TITLE_EXTRA, item.getDataItem().getTitle());
                 	
                 	startActivity(i);

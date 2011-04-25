@@ -17,6 +17,7 @@
 		android:layout_marginTop="10dp"
 		android:layout_marginLeft="10dp"
 		style="@style/TextAppearance.Header" />
+		
 	<TextView
 		android:id="@+id/course_title_text"
 		android:layout_width="wrap_content"
@@ -45,22 +46,10 @@
 		android:layout_below="@id/schedule_text"
 		android:background="@drawable/list_item_divider" />
 		
-	<ScrollView
+	<ListView android:id="@android:id/list"
 		android:layout_below="@id/section_divider"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentBottom="true"
-		android:paddingLeft="10dp"
-		android:paddingTop="2dp"
-		android:background="#ffffff">
-		
-		<TextView
-			android:id="@+id/html_content_text"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			/>
-	</ScrollView>
+		android:background="@color/color_foreground"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" />
 		
 </RelativeLayout>

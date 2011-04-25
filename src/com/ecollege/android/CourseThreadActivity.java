@@ -24,24 +24,28 @@ public class CourseThreadActivity extends ECollegeListActivity {
 	
 	public static final String THREAD_ID_EXTRA = "THREAD_ID_EXTRA";
 	public static final String COURSE_EXTRA = "COURSE_EXTRA";
+	public static final String SCHEDULE_EXTRA = "SCHEDULE_EXTRA";
 	
 	@Inject ECollegeApplication app;
 	@Inject SharedPreferences prefs;
 	
 	@InjectView(R.id.title_text) TextView titleText;
 	@InjectView(R.id.course_title_text) TextView courseTitleText;
+	@InjectView(R.id.schedule_text) TextView scheduleText;
 	
 	@InjectExtra(COURSE_EXTRA) Course course;
 	@InjectExtra(THREAD_ID_EXTRA) long threadId;
+	@InjectExtra(SCHEDULE_EXTRA) String scheduleInfo;
 	
 	private TopicsAdapter topicAdapter;
 	
 	@Override public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.course_menu_item_detail_view);
+		setContentView(R.layout.course_thread);
 		
 		titleText.setText(R.string.thread_topics);
 		courseTitleText.setText(Html.fromHtml(course.getTitle()));
+		scheduleText.setText(scheduleInfo);
 		
 		topicAdapter = new TopicsAdapter(this,TopicAdapterMode.NO_GROUP_NO_FILTER);
 		setListAdapter(topicAdapter);

@@ -37,6 +37,20 @@ public class UpcomingEventsAdapter extends UberAdapter<UpcomingEventItem> {
         ImageView icon;
     }
     
+    public static String getScheduleText(UpcomingEventItem uei) {
+        if (uei.getWhen() == null || uei.getWhen().getTime() == null) {
+        	return "Schedule Unknown";
+        } else {
+            if (uei.getCategoryType() == CategoryType.Start) {
+            	return "Starts at " + DateTimeUtil.getLongFriendlyDate(uei.getWhen().getTime());
+            } else if (uei.getCategoryType() == CategoryType.End) {
+            	return "Ends at " + DateTimeUtil.getLongFriendlyDate(uei.getWhen().getTime());
+            } else {
+            	return "Due at " + DateTimeUtil.getLongFriendlyDate(uei.getWhen().getTime());
+            }
+        }
+    }
+    
 	@Override
 	protected View getDataItemView(View convertView, ViewGroup parent, UberItem<UpcomingEventItem> item) {
 
@@ -80,19 +94,7 @@ public class UpcomingEventsAdapter extends UberAdapter<UpcomingEventItem> {
         } else if (uei.getEventType() == UpcomingEventType.QuizExamTest) {
         	holder.icon.setImageResource(R.drawable.ic_grade);
         }
-        
-        if (uei.getWhen() == null || uei.getWhen().getTime() == null) {
-        	holder.scheduleText.setText("Schedule Unknown");
-        } else {
-            if (uei.getCategoryType() == CategoryType.Start) {
-            	holder.scheduleText.setText("Starts at " + DateTimeUtil.getLongFriendlyDate(uei.getWhen().getTime()));
-            } else if (uei.getCategoryType() == CategoryType.End) {
-            	holder.scheduleText.setText("Ends at " + DateTimeUtil.getLongFriendlyDate(uei.getWhen().getTime()));
-            } else if (uei.getCategoryType() == CategoryType.Due) {
-            	holder.scheduleText.setText("Due at " + DateTimeUtil.getLongFriendlyDate(uei.getWhen().getTime()));
-            }
-        }
-        
+        holder.scheduleText.setText(getScheduleText(uei));
         
         return convertView;	
 	}
